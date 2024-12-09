@@ -1,0 +1,13 @@
+<div class="user-list">
+    @for(user of users; track user){
+        <div class="user-card">
+            <h3>{{ user.firstName }} {{ user.lastName }}</h3>
+            <p><strong>Отдел:</strong> {{ user.department }}</p>
+            <p><strong>Дата рождения:</strong> {{ user.birthDate  }}</p>
+            <p><strong>Email:</strong> {{ user.email }}</p>
+            <p><strong>Логин:</strong> {{ user.login }}</p>
+            <p><strong>Телеграм:</strong> {{ user.telegramId ? user.telegramId : 'Нет данных' }}</p>
+          </div>
+    }
+  </div>
+  

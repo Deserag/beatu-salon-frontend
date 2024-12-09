@@ -1,0 +1,8 @@
+<header>
+    <button [routerLink]="['/', ERoutesConstans.USER_PANEL]" type="button">Сотрудники</button>
+    <button [routerLink]="['/', ERoutesConstans.CLIENT_PANEL]" type="button">Клиенты</button>
+    <button [routerLink]="['/', ERoutesConstans.OFFICE_PANEL]" type="button">Офисы</button>
+    <button [routerLink]="['/', ERoutesConstans.SERVICES_PANEL]" type="button">Услуги</button>
+    <button [routerLink]="['/', ERoutesConstans.ADMIN_PANEL]" type="button">Статистика</button>
+    <button (click)="onClickLogOut()">Выйти</button>
+</header>

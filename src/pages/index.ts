@@ -1,0 +1,7 @@
+export * from './admin-panel/admin-panel.component'
+export * from './services/services.component'
+export * from './office/office.component'
+export * from './services/services.component'
+export * from './user/user.component'
+export * from './auth/index'
+export * from './work-page/work-page.component'

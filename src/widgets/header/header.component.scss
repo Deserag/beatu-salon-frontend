@@ -1,0 +1,46 @@
+header {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #1e1e1e;
+    padding: 15px 40px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    color: #fff;
+}
+
+header button {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 12px 20px;
+    margin: 0 15px;
+    font-size: 16px;
+    font-weight: 500;
+    cursor: pointer;
+    border-radius: 30px;
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+}
+
+header button:hover {
+    background-color: #0056b3;
+    transform: scale(1.05);
+}
+
+header button:active {
+    transform: scale(0.98);
+}
+
+header button:last-child {
+    background-color: #e74c3c;
+}
+
+header button:last-child:hover {
+    background-color: #c0392b;
+}
+
+header button:focus {
+    outline: none;
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.8);
+}
