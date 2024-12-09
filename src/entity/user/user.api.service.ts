@@ -10,7 +10,8 @@ export class UserApiService {
     private _http = inject(HttpClient)
     private _baseURL = environment.apiService
 
-    getUser(): Observable<IGetUser>{
-        return this._http.get<IGetUser>(`${this._baseURL}user/list`);
-    }
+    getUser(name: string = '', page: number = 1, size: number = 10): Observable<IGetUser> {
+        const body = { name, page, size };
+        return this._http.post<IGetUser>(`${this._baseURL}user/list`, body);
+      }
 }

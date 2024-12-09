@@ -23,4 +23,6 @@ export interface IGetUser {
   name: string;
   page: number;
   size: number;
+  totalCount: number;
+  totalPages: number;
 }
