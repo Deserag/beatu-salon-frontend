@@ -1,47 +1,46 @@
-import { Component, OnInit } from '@angular/core';
-import { ReactiveFormsModule } from '@angular/forms';
+import { Component } from '@angular/core';
+import { MatTableDataSource } from '@angular/material/table';
 import { IUser, UserApiService } from '@entity';
-import { IGetUser } from '@entity';
 
 @Component({
   selector: 'app-user',
   standalone: true,
-  imports: [ReactiveFormsModule],
+  imports: [MatTableDataSource],
   templateUrl: './user.component.html',
-  styleUrls: ['./user.component.scss']
+  styleUrls: ['./user.component.scss'],
 })
 export class UserComponent {
   users: IUser[] = [];
-  totalUsers: number = 0;
-  totalPages: number = 0;
-  currentPage: number = 1;
-  pageSize: number = 10;
-  nameFilter: string = '';
+  displayedColumns: string[] = ['firstName', 'lastName', 'email', 'actions'];
+  dataSource = new MatTableDataSource<IUser>(this.users);
 
   constructor(private userApiService: UserApiService) {
-    this.userApiService.getUser().subscribe((response: IGetUser) => {
-      this.users = response.users;
-    });
+    this.loadUsers();
   }
+
   loadUsers() {
-    this.userApiService.getUser(this.nameFilter, this.currentPage, this.pageSize).subscribe(
-      (response: IGetUser) => {
+    this.userApiService.getUser().subscribe(
+      (response) => {
         this.users = response.users;
-        this.totalUsers = response.totalCount;
-        this.totalPages = response.totalPages;
+        this.dataSource.data = this.users;
       },
-      (error) => {
-        console.error('Ошибка при загрузке пользователей', error);
-      }
+      (error) => console.error('Ошибка загрузки данных', error)
     );
   }
-  onFilterChange() {
-    this.currentPage = 1; 
-    this.loadUsers();
+
+  createUser() {
+    console.log('Создание нового пользователя');
   }
-  goToPage(page: number) {
-    if (page < 1 || page > this.totalPages) return;
-    this.currentPage = page;
-    this.loadUsers();
+
+  editUser(user: IUser) {
+    console.log('Редактирование пользователя', user);
+  }
+
+  deleteUser(user: IUser) {
+    console.log('Удаление пользователя', user);
+  }
+
+  navigateTo(route: string) {
+    console.log('Навигация', route);
   }
 }
