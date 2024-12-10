@@ -7,7 +7,7 @@ export interface IGetUser {
     firstName: string;
     lastName: string;
     middleName: string;
-    birthDate: string;
+    birthDate: Date;
     department: string;
     createdAt: string;
     updatedAt: string;

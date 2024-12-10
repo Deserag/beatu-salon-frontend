@@ -1,0 +1,88 @@
+<div class="modal-container">
+  <h2>Создать/Редактировать пользователя</h2>
+  <form [formGroup]="form" (ngSubmit)="submit()">
+    <div class="form-row">
+      <mat-form-field appearance="fill">
+        <mat-label>Имя</mat-label>
+        <input matInput formControlName="firstName" />
+        @if (form.controls.firstName.invalid &&
+        form.controls['firstName'].touched){
+        <mat-error> Имя обязательно </mat-error>
+        }
+      </mat-form-field>
+      <mat-form-field appearance="fill">
+        <mat-label>Фамилия</mat-label>
+        <input matInput formControlName="lastName" />
+        @if(form.controls.lastName.invalid && form.controls.lastName.touched){
+        <mat-error> Фамилия обязательна </mat-error>
+        }
+      </mat-form-field>
+      <mat-form-field appearance="fill">
+        <mat-label>Отчество</mat-label>
+        <input matInput formControlName="middleName" />
+      </mat-form-field>
+    </div>
+
+    <div class="form-row">
+      <mat-form-field appearance="fill">
+        <mat-label>Дата рождения</mat-label>
+        <input matInput type="date" formControlName="birthDate" />
+        @if(form.controls.birthDate.invalid && form.controls.birthDate.touched){
+        <mat-error> Дата рождения обязательна </mat-error>
+        }
+      </mat-form-field>
+
+      <mat-form-field appearance="fill">
+        <mat-label>Отдел</mat-label>
+        <input matInput formControlName="department" />
+        @if(form.controls.department.invalid &&
+        form.controls.department.touched){
+        <mat-error> Отдел обязателен </mat-error>
+        }
+      </mat-form-field>
+    </div>
+
+    <div class="form-row">
+      <mat-form-field appearance="fill">
+        <mat-label>Логин</mat-label>
+        <input matInput formControlName="login" />
+        @if(form.controls.login.invalid && form.controls.login.touched){
+        <mat-error> Логин обязателен </mat-error>
+        }
+      </mat-form-field>
+
+      <mat-form-field appearance="fill">
+        <mat-label>Email</mat-label>
+        <input matInput formControlName="email" type="email" />
+        @if(form.controls.email.invalid && form.controls.email.touched){
+        <mat-error> Email обязателен </mat-error>
+        } @if(form.controls.email.hasError('email') &&
+        form.controls.email.touched){
+        <mat-error> Введите корректный Email </mat-error>
+        }
+      </mat-form-field>
+    </div>
+
+    <mat-form-field appearance="fill">
+      <mat-label>Пароль</mat-label>
+      <input matInput formControlName="password" type="password" />
+      @if(form.controls.password.invalid && form.controls.password.touched){
+      <mat-error> Пароль обязателен </mat-error>
+      } @if(form.controls.password.hasError('minlength') &&
+      form.controls.password.touched){
+      <mat-error> Пароль должен содержать минимум 8 символов </mat-error>
+      } @if(form.controls.password.hasError('pattern') &&
+      form.controls.password.touched){
+      <mat-error>
+        Пароль должен содержать минимум 1 заглавную букву, 1 цифру и 1
+        спецсимвол
+      </mat-error>
+      }
+    </mat-form-field>
+
+    <div class="actions">
+      <button mat-raised-button color="primary" type="submit">Сохранить</button>
+      <button mat-button color="warn" (click)="close()">Отмена</button>
+    </div>
+  </form>
+</div>

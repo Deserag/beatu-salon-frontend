@@ -4,6 +4,10 @@ import { ERouteConstans } from '@routes';
 
 export const routes: Routes = [];
 
+
+export const userRoutes: Routes = [
+  
+]
 export const authRoutes: Routes = [
   {
     path: ERouteConstans.LOGIN,

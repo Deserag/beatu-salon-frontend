@@ -1,0 +1,31 @@
+.admin-panel {
+    display: flex;
+    height: 100vh;
+  }
+  
+  .sidebar {
+    width: 25%;
+    padding: 20px;
+    background-color: #f4f4f4;
+    border-right: 1px solid #ccc;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  
+  .content {
+    width: 75%;
+    padding: 20px;
+    overflow-y: auto;
+  }
+  
+  .user-table {
+    width: 100%;
+    margin-bottom: 20px;
+  }
+  
+  .table-footer {
+    text-align: right;
+  }
+  

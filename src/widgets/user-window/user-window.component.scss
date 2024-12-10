@@ -1,0 +1,43 @@
+.modal-container {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding: 20px;
+  max-width: 1200px;
+  min-height: 60%; /* Увеличил высоту */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  background-color: #ffffff;
+}
+
+.form-row {
+  display: flex;
+  gap: 20px; 
+}
+
+mat-form-field {
+  flex: 1; 
+}
+
+.actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+.actions button {
+  min-width: 120px;
+}
+
+h2 {
+  text-align: center;
+  font-size: 24px;
+  margin-bottom: 10px;
+}
+
+@media (max-width: 768px) {
+  .form-row {
+    flex-direction: column; 
+    gap: 10px;
+  }
+}
