@@ -1,3 +1,5 @@
+import { IResTablePage } from "../work-page";
+
 export interface IGetUser {
     users: IUser[];
   }
@@ -26,3 +28,23 @@ export interface IGetUser {
   totalCount: number;
   totalPages: number;
 }
+
+export interface IGetRole {
+  name: string;
+  page: number;
+  size: number;
+  totalCount: number;
+  totalPages: number;
+}
+
+export interface IUserRole {
+  id: string;
+  name: string;
+  createdAt: string;
+  updatedAt: string;
+  deletedAt: string | null;
+  creatorId: string;
+}
+
+export type TResGetUsers = IResTablePage<IUser>;
+export type TResGetRoles = IResTablePage<IUserRole>

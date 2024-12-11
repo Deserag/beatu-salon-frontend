@@ -1,8 +1,9 @@
 import { HttpClient } from "@angular/common/http";
 import { inject, Injectable } from "@angular/core";
 import { Observable } from "rxjs";
-import { IGetUser, IUser } from "./user.interface";
+import { IGetRole, IGetUser, IUser, TResGetRoles, TResGetUsers } from "./user.interface";
 import { environment } from "environment/environment";
+import { IReqPage } from "../work-page";
 @Injectable({
     providedIn: 'root',
   })
@@ -10,8 +11,11 @@ export class UserApiService {
     private _http = inject(HttpClient)
     private _baseURL = environment.apiService
 
-    getUser(name: string = '', page: number = 1, size: number = 10): Observable<IGetUser> {
-        const body = { name, page, size };
-        return this._http.post<IGetUser>(`${this._baseURL}user/list`, body);
+    getUser(body: IReqPage): Observable<TResGetUsers> {
+        return this._http.post<TResGetUsers>(`${this._baseURL}user/list`, body);
+      }
+
+      getUserRole(body: IReqPage): Observable<TResGetRoles> {
+        return this._http.post<TResGetRoles>(`${this._baseURL}user/list-roles`, body);
       }
 }

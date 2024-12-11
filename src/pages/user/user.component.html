@@ -1,8 +1,16 @@
 <div class="admin-panel">
   <div class="sidebar">
-    <button [routerLink]="['/', ERoutesConstans.USER_LIST]" type="button">Список пользователей</button>
-    <button [routerLink]="['/', ERoutesConstans.USER_DEPARTMENT]" type="button">Список направлений</button>
-    <button [routerLink]="['/', ERoutesConstans.USER_ROLE]" type="button">Список ролей</button>
+    <button [routerLink]="[ERoutesConstans.USER_LIST]" type="button">
+      Список пользователей
+    </button>
+    <button [routerLink]="[ERoutesConstans.USER_DEPARTMENT]" type="button">
+      Список направлений
+    </button>
+    <button [routerLink]="[ERoutesConstans.USER_ROLE]" type="button">
+      Список ролей
+    </button>
   </div>
-
+  <div class="content">
+    <router-outlet></router-outlet>
+  </div>
 </div>

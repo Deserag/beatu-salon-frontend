@@ -13,13 +13,13 @@ export enum ERouteConstans {
 
     //Пути для пользователя
     USER_PANEL = 'user-panel',
-    USER_LIST = 'user-list',
-    USER_DEPARTMENT = 'user-department',
-    USER_ROLE = 'user-role',
+    USER_LIST = 'list',
+    USER_DEPARTMENT = 'department',
+    USER_ROLE = 'role',
 
     //Пути для офиса
     OFFICE_PANEL = 'office-panel',
-    CABINET_PANEL = 'cabinet-panel',
+    CABINET_PANEL = 'cabinet',
 
 
     //Пути для услуг
