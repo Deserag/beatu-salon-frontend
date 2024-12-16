@@ -1,0 +1,43 @@
+<div class="user-page">
+  <header class="user-page__header">
+    <h1 class="user-page__title">Профиль пользователя</h1>
+  </header>
+
+  <div class="user-page__content">
+    <div class="user-page__columns">
+      <section class="user-page__section user-page__info">
+        <div class="user-page__info-card">
+          <h2 class="user-page__sub-title">Основная информация</h2>
+          <p><strong>ФИО:</strong> {{ user.firstName }} {{ user.lastName }} {{ user.middleName }}</p>
+          <p><strong>Дата рождения:</strong> {{ user.birthDate | date }}</p>
+          <p><strong>Email:</strong> {{ user.email }}</p>
+          <p><strong>Логин:</strong> {{ user.login }}</p>
+          <p><strong>Отдел:</strong> {{ user.department }}</p>
+          <p><strong>Роль:</strong> {{ user.role }}</p>
+          <p><strong>Дата создания:</strong> {{ user.createdAt | date }}</p>
+          <p><strong>Дата обновления:</strong> {{ user.updatedAt | date }}</p>
+          <h3 class="user-page__sub-title">Направления</h3>
+          <ul>
+            <li *ngFor="let direction of user.directions">{{ direction }}</li>
+          </ul>
+
+          <button class="user-page__edit-button" (click)="onEdit()">Редактировать</button>
+        </div>
+      </section>
+
+      <section class="user-page__section user-page__right">
+        <div class="user-page__right-card">
+          <h2 class="user-page__sub-title">Календарь</h2>
+          <mat-calendar></mat-calendar>
+        </div>
+
+        <div class="user-page__right-card">
+          <h2 class="user-page__sub-title">Заработок</h2>
+          <div class="chart-container">
+            <canvas id="salaryChart"></canvas>
+          </div>
+        </div>
+      </section>
+    </div>
+  </div>
+</div>

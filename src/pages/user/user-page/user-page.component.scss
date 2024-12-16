@@ -1,0 +1,87 @@
+$user-page-bg: #d6e5d5;
+$card-bg: #b09e86;
+$card-header-bg: #b6cb6a;
+$button-bg: #8db662;
+$button-hover-bg: #b7c36c;
+$button-text-color: #fff;
+
+.user-page {
+  background-color: $user-page-bg;
+  padding: 20px;
+}
+
+.user-page__header {
+  text-align: center;
+}
+
+.user-page__title {
+  font-size: 24px;
+  font-weight: bold;
+  color: #333;
+}
+
+.user-page__content {
+  display: flex;
+  gap: 20px;
+  margin-top: 20px;
+}
+
+.user-page__columns {
+  display: flex;
+  gap: 20px;
+  width: 100%;
+}
+
+.user-page__section {
+  flex: 1;
+}
+
+.user-page__info {
+  flex-basis: 45%;
+}
+
+.user-page__info-card,
+.user-page__right-card {
+  background-color: $card-bg;
+  border-radius: 8px;
+  padding: 20px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.user-page__sub-title {
+  font-size: 18px;
+  font-weight: 600;
+  color: #333;
+}
+
+.user-page__edit-button {
+  background-color: $button-bg;
+  color: $button-text-color;
+  border: none;
+  padding: 10px 20px;
+  font-size: 16px;
+  border-radius: 4px;
+  cursor: pointer;
+  margin-top: 20px;
+
+  &:hover {
+    background-color: $button-hover-bg;
+  }
+}
+
+.user-page__right {
+  flex: 1;
+}
+
+.chart-container {
+  position: relative;
+  width: 100%;
+  height: 300px;
+  margin-top: 20px;
+}
+
+mat-calendar {
+  border-radius: 8px;
+  background-color: $card-header-bg;
+  padding: 10px;
+}

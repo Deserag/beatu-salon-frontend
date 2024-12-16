@@ -8,6 +8,8 @@ import { BehaviorSubject, combineLatestWith, switchMap } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { IUser, TResGetUsers, UserApiService } from '@entity';
 import { UserWindowComponent } from 'src/widgets/user-window/user-window.component';
+import { ERouteConstans } from '@routes';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-user-list',
@@ -17,6 +19,7 @@ import { UserWindowComponent } from 'src/widgets/user-window/user-window.compone
   styleUrls: ['./user-list.component.scss'],
 })
 export class UserListComponent {
+  protected readonly ERoutesConstans = ERouteConstans;
   displayedColumns: string[] = ['firstName', 'lastName', 'email', 'actions'];
   dataSource$ = new BehaviorSubject<IUser[]>([]);
   totalCount$ = new BehaviorSubject<number>(0);
@@ -25,6 +28,7 @@ export class UserListComponent {
   private _userApiService = inject(UserApiService);
   private _dialog = inject(MatDialog);
   private _destroyRef = inject(DestroyRef);
+  private _router = inject(Router);
 
   constructor() {
     this._page$
@@ -36,9 +40,16 @@ export class UserListComponent {
         takeUntilDestroyed(this._destroyRef)
       )
       .subscribe((response: TResGetUsers) => {
-        this.dataSource$.next(response.rows || []);
-        this.totalCount$.next(response.infoPage?.totalCount || 0);
+        this.dataSource$.next(response.rows);
+        this.totalCount$.next(response.infoPage.totalCount);
       });
+
+      this._destroyRef.onDestroy(() => {
+        this._page$.complete();
+        this._pageSize$.complete();
+        this.dataSource$.complete();
+        this.totalCount$.complete();
+    });
   }
 
   onPageChange(event: PageEvent): void {
@@ -50,13 +61,14 @@ export class UserListComponent {
     const dialogRef = this._dialog.open(UserWindowComponent);
     dialogRef.componentInstance.user.subscribe((newUser: IUser) => {
       console.log('Создан пользователь:', newUser);
-      // Обновление списка пользователей
       this._page$.next(this._page$.value);
     });
   }
 
   editUser(user: IUser): void {
-    console.log('Редактирование пользователя', user);
+    this._router.navigate([`/user-panel/${ERouteConstans.USER_PAGE.replace(':id', user.id)}`]);
+    console.log(`user-panel/${ERouteConstans.USER_PAGE}/${user.id}`);
+
   }
 
   deleteUser(user: IUser): void {

@@ -24,6 +24,11 @@ export const userRoutes: Routes = [
         path: ERouteConstans.USER_ROLE,
         loadComponent: () =>
           import('../pages/user/user-role/user-role.component').then((m) => m.UserRoleComponent),
+      },
+      {
+        path: ERouteConstans.USER_PAGE,
+        loadComponent: () =>
+          import('../pages/user/user-page/user-page.component').then((m) => m.UserPageComponent),
       }
     ]
   },
