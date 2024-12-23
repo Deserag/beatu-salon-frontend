@@ -1,3 +1,4 @@
+import { NgFor, NgIf } from '@angular/common';
 import { Component, EventEmitter, Output } from '@angular/core';
 import {
   FormControl,
@@ -9,17 +10,33 @@ import {
 import { MatDialogRef } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
+import {  IUserRoles, UserApiService } from '@entity';
+import { MatSelectModule } from '@angular/material/select';
 @Component({
   selector: 'app-user-window',
   standalone: true,
-  imports: [ReactiveFormsModule, FormsModule, MatFormFieldModule, MatInputModule],
+  imports: [
+    ReactiveFormsModule,
+    FormsModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatSelectModule,
+    NgFor,
+    NgIf,
+  ],
   templateUrl: './user-window.component.html',
   styleUrls: ['./user-window.component.scss'],
 })
 export class UserWindowComponent {
   @Output() user = new EventEmitter<any>();
-
-  constructor(private _dialogRef: MatDialogRef<UserWindowComponent>) {}
+  private creatorId: string = 'd52c32d6-0b2b-46e8-b16f-386fdd20d47d';
+  roles: IUserRoles[] = [];
+  constructor(
+    private _dialogRef: MatDialogRef<UserWindowComponent>,
+    private _userApiService: UserApiService
+  ) {
+    this.loadRoles()
+  }
 
   form = new FormGroup({
     firstName: new FormControl<string>('', {
@@ -35,6 +52,7 @@ export class UserWindowComponent {
       nonNullable: true,
       validators: [Validators.required],
     }),
+    
     department: new FormControl<string>('', {
       nonNullable: true,
       validators: [Validators.required],
@@ -55,6 +73,10 @@ export class UserWindowComponent {
       nonNullable: true,
       validators: [Validators.required],
     }),
+    roleId: new FormControl<string>('', {
+      nonNullable: true,
+      validators: [Validators.required]
+    })
   });
 
   submit() {
@@ -66,7 +88,47 @@ export class UserWindowComponent {
     }
   }
 
+  loadRoles() {
+    this._userApiService.getUserRoles().subscribe({
+      next: (response) => {
+        this.roles = response;
+      },
+      error: (error) => {
+        console.error('Ошибка при получении ролей:', error);
+      },
+    });
+  }
+
   close() {
     this._dialogRef.close();
   }
+  onClickCreateUser() {
+    if (this.form.valid) {
+      const formData = {
+        ...this.form.value,
+        // creatorId: this.creatorId,
+        firstName: this.form.value.firstName || '',
+        lastName: this.form.value.lastName || '',
+        birthDate: this.form.value.birthDate instanceof Date && !isNaN(this.form.value.birthDate.getTime()) 
+          ? this.form.value.birthDate.toISOString() 
+          : new Date().toISOString(),  
+        department: this.form.value.department || '',
+        login: this.form.value.login || '',
+        email: this.form.value.email || '',
+        password: this.form.value.password || '',
+        telegramId: this.form.value.telegramId || '',
+        roleId: this.form.value.roleId!,
+      };
+      console.log('Отправка данных на сервер:', formData);
+      this._userApiService.createUser(formData).subscribe({
+        next: (response) => {
+          console.log('Ответ от сервера:', response);
+        },
+        error: (error) => {
+          console.error('Ошибка при создании пользователя:', error);
+        },
+      });
+    }
+  }
+  
 }

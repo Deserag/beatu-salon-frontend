@@ -41,14 +41,14 @@ export class UserListComponent {
       )
       .subscribe((response: TResGetUsers) => {
         this.dataSource$.next(response.rows);
-        this.totalCount$.next(response.infoPage.totalCount);
+        // this.totalCount$.next(response.infoPage.totalCount);
       });
 
-      this._destroyRef.onDestroy(() => {
-        this._page$.complete();
-        this._pageSize$.complete();
-        this.dataSource$.complete();
-        this.totalCount$.complete();
+    this._destroyRef.onDestroy(() => {
+      this._page$.complete();
+      this._pageSize$.complete();
+      this.dataSource$.complete();
+      this.totalCount$.complete();
     });
   }
 
@@ -67,8 +67,6 @@ export class UserListComponent {
 
   editUser(user: IUser): void {
     this._router.navigate([`/user-panel/${ERouteConstans.USER_PAGE.replace(':id', user.id)}`]);
-    console.log(`user-panel/${ERouteConstans.USER_PAGE}/${user.id}`);
-
   }
 
   deleteUser(user: IUser): void {

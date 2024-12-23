@@ -15,6 +15,33 @@ import { IResTablePage } from "../work-page";
     roleId: string;
     telegramId: string | null;
   }
+  export interface ICreateUser {
+    firstName: string;
+    lastName: string;
+    middleName?: string | null;
+    birthDate: string;
+    department: string;
+    login: string;
+    email: string;
+    password: string;
+    telegramId: string | null;
+    // creatorId: string; 
+  }
+  
+  export interface IRole {
+    name: string
+  }
+
+  export interface IGetUser {
+    user: IUser;
+    userRole: IRole;
+  }
+
+  export interface IUserRoles {
+    id: string,
+    name: string,
+  }
+  
   
 
 export interface IGetUser {

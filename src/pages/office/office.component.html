@@ -1,1 +1,16 @@
-<p>office works!</p>
+<div class="page-container">
+  <div class="sidebar">
+    <button [routerLink]="[ERoutesConstans.USER_LIST]" type="button" class="nav-button">
+      Список офисов
+    </button>
+    <button [routerLink]="[ERoutesConstans.USER_DEPARTMENT]" type="button" class="nav-button">
+      Список Кабинетов
+    </button>
+    <button [routerLink]="[ERoutesConstans.USER_ROLE]" type="button" class="nav-button">
+      Список
+    </button>
+  </div>
+  <div class="router-outlet-container">
+    <router-outlet></router-outlet>
+  </div>
+</div>

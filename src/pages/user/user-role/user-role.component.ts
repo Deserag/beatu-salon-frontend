@@ -38,7 +38,7 @@ export class UserRoleComponent {
       )
       .subscribe((response: TResGetRoles) => {
         this.dataSource$.next(response.rows);
-        this.totalCount$.next(response.infoPage.totalCount);
+        // this.totalCount$.next(response.infoPage.totalCount);
       });
 
       this._destroyRef.onDestroy(() => {

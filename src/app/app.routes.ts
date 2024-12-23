@@ -11,6 +11,11 @@ export const userRoutes: Routes = [
       import('../pages/user/user.component').then((m) => m.UserComponent),
     children: [
       {
+        path: '',  
+        redirectTo: ERouteConstans.USER_LIST,  
+        pathMatch: 'full',
+      },
+      {
         path: ERouteConstans.USER_LIST,
         loadComponent: () =>
           import('../pages/user/user-list/user-list.component').then((m) => m.UserListComponent),

@@ -34,7 +34,7 @@ private _page$ = new BehaviorSubject<number>(1);
         )
         .subscribe((response: TResGetDepartment) => {
           this.dataSource$.next(response.rows);
-          this.totalCount$.next(response.infoPage.totalCount);
+          // this.totalCount$.next(response.infoPage.totalCount);
         });
   
         this._destroyRef.onDestroy(() => {

@@ -2,9 +2,11 @@ import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import {
+  ICreateUser,
   IGetRole,
   IGetUser,
   IUser,
+  IUserRoles,
   TResGetDepartment,
   TResGetRoles,
   TResGetUsers,
@@ -22,16 +24,29 @@ export class UserApiService {
     return this._http.post<TResGetUsers>(`${this._baseURL}user/list`, body);
   }
 
+  getUserInfo(id: string): Observable<IGetUser> {
+    return this._http.get<IGetUser>(`${this._baseURL}user/${id}`);
+  }
+
   getUserRole(body: IReqPage): Observable<TResGetRoles> {
-    return this._http.post<TResGetRoles>(`${this._baseURL}user/list-roles`,body);
+    return this._http.post<TResGetRoles>(
+      `${this._baseURL}user/list-roles`,
+      body
+    );
   }
 
   getUserDepartment(body: IReqPage): Observable<TResGetDepartment> {
-    return this._http.post<TResGetDepartment>(`${this._baseURL}user/list-departments`,body);
+    return this._http.post<TResGetDepartment>(
+      `${this._baseURL}user/list-departments`,
+      body
+    );
   }
 
-  createUser(body: IUser): Observable<IGetUser> {
-    return this._http.post<IGetUser>(`${this._baseURL}user/create`, body);
+  createUser(body: ICreateUser): Observable<ICreateUser> {
+    return this._http.post<ICreateUser>(
+      `${this._baseURL}user/create-user`,
+      body
+    );
   }
 
   createRole(body: IGetRole): Observable<IGetRole> {
@@ -39,7 +54,10 @@ export class UserApiService {
   }
 
   createDepartment(body: IGetRole): Observable<IGetRole> {
-    return this._http.post<IGetRole>(`${this._baseURL}user/create-department`,body);
+    return this._http.post<IGetRole>(
+      `${this._baseURL}user/create-department`,
+      body
+    );
   }
 
   updateUser(body: IUser): Observable<IGetUser> {
@@ -51,6 +69,13 @@ export class UserApiService {
   }
 
   updateDepartment(body: IGetRole): Observable<IGetRole> {
-    return this._http.post<IGetRole>(`${this._baseURL}user/update-department`,body);
+    return this._http.post<IGetRole>(
+      `${this._baseURL}user/update-department`,
+      body
+    );
+  }
+
+  getUserRoles(): Observable<IUserRoles[]> {
+    return this._http.get<IUserRoles[]>(`${this._baseURL}user/user-roles`);
   }
 }
