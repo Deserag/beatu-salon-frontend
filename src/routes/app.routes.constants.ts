@@ -21,10 +21,15 @@ export enum ERouteConstans {
     //Пути для офиса
     OFFICE_PANEL = 'office-panel',
     CABINET_PANEL = 'cabinet',
+    OFFICE_LIST = 'list',
 
 
     //Пути для услуг
     SERVICES_PANEL = 'services-panel',
+    SERVICE_LIST = 'list',
+    SERVICE_PAGE = 'detail/:id',
+    SERVICE_PRODUCT = 'product',
+    SERVICE_PRODUCT_SALE = 'product-sale',
 
     //Рабочая панель
     WORK_PANEL = 'work-panel',

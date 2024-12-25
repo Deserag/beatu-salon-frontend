@@ -41,7 +41,11 @@ import { IResTablePage } from "../work-page";
     id: string,
     name: string,
   }
-  
+  export interface ICreateDepartment {
+    name: string;
+    description: string;
+    creatorId: string
+  }
   
 
 export interface IGetUser {

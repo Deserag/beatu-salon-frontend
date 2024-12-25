@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import {
+  ICreateDepartment,
   ICreateUser,
   IGetRole,
   IGetUser,
@@ -53,8 +54,8 @@ export class UserApiService {
     return this._http.post<IGetRole>(`${this._baseURL}user/create-role`, body);
   }
 
-  createDepartment(body: IGetRole): Observable<IGetRole> {
-    return this._http.post<IGetRole>(
+  createDepartment(body: ICreateDepartment): Observable<ICreateDepartment> {
+    return this._http.post<ICreateDepartment>(
       `${this._baseURL}user/create-department`,
       body
     );
