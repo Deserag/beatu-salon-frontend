@@ -6,7 +6,7 @@ import { IResTablePage } from "../work-page";
     lastName: string;
     middleName: string;
     birthDate: Date;
-    department: string;
+    departments: string[];
     createdAt: string;
     updatedAt: string;
     login: string;
@@ -20,12 +20,15 @@ import { IResTablePage } from "../work-page";
     lastName: string;
     middleName?: string | null;
     birthDate: string;
-    department: string;
+    departments: string[];
     login: string;
     email: string;
     password: string;
     telegramId: string | null;
     // creatorId: string; 
+  }
+  export interface IUpdateUser extends ICreateUser {
+    id: string;
   }
   
   export interface IRole {

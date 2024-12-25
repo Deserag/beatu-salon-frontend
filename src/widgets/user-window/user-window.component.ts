@@ -1,5 +1,5 @@
 import { NgFor, NgIf } from '@angular/common';
-import { Component, EventEmitter, Output } from '@angular/core';
+import { Component, EventEmitter, Inject, Output } from '@angular/core';
 import {
   FormControl,
   FormGroup,
@@ -7,10 +7,10 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import { MatDialogRef } from '@angular/material/dialog';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
-import {  IUserRoles, UserApiService } from '@entity';
+import {  IUser, IUserDepartment, IUserRoles, UserApiService } from '@entity';
 import { MatSelectModule } from '@angular/material/select';
 @Component({
   selector: 'app-user-window',
@@ -31,61 +31,91 @@ export class UserWindowComponent {
   @Output() user = new EventEmitter<any>();
   private creatorId: string = 'd52c32d6-0b2b-46e8-b16f-386fdd20d47d';
   roles: IUserRoles[] = [];
+  departments: IUserDepartment[] = []
+
   constructor(
     private _dialogRef: MatDialogRef<UserWindowComponent>,
-    private _userApiService: UserApiService
+    private _userApiService: UserApiService,
+    @Inject(MAT_DIALOG_DATA) public data: IUser | null 
   ) {
-    this.loadRoles()
+    this.loadRoles();
+    this.loadDepartaments();
+    if (this.data) {
+      this.initializeForm(this.data); 
+    }
   }
 
   form = new FormGroup({
-    firstName: new FormControl<string>('', {
-      nonNullable: true,
-      validators: [Validators.required],
-    }),
-    lastName: new FormControl<string>('', {
-      nonNullable: true,
-      validators: [Validators.required],
-    }),
+    id: new FormControl<string | null>(null),
+    firstName: new FormControl<string>('', Validators.required),
+    lastName: new FormControl<string>('', Validators.required),
     middleName: new FormControl<string>(''),
-    birthDate: new FormControl<Date>(new Date(), {
-      nonNullable: true,
-      validators: [Validators.required],
-    }),
-    
-    department: new FormControl<string>('', {
-      nonNullable: true,
-      validators: [Validators.required],
-    }),
-    login: new FormControl<string>('', {
-      nonNullable: true,
-      validators: [Validators.required],
-    }),
+    birthDate: new FormControl<Date | null>(null, Validators.required),
+    departments: new FormControl<string[]>([], Validators.required),
+    login: new FormControl<string>('', Validators.required),
     email: new FormControl<string>('', [Validators.required, Validators.email]),
-    password: new FormControl<string>('', [
-      Validators.required,
+    password: new FormControl<string | null>(null, [
       Validators.minLength(8),
       Validators.pattern(
         '^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*])[A-Za-z0-9!@#$%^&*]{8,}$'
       ),
     ]),
-    telegramId: new FormControl<string>('', {
-      nonNullable: true,
-      validators: [Validators.required],
-    }),
-    roleId: new FormControl<string>('', {
-      nonNullable: true,
-      validators: [Validators.required]
-    })
+    telegramId: new FormControl<string>('', Validators.required),
+    roleId: new FormControl<string>('', Validators.required),
   });
+
+  initializeForm(user: IUser) {
+    this.form.patchValue({
+      id: user.id,
+      firstName: user.firstName,
+      lastName: user.lastName,
+      middleName: user.middleName,
+      birthDate: new Date(user.birthDate),
+      departments: user.departments,
+      login: user.login,
+      email: user.email,
+      telegramId: user.telegramId,
+      roleId: user.roleId,
+    });
+    this.form.controls.password.setValidators(null); 
+  }
 
   submit() {
     if (this.form.valid) {
-      this.user.emit(this.form.value);
-      this._dialogRef.close();
+      const userData = this.form.value;
+
+      if (userData.id) {
+        this.updateUser(userData); 
+      } else {
+        this.onClickCreateUser(userData); 
+      }
     } else {
       this.form.markAllAsTouched();
     }
+  }
+
+  onClickCreateUser(user: any) {
+    this._userApiService.createUser(user).subscribe({
+      next: (response) => {
+        console.log('Создан пользователь:', response);
+        this._dialogRef.close(response);
+      },
+      error: (error) => {
+        console.error('Ошибка при создании пользователя:', error);
+      },
+    });
+  }
+
+  updateUser(user: any) {
+    this._userApiService.updateUser(user).subscribe({
+      next: (response) => {
+        console.log('Обновлен пользователь:', response);
+        this._dialogRef.close(response);
+      },
+      error: (error) => {
+        console.error('Ошибка при обновлении пользователя:', error);
+      },
+    });
   }
 
   loadRoles() {
@@ -99,36 +129,18 @@ export class UserWindowComponent {
     });
   }
 
+  loadDepartaments() {
+    this._userApiService.getDepartaments().subscribe({
+      next : (response) => {
+        this.departments = response;
+      },
+      error: (error) => {
+        console.error('Ошибка при получении отделов:', error);
+      }
+    })
+  }
+
   close() {
     this._dialogRef.close();
   }
-  onClickCreateUser() {
-    if (this.form.valid) {
-      const formData = {
-        ...this.form.value,
-        // creatorId: this.creatorId,
-        firstName: this.form.value.firstName || '',
-        lastName: this.form.value.lastName || '',
-        birthDate: this.form.value.birthDate instanceof Date && !isNaN(this.form.value.birthDate.getTime()) 
-          ? this.form.value.birthDate.toISOString() 
-          : new Date().toISOString(),  
-        department: this.form.value.department || '',
-        login: this.form.value.login || '',
-        email: this.form.value.email || '',
-        password: this.form.value.password || '',
-        telegramId: this.form.value.telegramId || '',
-        roleId: this.form.value.roleId!,
-      };
-      console.log('Отправка данных на сервер:', formData);
-      this._userApiService.createUser(formData).subscribe({
-        next: (response) => {
-          console.log('Ответ от сервера:', response);
-        },
-        error: (error) => {
-          console.error('Ошибка при создании пользователя:', error);
-        },
-      });
-    }
-  }
-  
 }

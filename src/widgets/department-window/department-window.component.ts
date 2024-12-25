@@ -6,7 +6,6 @@ import { EventEmitter } from '@angular/core';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
-import { NgFor, NgIf } from '@angular/common';
 
 @Component({
   selector: 'app-department-window',
@@ -17,15 +16,13 @@ import { NgFor, NgIf } from '@angular/common';
     MatFormFieldModule,
     MatInputModule,
     MatSelectModule,
-    NgFor,
-    NgIf,
   ],
   templateUrl: './department-window.component.html',
   styleUrl: './department-window.component.scss',
 })
 export class DepartmentWindowComponent {
   @Output() department = new EventEmitter<any>();
-  private creatorId: string = 'd52c32d6-0b2b-46e8-b16f-386fdd20d47d';
+  private creatorId: string = 'b973f509-6ed5-4e9d-92b1-dc8b4e320cbf';
   constructor(
     private _dialogRef: MatDialogRef<DepartmentWindowComponent>,
     private _userApiService: UserApiService
@@ -37,8 +34,7 @@ export class DepartmentWindowComponent {
       nonNullable: true,
       validators: [Validators.required],
     }),
-    description: new FormControl<string>('',{
-      nonNullable: true,
+    description: new FormControl<string | null>(null,{
       validators: [Validators.required],
     })
   })
@@ -68,6 +64,7 @@ export class DepartmentWindowComponent {
       this._userApiService.createDepartment(FormData).subscribe({
         next: (response) => {
           console.log('Ответ от сервера:', response);
+          this.onClickClose()
         },
         error: (error) => {
           console.error('Ошибка при создании отдела:', error);

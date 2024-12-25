@@ -6,7 +6,9 @@ import {
   ICreateUser,
   IGetRole,
   IGetUser,
+  IUpdateUser,
   IUser,
+  IUserDepartment,
   IUserRoles,
   TResGetDepartment,
   TResGetRoles,
@@ -43,6 +45,7 @@ export class UserApiService {
     );
   }
 
+
   createUser(body: ICreateUser): Observable<ICreateUser> {
     return this._http.post<ICreateUser>(
       `${this._baseURL}user/create-user`,
@@ -61,8 +64,8 @@ export class UserApiService {
     );
   }
 
-  updateUser(body: IUser): Observable<IGetUser> {
-    return this._http.post<IGetUser>(`${this._baseURL}user/update`, body);
+  updateUser(body: IUpdateUser): Observable<IUpdateUser> {
+    return this._http.put<IUpdateUser>(`${this._baseURL}user/update`, body);
   }
 
   updateRole(body: IGetRole): Observable<IGetRole> {
@@ -78,5 +81,11 @@ export class UserApiService {
 
   getUserRoles(): Observable<IUserRoles[]> {
     return this._http.get<IUserRoles[]>(`${this._baseURL}user/user-roles`);
+  }
+
+  getDepartaments(): Observable<IUserDepartment[]> {
+    return this._http.get<IUserDepartment[]>(
+      `${this._baseURL}user/user-departaments`
+    )
   }
 }

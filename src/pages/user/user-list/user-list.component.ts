@@ -66,7 +66,16 @@ export class UserListComponent {
   }
 
   editUser(user: IUser): void {
-    this._router.navigate([`/user-panel/${ERouteConstans.USER_PAGE.replace(':id', user.id)}`]);
+    const dialogRef = this._dialog.open(UserWindowComponent, {
+      data: user, 
+    });
+  
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result) {
+        console.log('Обновлен пользователь:', result);
+        this._page$.next(this._page$.value); 
+      }
+    });
   }
 
   deleteUser(user: IUser): void {
