@@ -33,11 +33,25 @@
       </mat-form-field>
 
       <mat-form-field appearance="fill">
-        <mat-label>Отдел</mat-label>
-        <input matInput formControlName="department" />
-        @if(form.controls.department.invalid &&
-        form.controls.department.touched){
-        <mat-error> Отдел обязателен </mat-error>
+        <mat-label>Проффессии</mat-label>
+        <mat-select formControlName="departments" multiple>
+          <mat-option *ngFor="let department of departments" [value]="department.id">
+            {{ department.name }}
+          </mat-option>
+        </mat-select>
+        <mat-error
+          *ngIf="form.controls.departments.invalid && form.controls.departments.touched"
+        >
+          Необходимо выбрать хотя бы один отдел
+        </mat-error>
+      </mat-form-field>
+      
+
+      <mat-form-field appearance="fill">
+        <mat-label>Телеграм Id</mat-label>
+        <input matInput formControlName="telegramId" />
+        @if (form.controls.telegramId.invalid) {
+        <mat-error> Телеграм id обязателен</mat-error>
         }
       </mat-form-field>
     </div>
@@ -79,10 +93,29 @@
       </mat-error>
       }
     </mat-form-field>
+    <mat-form-field appearance="fill">
+      <mat-label>Роль</mat-label>
+      <mat-select formControlName="roleId">
+        <mat-option *ngFor="let role of roles" [value]="role.id">{{
+          role.name
+        }}</mat-option>
+      </mat-select>
+      <mat-error
+        *ngIf="form.controls.roleId.invalid && form.controls.roleId.touched"
+      >
+        Роль обязательна
+      </mat-error>
+    </mat-form-field>
 
     <div class="actions">
-      <button mat-raised-button color="primary" type="submit">Сохранить</button>
-      <button mat-button color="warn" (click)="close()">Отмена</button>
+      @if(!data?.id){
+      <button mat-raised-button color="primary" type="submit">Создать</button>
+      } @if(data?.id){
+      <button mat-raised-button color="primary" type="submit">Обновить</button>
+      }
+      <button mat-button color="warn" type="button" (click)="close()">
+        Отмена
+      </button>
     </div>
   </form>
 </div>

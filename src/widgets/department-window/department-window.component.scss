@@ -1,0 +1,112 @@
+$color-primary: #b09e86;
+$color-secondary: #b6cb6a;
+$color-accent: #b7c36c;
+$color-highlight: #8db662;
+$color-background: #d6e5d5;
+
+.modal-content {
+  background-color: $color-background;
+  padding: 20px 30px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
+  border: 2px solid $color-primary;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+
+  .modal-header {
+    font-size: 24px;
+    font-weight: 700;
+    color: $color-primary;
+    text-align: center;
+    margin-bottom: 16px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid $color-primary;
+  }
+
+  .department-form {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+
+    mat-form-field {
+      width: 100%;
+
+      mat-label {
+        color: $color-primary;
+        font-size: 16px;
+        font-weight: 500;
+      }
+
+      input,
+      textarea {
+        font-size: 16px;
+        color: #333;
+      }
+
+      mat-error {
+        color: $color-highlight;
+        font-size: 14px;
+        font-weight: 500;
+      }
+    }
+  }
+}
+
+.modal-actions {
+  display: flex;
+  justify-content: space-between;
+  padding-top: 16px;
+
+  .cancel-button {
+    padding-left: 25px;
+    padding-bottom: 15px;
+    background-color: $color-primary;
+    color: white;
+    border-radius: 8px;
+    padding: 8px 20px;
+    font-size: 14px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+
+    &:hover {
+      background-color: $color-highlight;
+      transform: translateY(-2px);
+      box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+    }
+
+    &:active {
+      transform: translateY(2px);
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    }
+  }
+
+  .create-button {
+    background-color: $color-secondary;
+    color: white;
+    border-radius: 8px;
+    padding: 8px 20px;
+    font-size: 14px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+
+    &:hover {
+      background-color: $color-accent;
+      transform: translateY(-2px);
+      box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+    }
+
+    &:active {
+      transform: translateY(2px);
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    }
+
+    &:disabled {
+      background-color: lighten($color-secondary, 20%);
+      color: darken(white, 20%);
+      cursor: not-allowed;
+      box-shadow: none;
+    }
+  }
+}

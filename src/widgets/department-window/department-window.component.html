@@ -1,0 +1,44 @@
+<div mat-dialog-content class="modal-content">
+  <div class="modal-header">
+    Создать/Редактировать профессию
+  </div>
+  <form [formGroup]="form" class="department-form">
+    <mat-form-field appearance="fill" class="full-width">
+      <mat-label>Название профессии</mat-label>
+      <input
+        matInput
+        formControlName="name"
+        placeholder="Введите название профессии"
+      />
+      @if(form.controls.name.hasError('required')){
+      <mat-error> Название обязательно </mat-error>
+      }
+    </mat-form-field>
+
+    <mat-form-field appearance="fill" class="full-width">
+      <mat-label>Описание профессии</mat-label>
+      <textarea
+        matInput
+        formControlName="description"
+        placeholder="Введите описание профессии"
+      ></textarea>
+      @if(form.controls.description.hasError('required')){
+      <mat-error> Описание обязательно </mat-error>
+      }
+    </mat-form-field>
+  </form>
+</div>
+
+<div mat-dialog-actions align="end" class="modal-actions">
+  <button mat-button class="cancel-button" (click)="onClickClose()">
+    Отмена
+  </button>
+  <button
+    mat-raised-button
+    class="create-button"
+    (click)="onClickCreateDepartment()"
+    [disabled]="form.invalid"
+  >
+    Создать
+  </button>
+</div>

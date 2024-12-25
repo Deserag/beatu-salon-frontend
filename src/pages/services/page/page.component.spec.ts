@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { UserRoleComponent } from './user-role.component';
+import { PageComponent } from './page.component';
 
-describe('UserRoleComponent', () => {
-  let component: UserRoleComponent;
-  let fixture: ComponentFixture<UserRoleComponent>;
+describe('PageComponent', () => {
+  let component: PageComponent;
+  let fixture: ComponentFixture<PageComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [UserRoleComponent]
+      imports: [PageComponent]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(UserRoleComponent);
+    fixture = TestBed.createComponent(PageComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
