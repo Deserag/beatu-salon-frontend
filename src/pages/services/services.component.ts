@@ -7,8 +7,8 @@ import { ERouteConstans } from '@routes';
   standalone: true,
   imports: [RouterLink, RouterOutlet],
   templateUrl: './services.component.html',
-  styleUrl: './services.component.scss'
+  styleUrl: './services.component.scss',
 })
 export class ServicesComponent {
-protected readonly ERoutesConstans = ERouteConstans;
+  protected readonly ERoutesConstans = ERouteConstans;
 }
