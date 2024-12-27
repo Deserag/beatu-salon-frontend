@@ -1,0 +1,118 @@
+$color-primary: #b09e86;
+$color-secondary: #b6cb6a;
+$color-accent: #b7c36c;
+$color-light: #8db662;
+$color-background: #d6e5d5;
+$color-button-bg: $color-light; // Цвет фона для кнопок
+$color-button-hover: $color-secondary; // Цвет кнопки при наведении
+$color-button-active: $color-accent; // Цвет кнопки при нажатии
+
+.content {
+  padding: 20px;
+  background-color: $color-background;
+  border-radius: 8px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}
+
+.mat-table {
+  width: 100%;
+  background-color: $color-background;
+  border-radius: 8px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+
+  .mat-header-cell {
+    background-color: $color-primary;
+    color: white;
+    font-weight: bold;
+    padding: 12px 16px;
+    text-transform: uppercase;
+  }
+
+  .mat-cell {
+    padding: 12px 16px;
+    font-size: 14px;
+    color: $color-primary;
+  }
+
+  .mat-sort-header-sorted {
+    color: $color-secondary !important; // Цвет для сортировки
+  }
+
+  .mat-sort-header {
+    cursor: pointer;
+    &:hover {
+      color: $color-secondary;
+    }
+  }
+
+  .mat-row {
+    transition: background-color 0.3s ease;
+    &:hover {
+      background-color: $color-light;
+    }
+  }
+}
+
+.mat-paginator {
+  margin-top: 20px;
+  .mat-paginator-range-actions {
+    font-size: 14px;
+    color: $color-primary;
+  }
+  .mat-paginator-button {
+    background-color: $color-primary;
+    color: white;
+    border-radius: 8px;
+    padding: 8px 12px;
+    &:hover {
+      background-color: $color-secondary;
+    }
+    &:active {
+      background-color: $color-accent;
+    }
+  }
+}
+
+.table-footer {
+  margin-top: 10px;
+  display: flex;
+  justify-content: flex-end;
+
+  button {
+    background-color: $color-button-bg;
+    color: white;
+    padding: 12px 20px;
+    font-size: 16px;
+    font-weight: 600;
+    border-radius: 30px;
+    border: none;
+    cursor: pointer;
+    transition: all 0.3s ease;
+
+    &:hover {
+      background-color: $color-button-hover;
+      transform: scale(1.05);
+    }
+
+    &:active {
+      background-color: $color-button-active;
+      transform: scale(0.98);
+    }
+  }
+}
+
+mat-header-cell,
+mat-cell,
+mat-paginator {
+  font-family: 'Arial', sans-serif;
+  text-align: left;
+}
+
+mat-header-row {
+  background-color: $color-primary;
+  border-radius: 8px;
+}
+
+mat-row {
+  background-color: $color-background;
+}

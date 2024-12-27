@@ -1,0 +1,17 @@
+.service-form {
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+    max-width: 600px;
+    margin: 0 auto;
+  
+    mat-form-field {
+      margin-bottom: 15px;
+    }
+  
+    button {
+      align-self: flex-start;
+      margin-top: 20px;
+    }
+  }
+  
