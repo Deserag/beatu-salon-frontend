@@ -17,7 +17,7 @@
       <th mat-header-cell *matHeaderCellDef>Действия</th>
       <td mat-cell *matCellDef="let service">
         <div class="table-footer">
-          <button mat-button (click)="onClickEditService(service)">
+          <button mat-button [routerLink]="['/', ERoutesConstans.SERVICES_PANEL, ERoutesConstans.SERVICE_PAGE]">
             Редактировать
           </button>
           <button

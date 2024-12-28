@@ -1,0 +1,57 @@
+<div class="service-form">
+  <h2>{{ id ? 'Обновить услугу' : 'Создать услугу' }}</h2>
+
+  <form [formGroup]="serviceForm" (ngSubmit)="onSubmit()">
+    <div class="form-row">
+      <div class="form-group">
+        <label for="name">Название услуги</label>
+        <input type="text" id="name" formControlName="name" placeholder="Введите название услуги">
+        <div class="error" *ngIf="serviceForm.get('name')?.hasError('required') && serviceForm.get('name')?.touched">
+          Название обязательно.
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="price">Цена</label>
+        <input type="number" id="price" formControlName="price" placeholder="Введите цену">
+        <div class="error" *ngIf="serviceForm.get('price')?.hasError('required') && serviceForm.get('price')?.touched">
+          Цена обязательна.
+        </div>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="description">Описание</label>
+      <textarea id="description" formControlName="description" placeholder="Введите описание"></textarea>
+      <div class="error" *ngIf="serviceForm.get('description')?.hasError('required') && serviceForm.get('description')?.touched">
+        Описание обязательно.
+      </div>
+    </div>
+
+    <div class="form-row">
+      <div class="form-group select-group">
+        <label for="employees">Назначить сотрудников</label>
+        <select id="employees" formControlName="employees" multiple>
+          <option *ngFor="let employee of employees" [value]="employee">{{ employee }}</option>
+        </select>
+        <div class="error" *ngIf="serviceForm.get('employees')?.hasError('required') && serviceForm.get('employees')?.touched">
+          Пожалуйста, выберите хотя бы одного сотрудника.
+        </div>
+      </div>
+
+      <div class="form-group select-group">
+        <label for="roles">Выберите роли</label>
+        <select id="roles" formControlName="roles" multiple>
+          <option *ngFor="let role of roles" [value]="role">{{ role }}</option>
+        </select>
+        <div class="error" *ngIf="serviceForm.get('roles')?.hasError('required') && serviceForm.get('roles')?.touched">
+          Пожалуйста, выберите хотя бы одну роль.
+        </div>
+      </div>
+    </div>
+
+    <button type="submit" [disabled]="!serviceForm.valid">
+      {{ id ? 'Обновить услугу' : 'Создать услугу' }}
+    </button>
+  </form>
+</div>

@@ -4,7 +4,7 @@ export interface IServices {
     id: string;
     name: string;
     description: string;
-    price: string;
+    price: number;
     creatorId: string;
 }
 

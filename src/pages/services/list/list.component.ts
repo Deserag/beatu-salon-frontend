@@ -20,14 +20,20 @@ import { ServiceWindowComponent } from 'src/widgets/services';
 @Component({
   selector: 'app-list',
   standalone: true,
-  imports: [MatTableModule, MatPaginatorModule, MatSortModule, AsyncPipe],
+  imports: [
+    MatTableModule,
+    MatPaginatorModule,
+    MatSortModule,
+    AsyncPipe,
+    RouterLink,
+  ],
   templateUrl: './list.component.html',
   styleUrl: './list.component.scss',
 })
 export class ListComponent {
   protected readonly ERoutesConstans = ERouteConstans;
   displayedColumns: string[] = ['Name', 'Price', 'Symbol'];
-  dataSource$ = new BehaviorSubject<IProducts[]>([]);
+  dataSource$ = new BehaviorSubject<IServices[]>([]);
   totalCount$ = new BehaviorSubject<number>(0);
   private _page$ = new BehaviorSubject<number>(1);
   private _pageSize$ = new BehaviorSubject<number>(10);
@@ -40,11 +46,11 @@ export class ListComponent {
       .pipe(
         combineLatestWith(this._pageSize$),
         switchMap(([page, pageSize]) =>
-          this._serviceApiService.getProduct({ page, pageSize })
+          this._serviceApiService.getService({ page, pageSize })
         ),
         takeUntilDestroyed(this._destroyRef)
       )
-      .subscribe((response: TresGetProduct) => {
+      .subscribe((response: TResGetService) => {
         this.dataSource$.next(response.rows);
       });
 
@@ -60,16 +66,13 @@ export class ListComponent {
     this._pageSize$.next(event.pageSize);
     this._page$.next(event.pageIndex + 1);
   }
+
   onClickCreateService(): void {
-    this.router.navigate([
-      this.ERoutesConstans.SERVICES_PANEL,
-      this.ERoutesConstans.SERVICE_PAGE,
-    ]);
+    const dialogRef = this._dialog.open(ServiceWindowComponent);
+    dialogRef.componentInstance.service.subscribe((newService: IServices) => {
+      console.log('Создан пользователь:', newService);
+      this._page$.next(this._page$.value);
+    });
   }
-
-  onClickEditService(service: IServices) {
-    this.router.navigate(['./', service.id]); 
-  }
-
   onClickDeleteService(service: IServices) {}
 }

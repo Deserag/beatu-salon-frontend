@@ -27,7 +27,7 @@ export enum ERouteConstans {
     //Пути для услуг
     SERVICES_PANEL = 'services-panel',
     SERVICE_LIST = 'list',
-    SERVICE_PAGE =  'detail/:id',
+    SERVICE_PAGE =  'detail',
     SERVICE_PRODUCT = 'product',
     SERVICE_PRODUCT_SALE = 'product-sale',
 
