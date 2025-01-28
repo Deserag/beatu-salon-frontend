@@ -20,13 +20,7 @@ import { ServiceWindowComponent } from 'src/widgets/services';
 @Component({
   selector: 'app-list',
   standalone: true,
-  imports: [
-    MatTableModule,
-    MatPaginatorModule,
-    MatSortModule,
-    AsyncPipe,
-    RouterLink,
-  ],
+  imports: [MatTableModule, MatPaginatorModule, MatSortModule, AsyncPipe],
   templateUrl: './list.component.html',
   styleUrl: './list.component.scss',
 })
@@ -65,6 +59,15 @@ export class ListComponent {
   onPageChange(event: PageEvent): void {
     this._pageSize$.next(event.pageSize);
     this._page$.next(event.pageIndex + 1);
+  }
+
+  onCliCkEditService(service: IServices): void {
+    this.router.navigate(
+      [ERouteConstans.SERVICES_PANEL, ERouteConstans.SERVICE_PAGE],
+      {
+        state: { id: service.id },
+      }
+    );
   }
 
   onClickCreateService(): void {

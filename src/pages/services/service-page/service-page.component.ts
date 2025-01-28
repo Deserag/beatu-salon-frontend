@@ -1,25 +1,31 @@
-import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
-import { MatSelectChange, MatSelectModule } from '@angular/material/select';  // Импортируем для работы с мультивыбором
-
-import { IServices, IGetService, IUpdateService, ServicesApiService } from '@entity';
-import { FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import { Component } from '@angular/core';
+import { Router } from '@angular/router';
+import { IServices, IUpdateService, ServicesApiService } from '@entity';
+import {
+  FormBuilder,
+  FormGroup,
+  Validators,
+  ReactiveFormsModule,
+  FormsModule,
+} from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
+import { MatSelectModule } from '@angular/material/select';
 import { NgFor, NgIf } from '@angular/common';
+import { ERouteConstans } from '@routes';
 
 @Component({
   selector: 'app-page',
   standalone: true,
   imports: [
-      ReactiveFormsModule,
-      FormsModule,
-      MatFormFieldModule,
-      MatInputModule,
-      MatSelectModule,
-      NgIf,
-      NgFor,
-    ],
+    ReactiveFormsModule,
+    FormsModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatSelectModule,
+    NgIf,
+    NgFor,
+  ],
   templateUrl: './page.component.html',
   styleUrls: ['./page.component.scss'],
 })
@@ -27,26 +33,36 @@ export class ServicePageComponent {
   serviceForm: FormGroup;
   roles = ['Admin', 'Manager', 'Stylist'];
   employees = ['Employee 1', 'Employee 2', 'Employee 3'];
-  id: string | null = null;
-
+  id: string;
+  private creatorId: string = 'd52c32d6-0b2b-46e8-b16f-386fdd20d47d';
   constructor(
-    private _route: ActivatedRoute,
     private _router: Router,
     private _fb: FormBuilder,
     private _servicesApi: ServicesApiService
   ) {
+    const state = this._router.getCurrentNavigation()?.extras.state;
+
+    if (!state || !state['id']) {
+      this._router.navigate(['/']);
+      console.log('Ошибка');
+      throw new Error('ID отсутствует');
+    } else {
+      console.log(state['id']);
+    }
+
+    this.id = state['id'];
+    console.log(this.id);
+
     this.serviceForm = this._fb.group({
+      creatorId: this.creatorId,
       name: ['', Validators.required],
       description: ['', Validators.required],
       price: ['', Validators.required],
-      employees: [[], Validators.required],
-      roles: [[], Validators.required]
+      // employees: [[], Validators.required],
+      // roles: [[], Validators.required],
     });
 
-    this._route.paramMap.subscribe((params) => {
-      this.id = params.get('id');
-      if (this.id) this.loadService(this.id);
-    });
+    this.loadService(this.id);
   }
 
   loadService(id: string): void {
@@ -57,9 +73,13 @@ export class ServicePageComponent {
 
   onSubmit(): void {
     if (this.serviceForm.valid) {
-      const updatedService = { ...this.serviceForm.value, id: this.id };
+      const updatedService = {
+        ...this.serviceForm.value,
+        id: this.id, // id будет обновляться с текущим значением
+      };
+
       this._servicesApi.updateService(updatedService).subscribe(() => {
-        this._router.navigate(['/']);
+        this._router.navigate([ERouteConstans.SERVICES_PANEL]);
       });
     }
   }
