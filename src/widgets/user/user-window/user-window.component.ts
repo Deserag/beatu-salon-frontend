@@ -51,7 +51,7 @@ export class UserWindowComponent {
     lastName: new FormControl<string>('', Validators.required),
     middleName: new FormControl<string>(''),
     birthDate: new FormControl<Date | null>(null, Validators.required),
-    departments: new FormControl<string[]>([], Validators.required),
+    // departments: new FormControl<string[]>([], Validators.required),
     login: new FormControl<string>('', Validators.required),
     email: new FormControl<string>('', [Validators.required, Validators.email]),
     password: new FormControl<string | null>(null, [
@@ -61,7 +61,7 @@ export class UserWindowComponent {
       ),
     ]),
     telegramId: new FormControl<string>('', Validators.required),
-    roleId: new FormControl<string>('', Validators.required),
+    // roleId: new FormControl<string>('', Validators.required),
   });
 
   initializeForm(user: IUser) {
@@ -71,11 +71,11 @@ export class UserWindowComponent {
       lastName: user.lastName,
       middleName: user.middleName,
       birthDate: new Date(user.birthDate),
-      departments: user.departments,
+      // departments: user.departments,
       login: user.login,
       email: user.email,
       telegramId: user.telegramId,
-      roleId: user.roleId,
+      // roleId: user.roleId,
     });
     this.form.controls.password.setValidators(null); 
   }

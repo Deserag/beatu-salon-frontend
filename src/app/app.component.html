@@ -1,1 +1,99 @@
-<router-outlet></router-outlet>
+<mat-sidenav-container class="sidenav-container">
+  <mat-sidenav #drawer class="sidenav" mode="side">
+    <mat-toolbar>
+      <span>DORM CRM</span>
+    </mat-toolbar>
+    <mat-nav-list>
+      <a mat-list-item routerLink="/">Главная</a>
+      <a mat-list-item routerLink="/clients">Клиенты</a>
+      <a mat-list-item routerLink="/appointments">Записи</a>
+      <a mat-list-item routerLink="/services">Услуги</a>
+      <a mat-list-item routerLink="/employees">Персонал</a>
+      <a mat-list-item routerLink="/reports">Отчеты</a>
+      <a mat-list-item routerLink="/settings">Настройки</a>
+      <mat-divider></mat-divider>
+      <div class="user-info">
+        <span>{{ userName }}</span>
+        <button mat-button (click)="logout()">Выход</button>
+      </div>
+    </mat-nav-list>
+  </mat-sidenav>
+
+  <mat-sidenav-content>
+    <button mat-icon-button (click)="drawer.toggle()">
+      <mat-icon>menu</mat-icon>
+    </button>
+    <div class="content">
+      <div class="dashboard-widgets">
+        <mat-card>
+          <mat-card-title>Клиентов</mat-card-title>
+          <mat-card-content>{{ clientsCount }}</mat-card-content>
+        </mat-card>
+        <mat-card>
+          <mat-card-title>Записи сегодня</mat-card-title>
+          <mat-card-content>{{ appointments.length }}</mat-card-content>
+        </mat-card>
+        <mat-card>
+          <mat-card-title>Выручка</mat-card-title>
+          <mat-card-content>{{ revenue }} P</mat-card-content>
+        </mat-card>
+        <mat-card>
+          <mat-card-title>Новые клиенты</mat-card-title>
+          <mat-card-content>{{ newClientsCount }}</mat-card-content>
+        </mat-card>
+        <mat-card>
+          <mat-card-title>Средний чек</mat-card-title>
+          <mat-card-content>{{ averageCheck }} P</mat-card-content>
+        </mat-card>
+      </div>
+
+      <div class="widget-container">
+        <div class="appointments-widget">
+          <mat-card>
+            <mat-card-title>Ближайшие записи</mat-card-title>
+            <mat-card-content>
+              <mat-list>
+                <mat-list-item *ngFor="let appointment of appointments">
+                  <span>{{ appointment.time }}</span>
+                  <span>{{ appointment.clientName }}</span>
+                  <span>{{ appointment.service }}</span>
+                  <span>{{ appointment.master }}</span>
+                </mat-list-item>
+              </mat-list>
+            </mat-card-content>
+          </mat-card>
+        </div>
+
+        <div class="employees-widget">
+          <mat-card>
+            <mat-card-title>Сотрудники</mat-card-title>
+            <mat-card-content>
+              <mat-list>
+                <mat-list-item *ngFor="let employee of employees">
+                  <span>{{ employee.name }}</span>
+                  <span>{{ employee.appointmentsCount }}</span>
+                  <span>{{ employee.rating }}</span>
+                </mat-list-item>
+              </mat-list>
+            </mat-card-content>
+          </mat-card>
+        </div>
+
+        <div class="reviews-widget">
+          <mat-card>
+            <mat-card-title>Отзывы</mat-card-title>
+            <mat-card-content>
+              <mat-list>
+                <mat-list-item *ngFor="let review of reviews">
+                  <span>{{ review.clientName }}</span>
+                  <span>{{ review.text }}</span>
+                  <span>{{ review.rating }}</span>
+                </mat-list-item>
+              </mat-list>
+            </mat-card-content>
+          </mat-card>
+        </div>
+      </div>
+    </div>
+  </mat-sidenav-content>
+</mat-sidenav-container>
