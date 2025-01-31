@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { RouterLink, RouterOutlet } from '@angular/router';
@@ -7,6 +7,8 @@ import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatListModule } from '@angular/material/list';
 import { MatIconModule } from '@angular/material/icon';
+import { ERouteConstans } from '@routes';
+import { AuthService } from '@entity';
 interface Appointment {
   time: string;
   clientName: string;
@@ -41,12 +43,19 @@ interface Review {
     MatCardModule,    
     MatListModule,    
     MatIconModule,     
-    MatButtonModule   
+    MatButtonModule,
+    RouterLink 
   ],
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent {
+  protected readonly ERoutesConstans = ERouteConstans;
+    readonly #authService = inject(AuthService);
+    protected onClickLogOut(): void{
+      this. #authService.logout();
+    }
+  
   userName = 'Имя пользователя';
   appointments: Appointment[] = [ /* ... */ ]; // Оставим appointments как есть
   clientsCount = 125;
@@ -68,6 +77,12 @@ export class AppComponent {
     { clientName: 'Виктория', text: 'Ирина - настоящий художник! Моя новая стрижка просто потрясающая.', rating: 5 },
   ];
 
+  // Переменные для раскрывающихся виджетов
+  appointmentsExpanded = false;
+  employeesExpanded = false;
+  reviewsExpanded = false;
+
+
   logout() {
     console.log('Выход из системы');
   }
@@ -75,6 +90,4 @@ export class AppComponent {
   openAppointmentModal() {
     console.log('Открыть модальное окно');
   }
-
-  
 }

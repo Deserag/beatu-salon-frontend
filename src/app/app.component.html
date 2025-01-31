@@ -4,14 +4,12 @@
       <span>DORM CRM</span>
     </mat-toolbar>
     <mat-nav-list>
-      <a mat-list-item routerLink="/">Главная</a>
-      <a mat-list-item routerLink="/clients">Клиенты</a>
-      <a mat-list-item routerLink="/appointments">Записи</a>
-      <a mat-list-item routerLink="/services">Услуги</a>
-      <a mat-list-item routerLink="/employees">Персонал</a>
-      <a mat-list-item routerLink="/reports">Отчеты</a>
-      <a mat-list-item routerLink="/settings">Настройки</a>
-      <mat-divider></mat-divider>
+      <a mat-list-item routerLink="/">Главная</a>  <a mat-list-item [routerLink]="['/', ERoutesConstans.USER_PANEL]">Персонал</a>
+      <a mat-list-item [routerLink]="['/', ERoutesConstans.CLIENT_PANEL]">Клиенты</a>
+      <a mat-list-item [routerLink]="['/', ERoutesConstans.OFFICE_PANEL]">Офисы</a>
+      <a mat-list-item [routerLink]="['/', ERoutesConstans.SERVICES_PANEL]">Услуги</a>
+      <a mat-list-item [routerLink]="['/', ERoutesConstans.ADMIN_PANEL]">Статистика</a>
+      <a mat-list-item routerLink="/appointments">Записи</a> <a mat-list-item routerLink="/reports">Отчеты</a> <a mat-list-item routerLink="/settings">Настройки</a> <mat-divider></mat-divider>
       <div class="user-info">
         <span>{{ userName }}</span>
         <button mat-button (click)="logout()">Выход</button>
@@ -25,71 +23,98 @@
     </button>
     <div class="content">
       <div class="dashboard-widgets">
-        <mat-card>
-          <mat-card-title>Клиентов</mat-card-title>
-          <mat-card-content>{{ clientsCount }}</mat-card-content>
-        </mat-card>
-        <mat-card>
-          <mat-card-title>Записи сегодня</mat-card-title>
-          <mat-card-content>{{ appointments.length }}</mat-card-content>
-        </mat-card>
-        <mat-card>
-          <mat-card-title>Выручка</mat-card-title>
-          <mat-card-content>{{ revenue }} P</mat-card-content>
-        </mat-card>
-        <mat-card>
-          <mat-card-title>Новые клиенты</mat-card-title>
-          <mat-card-content>{{ newClientsCount }}</mat-card-content>
-        </mat-card>
-        <mat-card>
-          <mat-card-title>Средний чек</mat-card-title>
-          <mat-card-content>{{ averageCheck }} P</mat-card-content>
-        </mat-card>
+        <div class="widget-row">
+          <mat-card>
+            <mat-card-title>Клиентов</mat-card-title>
+            <mat-card-content>{{ clientsCount }}</mat-card-content>
+          </mat-card>
+          <mat-card>
+            <mat-card-title>Записи сегодня</mat-card-title>
+            <mat-card-content>{{ appointments.length }}</mat-card-content>
+          </mat-card>
+        </div>
+        <div class="widget-row">
+          <mat-card>
+            <mat-card-title>Выручка</mat-card-title>
+            <mat-card-content>{{ revenue }} P</mat-card-content>
+          </mat-card>
+          <mat-card>
+            <mat-card-title>Новые клиенты</mat-card-title>
+            <mat-card-content>{{ newClientsCount }}</mat-card-content>
+          </mat-card>
+        </div>
+        <div class="widget-row">
+          <mat-card>
+            <mat-card-title>Средний чек</mat-card-title>
+            <mat-card-content>{{ averageCheck }} P</mat-card-content>
+          </mat-card>
+        </div>
       </div>
 
       <div class="widget-container">
-        <div class="appointments-widget">
+        <div class="expandable-widget">
           <mat-card>
-            <mat-card-title>Ближайшие записи</mat-card-title>
-            <mat-card-content>
+            <mat-card-title (click)="appointmentsExpanded = !appointmentsExpanded">
+              Ближайшие записи
+              <mat-icon>{{ appointmentsExpanded ? 'expand_less' : 'expand_more' }}</mat-icon>
+            </mat-card-title>
+            <mat-card-content *ngIf="appointmentsExpanded">
               <mat-list>
-                <mat-list-item *ngFor="let appointment of appointments">
-                  <span>{{ appointment.time }}</span>
-                  <span>{{ appointment.clientName }}</span>
-                  <span>{{ appointment.service }}</span>
-                  <span>{{ appointment.master }}</span>
+                <mat-list-item *ngFor="let appointment of appointments; let i = index">
+                  <ng-container *ngIf="i < 10">
+                    <span>{{ appointment.time }}</span>
+                    <span>{{ appointment.clientName }}</span>
+                    <span>{{ appointment.service }}</span>
+                    <span>{{ appointment.master }}</span>
+                  </ng-container>
                 </mat-list-item>
               </mat-list>
+              <span *ngIf="appointments.length > 10">...</span>
+              <a href="#">Просмотреть все</a>
             </mat-card-content>
           </mat-card>
         </div>
 
-        <div class="employees-widget">
+        <div class="expandable-widget">
           <mat-card>
-            <mat-card-title>Сотрудники</mat-card-title>
-            <mat-card-content>
+            <mat-card-title (click)="employeesExpanded = !employeesExpanded">
+              Сотрудники
+              <mat-icon>{{ employeesExpanded ? 'expand_less' : 'expand_more' }}</mat-icon>
+            </mat-card-title>
+            <mat-card-content *ngIf="employeesExpanded">
               <mat-list>
-                <mat-list-item *ngFor="let employee of employees">
-                  <span>{{ employee.name }}</span>
-                  <span>{{ employee.appointmentsCount }}</span>
-                  <span>{{ employee.rating }}</span>
+                <mat-list-item *ngFor="let employee of employees; let i = index">
+                  <ng-container *ngIf="i < 10">
+                    <span>{{ employee.name }}</span>
+                    <span>{{ employee.appointmentsCount }}</span>
+                    <span>{{ employee.rating }}</span>
+                  </ng-container>
                 </mat-list-item>
               </mat-list>
+              <span *ngIf="employees.length > 10">...</span>
+              <a href="#">Просмотреть все</a>
             </mat-card-content>
           </mat-card>
         </div>
 
-        <div class="reviews-widget">
+        <div class="expandable-widget">
           <mat-card>
-            <mat-card-title>Отзывы</mat-card-title>
-            <mat-card-content>
+            <mat-card-title (click)="reviewsExpanded = !reviewsExpanded">
+              Отзывы
+              <mat-icon>{{ reviewsExpanded ? 'expand_less' : 'expand_more' }}</mat-icon>
+            </mat-card-title>
+            <mat-card-content *ngIf="reviewsExpanded">
               <mat-list>
-                <mat-list-item *ngFor="let review of reviews">
-                  <span>{{ review.clientName }}</span>
-                  <span>{{ review.text }}</span>
-                  <span>{{ review.rating }}</span>
+                <mat-list-item *ngFor="let review of reviews; let i = index">
+                  <ng-container *ngIf="i < 10">
+                    <span>{{ review.clientName }}</span>
+                    <span>{{ review.text }}</span>
+                    <span>{{ review.rating }}</span>
+                  </ng-container>
                 </mat-list-item>
               </mat-list>
+              <span *ngIf="reviews.length > 10">...</span>
+              <a href="#">Просмотреть все</a>
             </mat-card-content>
           </mat-card>
         </div>
