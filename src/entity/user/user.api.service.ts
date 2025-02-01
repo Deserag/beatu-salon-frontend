@@ -45,7 +45,6 @@ export class UserApiService {
     );
   }
 
-
   createUser(body: ICreateUser): Observable<ICreateUser> {
     return this._http.post<ICreateUser>(
       `${this._baseURL}user/create-user`,
@@ -86,6 +85,20 @@ export class UserApiService {
   getDepartaments(): Observable<IUserDepartment[]> {
     return this._http.get<IUserDepartment[]>(
       `${this._baseURL}user/user-departaments`
-    )
+    );
+  }
+
+  deleteRole(roleId: string): Observable<any> {
+    return this._http.delete(`${this._baseURL}user/delete-role/${roleId}`);
+  }
+
+  deleteUser(userId: string): Observable<any> {
+    return this._http.delete(`${this._baseURL}user/delete-user/${userId}`);
+  }
+
+  deleteDepartment(departmentId: string): Observable<any> {
+    return this._http.delete(
+      `${this._baseURL}user/delete-department/${departmentId}`
+    );
   }
 }

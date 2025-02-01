@@ -20,7 +20,14 @@ import { Router } from '@angular/router';
 })
 export class UserListComponent {
   protected readonly ERoutesConstans = ERouteConstans;
-  displayedColumns: string[] = ['firstName', 'lastName', 'email', 'actions'];
+  displayedColumns: string[] = [
+    'firstName',
+    'lastName',
+    'middleName',
+    'birthDate',
+    'email',
+    'actions',
+  ];
   dataSource$ = new BehaviorSubject<IUser[]>([]);
   totalCount$ = new BehaviorSubject<number>(0);
   private _page$ = new BehaviorSubject<number>(1);
@@ -65,13 +72,13 @@ export class UserListComponent {
 
   editUser(user: IUser): void {
     const dialogRef = this._dialog.open(UserWindowComponent, {
-      data: user, 
+      data: user,
     });
-  
+
     dialogRef.afterClosed().subscribe((result) => {
       if (result) {
         console.log('Обновлен пользователь:', result);
-        this._page$.next(this._page$.value); 
+        this._page$.next(this._page$.value);
       }
     });
   }

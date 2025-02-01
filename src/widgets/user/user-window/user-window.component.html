@@ -32,7 +32,7 @@
         }
       </mat-form-field>
 
-      <!-- <mat-form-field appearance="fill">
+      <mat-form-field appearance="fill">
         <mat-label>Проффессии</mat-label>
         <mat-select formControlName="departments" multiple>
           <mat-option *ngFor="let department of departments" [value]="department.id">
@@ -44,7 +44,7 @@
         >
           Необходимо выбрать хотя бы один отдел
         </mat-error>
-      </mat-form-field> -->
+      </mat-form-field>
       
 
       <mat-form-field appearance="fill">
@@ -93,7 +93,7 @@
       </mat-error>
       }
     </mat-form-field>
-    <!-- <mat-form-field appearance="fill">
+    <mat-form-field appearance="fill">
       <mat-label>Роль</mat-label>
       <mat-select formControlName="roleId">
         <mat-option *ngFor="let role of roles" [value]="role.id">{{
@@ -105,7 +105,7 @@
       >
         Роль обязательна
       </mat-error>
-    </mat-form-field> -->
+    </mat-form-field>
 
     <div class="actions">
       @if(!data?.id){

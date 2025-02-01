@@ -1,8 +1,117 @@
-<header>
-    <button [routerLink]="['/', ERoutesConstans.USER_PANEL]" type="button">Сотрудники</button>
-    <button [routerLink]="['/', ERoutesConstans.CLIENT_PANEL]" type="button">Клиенты</button>
-    <button [routerLink]="['/', ERoutesConstans.OFFICE_PANEL]" type="button">Офисы</button>
-    <button [routerLink]="['/', ERoutesConstans.SERVICES_PANEL]" type="button">Услуги</button>
-    <button [routerLink]="['/', ERoutesConstans.ADMIN_PANEL]" type="button">Статистика</button>
-    <button (click)="onClickLogOut()">Выйти</button>
-</header>
+<mat-sidenav-container class="sidenav-container">
+  <mat-sidenav #drawer class="sidenav" mode="side">
+    <mat-toolbar>
+      <span>DORM CRM</span>
+    </mat-toolbar>
+    <mat-nav-list>
+      <a mat-list-item routerLink="/">Главная</a>
+
+      <mat-expansion-panel>
+        <mat-expansion-panel-header>
+          <mat-panel-title>Персонал</mat-panel-title>
+        </mat-expansion-panel-header>
+        <mat-nav-list>
+          <a
+            mat-list-item
+            [routerLink]="[
+              '/',
+              ERoutesConstans.USER_PANEL,
+              ERoutesConstans.USER_LIST
+            ]"
+            >Список пользователей</a
+          >
+          <a
+            mat-list-item
+            [routerLink]="[
+              '/',
+              ERoutesConstans.USER_PANEL,
+              ERoutesConstans.USER_DEPARTMENT
+            ]"
+            >Список направлений</a
+          >
+          <a
+            mat-list-item
+            [routerLink]="[
+              '/',
+              ERoutesConstans.USER_PANEL,
+              ERoutesConstans.USER_ROLE
+            ]"
+            >Список ролей</a
+          >
+        </mat-nav-list>
+      </mat-expansion-panel>
+      <mat-expansion-panel>
+        <mat-expansion-panel-header>
+          <mat-panel-title>Офисы</mat-panel-title>
+        </mat-expansion-panel-header>
+        <mat-nav-list>
+          <a
+            mat-list-item
+            [routerLink]="[
+              '/',
+              ERoutesConstans.OFFICE_PANEL,
+              ERoutesConstans.OFFICE_LIST
+            ]"
+            >Список офисов</a
+          >
+          <a
+            mat-list-item
+            [routerLink]="[
+              '/',
+              ERoutesConstans.OFFICE_PANEL,
+              ERoutesConstans.CABINET_PANEL
+            ]"
+            >Список кабинетов</a
+          >
+          <a
+            mat-list-item
+            [routerLink]="[
+              '/',
+              ERoutesConstans.OFFICE_PANEL,
+              ERoutesConstans.USER_ROLE
+            ]"
+            >Список ролей</a
+          >
+        </mat-nav-list>
+      </mat-expansion-panel>
+      <a mat-list-item [routerLink]="['/', ERoutesConstans.OFFICE_PANEL]"
+        >Клиенты</a
+      >
+      <a mat-list-item [routerLink]="['/', ERoutesConstans.SERVICES_PANEL]"
+        >Услуги</a
+      >
+      <a mat-list-item [routerLink]="['/', ERoutesConstans.ADMIN_PANEL]"
+        >Статистика</a
+      >
+      <a mat-list-item routerLink="/appointments">Записи</a>
+      <a mat-list-item routerLink="/reports">Отчеты</a>
+      <a mat-list-item routerLink="/settings">Настройки</a>
+      <mat-divider></mat-divider>
+      <div class="user-info">
+        <span>{{ userName }}</span>
+        <button mat-button (click)="logout()">Выход</button>
+      </div>
+    </mat-nav-list>
+  </mat-sidenav>
+
+  <mat-sidenav-content>
+    <mat-toolbar color="primary">
+      <button mat-icon-button (click)="drawer.toggle()">
+        <mat-icon>menu</mat-icon>
+      </button>
+      <span>DORM CRM</span> <span class="spacer"></span>
+      <span *ngIf="userName" class="toolbar-user-info">
+        {{ userName }}
+        <button mat-icon-button [matMenuTriggerFor]="userMenu">
+          <mat-icon>account_circle</mat-icon>
+        </button>
+        <mat-menu #userMenu="matMenu">
+          <button mat-menu-item (click)="logout()">Выход</button>
+        </mat-menu>
+      </span>
+    </mat-toolbar>
+    <div class="content">
+      <router-outlet></router-outlet>
+    </div>
+  </mat-sidenav-content>
+</mat-sidenav-container>

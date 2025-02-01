@@ -44,7 +44,7 @@ interface Review {
     MatListModule,    
     MatIconModule,     
     MatButtonModule,
-    RouterLink 
+    RouterOutlet,
   ],
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss']
@@ -57,7 +57,7 @@ export class AppComponent {
     }
   
   userName = 'Имя пользователя';
-  appointments: Appointment[] = [ /* ... */ ]; // Оставим appointments как есть
+  appointments: Appointment[] = [ /* ... */ ]; 
   clientsCount = 125;
   newClientsCount = 25;
   revenue = 18500;
