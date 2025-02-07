@@ -74,12 +74,61 @@
           >
         </mat-nav-list>
       </mat-expansion-panel>
+
+      <!-- <mat-expansion-panel>
+        <mat-expansion-panel-header>
+          <mat-panel-title>Клиенты</mat-panel-title>
+        </mat-expansion-panel-header>
+        <mat-nav-list>
+          <a
+            mat-list-item
+            [routerLink]="[
+              '/',
+              ERoutesConstans.CLIENT_PANEL,
+              ERoutesConstans.CLIENT_LIST
+            ]"
+            >Список клиентов</a
+          >
+
+        </mat-nav-list>
+      </mat-expansion-panel> -->
       <a mat-list-item [routerLink]="['/', ERoutesConstans.OFFICE_PANEL]"
         >Клиенты</a
       >
-      <a mat-list-item [routerLink]="['/', ERoutesConstans.SERVICES_PANEL]"
-        >Услуги</a
-      >
+      <mat-expansion-panel>
+        <mat-expansion-panel-header>
+          <mat-panel-title>Услуги</mat-panel-title>
+        </mat-expansion-panel-header>
+        <mat-nav-list>
+          <a
+            mat-list-item
+            [routerLink]="[
+              '/',
+              ERoutesConstans.SERVICES_PANEL,
+              ERoutesConstans.SERVICE_LIST
+            ]"
+            >Список услуг</a
+          >
+          <a
+            mat-list-item
+            [routerLink]="[
+              '/',
+              ERoutesConstans.SERVICES_PANEL,
+              ERoutesConstans.SERVICE_PRODUCT
+            ]"
+            >Список Товаров на складе
+          </a>
+          <a
+            mat-list-item
+            [routerLink]="[
+              '/',
+              ERoutesConstans.SERVICES_PANEL,
+              ERoutesConstans.SERVICE_PRODUCT_SALE
+            ]"
+            >Список Товаров для продажи</a
+          >
+        </mat-nav-list>
+      </mat-expansion-panel>
       <a mat-list-item [routerLink]="['/', ERoutesConstans.ADMIN_PANEL]"
         >Статистика</a
       >

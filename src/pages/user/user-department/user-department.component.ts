@@ -61,7 +61,23 @@ export class UserDepartmentComponent {
 
   onClickEditDepartment(department: IUserDepartment) {}
 
-  onClickDeleteDepartment(department: IUserDepartment) {}
+  onClickDeleteDepartment(department: IUserDepartment) {
+    if (
+      confirm(
+        `Вы уверены, что хотите удалить отделение ${department.name}?`
+      )
+    ) {
+      this._departmentApiService.deleteDepartment(department.id).subscribe({
+        next: (response) => {
+          console.log('Отделение успешно удалено', response);
+          this._page$.next(this._page$.value);
+        },
+        error: (error) => {
+          console.error('Ошибка удаления отделения', error);
+        },
+      });
+    }
+  }
 
   onPageChange(event: PageEvent): void {
     this._pageSize$.next(event.pageSize);

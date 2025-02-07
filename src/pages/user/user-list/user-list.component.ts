@@ -4,12 +4,11 @@ import { MatDialog } from '@angular/material/dialog';
 import { MatTableModule } from '@angular/material/table';
 import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
 import { MatSortModule } from '@angular/material/sort';
-import { BehaviorSubject, combineLatestWith, switchMap } from 'rxjs';
+import { BehaviorSubject, combineLatest, combineLatestWith, switchMap } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { IUser, TResGetUsers, UserApiService } from '@entity';
 import { UserWindowComponent } from 'src/widgets/user/user-window/user-window.component';
 import { ERouteConstans } from '@routes';
-import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-user-list',
@@ -39,16 +38,13 @@ export class UserListComponent {
     this._page$
       .pipe(
         combineLatestWith(this._pageSize$),
-        switchMap(([page, pageSize]) =>
-          this._userApiService.getUser({ page, pageSize })
-        ),
+        switchMap(([page, pageSize]) => this._userApiService.getUser({ page, pageSize })),
         takeUntilDestroyed(this._destroyRef)
       )
       .subscribe((response: TResGetUsers) => {
         this.dataSource$.next(response.rows);
         // this.totalCount$.next(response.infoPage.totalCount);
       });
-
     this._destroyRef.onDestroy(() => {
       this._page$.complete();
       this._pageSize$.complete();
@@ -84,6 +80,20 @@ export class UserListComponent {
   }
 
   deleteUser(user: IUser): void {
-    console.log('Удаление пользователя', user);
+    if (
+      confirm(
+        `Вы уверены, что хотите удалить пользователя ${user.firstName} ${user.lastName}?`
+      )
+    ) {
+      this._userApiService.deleteUser(user.id).subscribe({
+        next: (response) => {
+          console.log('Пользователь успешно удален', response);
+          this._page$.next(this._page$.value);
+        },
+        error: (error) => {
+          console.error('Ошибка удаления пользователя', error);
+        },
+      });
+    }
   }
 }

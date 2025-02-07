@@ -13,17 +13,18 @@ import { BehaviorSubject, combineLatestWith, switchMap } from 'rxjs';
   standalone: true,
   imports: [MatTableModule, MatPaginatorModule, MatSortModule, CommonModule],
   templateUrl: './user-role.component.html',
-  styleUrl: './user-role.component.scss'
+  styleUrl: './user-role.component.scss',
 })
 export class UserRoleComponent {
-  displayedColumns: string[] = ['Name', 'Description','Employees', 'Actions'];
+  displayedColumns: string[] = ['Name', 'Description', 'Employees', 'Actions'];
   private _page$ = new BehaviorSubject<number>(1);
   private _pageSize$ = new BehaviorSubject<number>(10);
   dataSource$ = new BehaviorSubject<IUserRole[]>([]);
   private _pages$ = new BehaviorSubject<number>(1);
   totalCount$ = new BehaviorSubject<number>(0);
+  private creatorId = '3ff92885-afb3-46dd-a8a9-14ae904c3a27';
 
-  constructor (
+  constructor(
     private _roleApiService: UserApiService,
     private _dialog: MatDialog,
     private _destroyRef: DestroyRef
@@ -41,32 +42,43 @@ export class UserRoleComponent {
         // this.totalCount$.next(response.infoPage.totalCount);
       });
 
-      this._destroyRef.onDestroy(() => {
-        this._page$.complete();
-        this._pageSize$.complete();
-        this.dataSource$.complete();
-        this.totalCount$.complete();
+    this._destroyRef.onDestroy(() => {
+      this._page$.complete();
+      this._pageSize$.complete();
+      this.dataSource$.complete();
+      this.totalCount$.complete();
     });
   }
 
-    createRole() {
-      // const dialogRef = this._dialog.open(UserWindowComponent);
-      // dialogRef.componentInstance.user.subscribe((newUser: IUser) => {
-      //   console.log('Создан пользователь:', newUser);
-      //   this._page$.next(this._page$.value);
-      // });
-    }
-  
-    editRole(user: IUserRole): void {
-      console.log('Редактирование пользователя', user);
-    }
-  
-    deleteRole(user: IUserRole): void {
-      console.log('Удаление пользователя', user);
-    }
+  createRole() {
+    // const dialogRef = this._dialog.open(UserWindowComponent);
+    // dialogRef.componentInstance.user.subscribe((newUser: IUser) => {
+    //   console.log('Создан пользователь:', newUser);
+    //   this._page$.next(this._page$.value);
+    // });
+  }
 
-    onPageChange(event: PageEvent): void {
-        this._pageSize$.next(event.pageSize);
-        this._page$.next(event.pageIndex + 1);
-      }
+  editRole(user: IUserRole): void {
+    console.log('Редактирование пользователя', user);
+  }
+
+  deleteRole(user: IUserRole): void {
+    if (confirm(`Вы уверены, что хотите удалить отделение ${user.name}?`)) {
+
+      this._roleApiService.deleteRole(this.creatorId, user.id).subscribe({
+        next: (response) => {
+          console.log('Отделение успешно удалено', response);
+          this._page$.next(this._page$.value);
+        },
+        error: (error) => {
+          console.error('Ошибка удаления отделения', error);
+        },
+      });
+    }
+  }
+
+  onPageChange(event: PageEvent): void {
+    this._pageSize$.next(event.pageSize);
+    this._page$.next(event.pageIndex + 1);
+  }
 }

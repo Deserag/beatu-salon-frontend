@@ -4,6 +4,9 @@ import { Observable } from 'rxjs';
 import {
   ICreateDepartment,
   ICreateUser,
+  IDeleteDepartment,
+  IDeleteRole,
+  IDeleteUser,
   IGetRole,
   IGetUser,
   IUpdateUser,
@@ -88,16 +91,20 @@ export class UserApiService {
     );
   }
 
-  deleteRole(roleId: string): Observable<any> {
-    return this._http.delete(`${this._baseURL}user/delete-role/${roleId}`);
+  deleteRole(userId: string, roleId: string): Observable<IDeleteRole> {
+    return this._http.delete<IDeleteRole>(`${this._baseURL}user/delete-role`, {
+      body: { userId, roleId },
+    });
   }
 
-  deleteUser(userId: string): Observable<any> {
-    return this._http.delete(`${this._baseURL}user/delete-user/${userId}`);
+  deleteUser(userId: string): Observable<IDeleteUser> {
+    return this._http.delete<IDeleteUser>(
+      `${this._baseURL}user/delete-user/${userId}`
+    );
   }
 
-  deleteDepartment(departmentId: string): Observable<any> {
-    return this._http.delete(
+  deleteDepartment(departmentId: string): Observable<IDeleteDepartment> {
+    return this._http.delete<IDeleteDepartment>(
       `${this._baseURL}user/delete-department/${departmentId}`
     );
   }

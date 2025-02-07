@@ -1,17 +1,1 @@
-<div class="page-container">
-    <div class="sidebar">
-      <button [routerLink]="[ERoutesConstans.SERVICE_LIST]" type="button" class="nav-button">
-        Список Услуг
-      </button>
-      <button [routerLink]="[ERoutesConstans.SERVICE_PRODUCT]" type="button" class="nav-button">
-        Список Товаров на складе
-      </button>
-      <button [routerLink]="[ERoutesConstans.SERVICE_PRODUCT_SALE]" type="button" class="nav-button">
-        Список Товаров для продажи
-      </button>
-    </div>
-    <div class="router-outlet-container">
-      <router-outlet></router-outlet>
-    </div>
-  </div>
-  
+<mat-sidenav-content><router-outlet></router-outlet></mat-sidenav-content>
