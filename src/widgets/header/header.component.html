@@ -40,6 +40,8 @@
           >
         </mat-nav-list>
       </mat-expansion-panel>
+
+
       <mat-expansion-panel>
         <mat-expansion-panel-header>
           <mat-panel-title>Офисы</mat-panel-title>
@@ -75,7 +77,7 @@
         </mat-nav-list>
       </mat-expansion-panel>
 
-      <!-- <mat-expansion-panel>
+      <mat-expansion-panel>
         <mat-expansion-panel-header>
           <mat-panel-title>Клиенты</mat-panel-title>
         </mat-expansion-panel-header>
@@ -89,12 +91,18 @@
             ]"
             >Список клиентов</a
           >
-
+          <a
+            mat-list-item
+            [routerLink]="[
+              '/',
+              ERoutesConstans.CLIENT_PANEL,
+              ERoutesConstans.CLIENT_ORDER,
+            ]"
+            >Список сегодняшних записей</a
+          >
         </mat-nav-list>
-      </mat-expansion-panel> -->
-      <a mat-list-item [routerLink]="['/', ERoutesConstans.OFFICE_PANEL]"
-        >Клиенты</a
-      >
+      </mat-expansion-panel>
+      
       <mat-expansion-panel>
         <mat-expansion-panel-header>
           <mat-panel-title>Услуги</mat-panel-title>
@@ -116,8 +124,8 @@
               ERoutesConstans.SERVICES_PANEL,
               ERoutesConstans.SERVICE_PRODUCT
             ]"
-            >Список Товаров на складе
-          </a>
+            >Список товаров</a
+          >
           <a
             mat-list-item
             [routerLink]="[
@@ -125,7 +133,7 @@
               ERoutesConstans.SERVICES_PANEL,
               ERoutesConstans.SERVICE_PRODUCT_SALE
             ]"
-            >Список Товаров для продажи</a
+            >Список товаров на продажу</a
           >
         </mat-nav-list>
       </mat-expansion-panel>

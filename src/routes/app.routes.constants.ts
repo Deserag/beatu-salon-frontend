@@ -35,6 +35,11 @@ export enum ERouteConstans {
     WORK_PANEL = 'work-panel',
 
     //КЛиентская часть
-    CLIENT_PANEL ='client-panel'
+    CLIENT_PANEL ='client-panel',
+    CLIENT_LIST ='client-list',
+    CLIENT_PAGE = 'client-page',
+    CLIENT_ORDER = 'client-order',
+    
+
 
 }
