@@ -1,0 +1,30 @@
+<div class="content">
+  <div class="table-container">
+    <form [formGroup]="form" (ngSubmit)="submit()">
+      <mat-form-field appearance="fill">
+        <input matInput placeholder="Название роли" formControlName="name" />
+        @if(form.controls.name.invalid && (form.controls.name.dirty ||
+        form.controls.name.touched)){
+        <mat-error> Название роли обязательно для заполнения </mat-error>
+        }
+      </mat-form-field>
+
+      <mat-form-field appearance="fill">
+        <textarea
+          matInput
+          placeholder="Описание роли"
+          formControlName="description"
+        ></textarea>
+        @if(form.controls.description.invalid &&
+        (form.controls.description.dirty || form.controls.description.touched)){
+        <mat-error> Описание роли обязательно для заполнения </mat-error>
+        }
+      </mat-form-field>
+
+      <div class="table-footer">
+        <button mat-raised-button type="submit">Сохранить</button>
+        <button mat-button color="warn" (click)="close()">Отмена</button>
+      </div>
+    </form>
+  </div>
+</div>

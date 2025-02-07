@@ -4,16 +4,29 @@ import { MatDialog } from '@angular/material/dialog';
 import { MatTableModule } from '@angular/material/table';
 import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
 import { MatSortModule } from '@angular/material/sort';
-import { BehaviorSubject, combineLatest, combineLatestWith, switchMap } from 'rxjs';
+import {
+  BehaviorSubject,
+  combineLatest,
+  combineLatestWith,
+  switchMap,
+} from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { IUser, TResGetUsers, UserApiService } from '@entity';
 import { UserWindowComponent } from 'src/widgets/user/user-window/user-window.component';
 import { ERouteConstans } from '@routes';
+import { MatIconModule } from '@angular/material/icon';
+import { Router, RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-user-list',
   standalone: true,
-  imports: [CommonModule, MatTableModule, MatPaginatorModule, MatSortModule],
+  imports: [
+    CommonModule,
+    MatTableModule,
+    MatPaginatorModule,
+    MatSortModule,
+    MatIconModule,
+  ],
   templateUrl: './user-list.component.html',
   styleUrls: ['./user-list.component.scss'],
 })
@@ -34,11 +47,14 @@ export class UserListComponent {
   private _userApiService = inject(UserApiService);
   private _dialog = inject(MatDialog);
   private _destroyRef = inject(DestroyRef);
+  private _router = inject(Router);
   constructor() {
     this._page$
       .pipe(
         combineLatestWith(this._pageSize$),
-        switchMap(([page, pageSize]) => this._userApiService.getUser({ page, pageSize })),
+        switchMap(([page, pageSize]) =>
+          this._userApiService.getUser({ page, pageSize })
+        ),
         takeUntilDestroyed(this._destroyRef)
       )
       .subscribe((response: TResGetUsers) => {
@@ -77,6 +93,9 @@ export class UserListComponent {
         this._page$.next(this._page$.value);
       }
     });
+  }
+  viewUser(user: IUser) {
+    this._router.navigate([ERouteConstans.USER_PANEL, ERouteConstans.USER_PAGE, user.id]);
   }
 
   deleteUser(user: IUser): void {

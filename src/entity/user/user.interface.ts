@@ -6,7 +6,7 @@ export interface IUser {
   lastName: string;
   middleName: string;
   birthDate: Date;
-  departments: string[];
+  departments: IUserDepartments[];
   createdAt: string;
   updatedAt: string;
   login: string;
@@ -14,6 +14,11 @@ export interface IUser {
   password: string;
   roleId: string;
   telegramId: string | null;
+}
+
+export interface IUserDepartments {
+  userId: string;
+  departmentsId: string
 }
 export interface ICreateUser {
   firstName: string;
@@ -32,7 +37,9 @@ export interface IUpdateUser extends ICreateUser {
 }
 
 export interface IRole {
+  id: string;
   name: string;
+  description: string
 }
 
 export interface IGetUser {

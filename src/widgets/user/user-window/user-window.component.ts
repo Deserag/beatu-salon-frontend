@@ -12,6 +12,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { IUser, IUserDepartment, IUserRoles, UserApiService } from '@entity';
 import { MatSelectModule } from '@angular/material/select';
+
 @Component({
   selector: 'app-user-window',
   standalone: true,
@@ -29,9 +30,10 @@ import { MatSelectModule } from '@angular/material/select';
 })
 export class UserWindowComponent {
   @Output() user = new EventEmitter<any>();
-  private creatorId: string = 'd52c32d6-0b2b-46e8-b16f-386fdd20d47d';
+  private creatorId: string = 'dfe98f95-5e99-4cc9-978e-9da41814820a';
   roles: IUserRoles[] = [];
   departments: IUserDepartment[] = [];
+  selectedDepartmentIds: string[] = [];
 
   constructor(
     private _dialogRef: MatDialogRef<UserWindowComponent>,
@@ -40,9 +42,6 @@ export class UserWindowComponent {
   ) {
     this.loadRoles();
     this.loadDepartaments();
-    if (this.data) {
-      this.initializeForm(this.data);
-    }
   }
 
   form = new FormGroup({
@@ -65,13 +64,17 @@ export class UserWindowComponent {
   });
 
   initializeForm(user: IUser) {
+    this.selectedDepartmentIds = user.departments.map(
+      (department) => department.userId
+    );
+
     this.form.patchValue({
       id: user.id,
       firstName: user.firstName,
       lastName: user.lastName,
       middleName: user.middleName,
       birthDate: new Date(user.birthDate),
-      departments: user.departments,
+      departments: this.selectedDepartmentIds,
       login: user.login,
       email: user.email,
       telegramId: user.telegramId,
@@ -134,6 +137,9 @@ export class UserWindowComponent {
     this._userApiService.getDepartaments().subscribe({
       next: (response) => {
         this.departments = response;
+        if (this.data) {
+          this.initializeForm(this.data);
+        }
       },
       error: (error) => {
         console.error('Ошибка при получении отделов:', error);

@@ -1,105 +1,115 @@
-// Определяем переменные для цветов
-$user-page-bg: #d6e5d5;
-$card-bg: #b09e86;
-$card-header-bg: #b6cb6a;
-$button-bg: #8db662;
-$button-hover-bg: #b7c36c;
-$button-text-color: #fff;
-
 .user-page {
-  background-color: $user-page-bg;
-  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  background-color: #f4f4f4;
 
   &__header {
+    background-color: #fff;
+    padding: 20px;
     text-align: center;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   }
 
   &__title {
-    font-size: 24px;
-    font-weight: bold;
+    font-size: 2em;
     color: #333;
   }
 
   &__content {
+    flex: 1;
+    padding: 20px;
     display: flex;
-    gap: 20px;
-    margin-top: 20px;
+    justify-content: center;
+    align-items: flex-start;
   }
 
   &__columns {
     display: flex;
     gap: 20px;
-    width: 100%;
+    width: 90%;
+    max-width: 1200px;
   }
 
   &__section {
+    background-color: #fff;
+    border-radius: 12px; 
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); 
+    padding: 25px; 
     flex: 1;
-  }
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    border: 3px solid #ddd; 
 
-  &__info {
-    flex-basis: 45%;
+    &:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2); 
+    }
+
+    &.user-page__right {
+      flex: 0.7;
+    }
   }
 
   &__info-card,
   &__right-card {
-    margin-top: 15px;
-    background-color: $card-bg;
-    border-radius: 8px;
-    padding: 20px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
+    border: 3px solid #ddd; 
+    padding: 30px; 
+    border-radius: 15px;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15); 
   }
 
   &__sub-title {
-    font-size: 18px;
-    font-weight: 600;
-    color: #333;
+    font-size: 2.2em; 
+    color: #0056b3; 
+    margin-bottom: 20px; 
+    border-bottom: 3px solid #ccc; 
+    padding-bottom: 10px; 
+  }
+
+  &__info-card p {
+    margin-bottom: 10px; 
+    font-size: 1.6em; 
   }
 
   &__edit-button {
-    background-color: $button-bg;
-    color: $button-text-color;
+    background-color: #0056b3; 
+    color: white;
     border: none;
-    padding: 10px 20px;
-    font-size: 16px;
-    border-radius: 4px;
+    padding: 15px 30px; 
+    border-radius: 10px; 
     cursor: pointer;
-    margin-top: 20px;
+    transition: background-color 0.3s ease;
+    font-size: 1.4em; 
 
     &:hover {
-      background-color: $button-hover-bg;
+      background-color: #003d82; 
     }
   }
 
-  &__right {
-    flex: 1;
-  }
-
   &__chart-container {
+    height: 300px; 
     position: relative;
-    width: 100%;
-    height: 300px;
-    margin-top: 20px;
-  }
-
-  mat-calendar {
-    border-radius: 8px;
-    background-color: $card-header-bg;
-    padding: 10px;
   }
 
   &__working-hours {
-    margin-top: 20px;
-    font-size: 16px;
-    color: #333;
+    margin-top: 30px; 
+    text-align: center;
+    font-size: 1.6em; 
   }
-}
 
-.working-day {
-  background-color: #8db662;
-  color: white;
-}
+  .mat-calendar {
+    animation: fadeIn 0.5s ease;
+    border: 2px solid #ddd; 
+    border-radius: 10px;
+  }
 
-.non-working-day {
-  background-color: #f5f5f5;
-  color: #ccc;
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
 }

@@ -5,8 +5,15 @@ import { MatDialog } from '@angular/material/dialog';
 import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
 import { MatSortModule } from '@angular/material/sort';
 import { MatTableModule } from '@angular/material/table';
-import { IGetRole, IUserRole, TResGetRoles, UserApiService } from '@entity';
+import {
+  IGetRole,
+  IRole,
+  IUserRole,
+  TResGetRoles,
+  UserApiService,
+} from '@entity';
 import { BehaviorSubject, combineLatestWith, switchMap } from 'rxjs';
+import { RoleWindowComponent } from 'src/widgets/user/role-window/role-window.component';
 
 @Component({
   selector: 'app-user-role',
@@ -16,7 +23,7 @@ import { BehaviorSubject, combineLatestWith, switchMap } from 'rxjs';
   styleUrl: './user-role.component.scss',
 })
 export class UserRoleComponent {
-  displayedColumns: string[] = ['Name', 'Description', 'Employees', 'Actions'];
+  displayedColumns: string[] = ['Name', 'Description', 'Actions'];
   private _page$ = new BehaviorSubject<number>(1);
   private _pageSize$ = new BehaviorSubject<number>(10);
   dataSource$ = new BehaviorSubject<IUserRole[]>([]);
@@ -51,20 +58,28 @@ export class UserRoleComponent {
   }
 
   createRole() {
-    // const dialogRef = this._dialog.open(UserWindowComponent);
-    // dialogRef.componentInstance.user.subscribe((newUser: IUser) => {
-    //   console.log('Создан пользователь:', newUser);
-    //   this._page$.next(this._page$.value);
-    // });
+    const dialogRef = this._dialog.open(RoleWindowComponent);
+    dialogRef.componentInstance.role.subscribe((newUser: IRole) => {
+      console.log('Создан пользователь:', newUser);
+      this._page$.next(this._page$.value);
+    });
   }
 
-  editRole(user: IUserRole): void {
-    console.log('Редактирование пользователя', user);
+  editRole(user: IRole): void {
+    const dialogRef = this._dialog.open(RoleWindowComponent, {
+      data: user,
+    });
+
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result) {
+        console.log('Обновлен пользователь:', result);
+        this._page$.next(this._page$.value);
+      }
+    });
   }
 
   deleteRole(user: IUserRole): void {
     if (confirm(`Вы уверены, что хотите удалить отделение ${user.name}?`)) {
-
       this._roleApiService.deleteRole(this.creatorId, user.id).subscribe({
         next: (response) => {
           console.log('Отделение успешно удалено', response);

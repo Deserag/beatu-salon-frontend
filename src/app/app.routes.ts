@@ -21,6 +21,7 @@ export const userRoutes: Routes = [
           import('../pages/user/user-list/user-list.component').then(
             (m) => m.UserListComponent
           ),
+        children: [],
       },
       {
         path: ERouteConstans.USER_DEPARTMENT,
@@ -37,7 +38,7 @@ export const userRoutes: Routes = [
           ),
       },
       {
-        path: ERouteConstans.USER_PAGE,
+        path: ERouteConstans.USER_PAGE + '/:id', 
         loadComponent: () =>
           import('../pages/user/user-page/user-page.component').then(
             (m) => m.UserPageComponent
@@ -65,22 +66,6 @@ export const adminRoutes: Routes = [
       import('../pages/admin-panel/admin-panel.component').then(
         (m) => m.AdminPanelComponent
       ),
-    children: [
-      {
-        path: ERouteConstans.USER_LIST,
-        loadComponent: () =>
-          import('../pages/user/user-list/user-list.component').then(
-            (m) => m.UserListComponent
-          ),
-      },
-      {
-        path: ERouteConstans.OFFICE_PANEL,
-        loadComponent: () =>
-          import('../pages/office/office.component').then(
-            (m) => m.OfficeComponent
-          ),
-      },
-    ],
   },
 ];
 
@@ -128,37 +113,41 @@ export const servicesRoutes: Routes = [
       import('../pages/services/services.component').then(
         (c) => c.ServicesComponent
       ),
-      children: [
-        {
-          path: '',
-          redirectTo: ERouteConstans.SERVICE_LIST,
-          pathMatch: 'full',
-        },
-        {
-          path: ERouteConstans.SERVICE_LIST,
-          loadComponent: () => import('../pages/services/list/list.component').then(
+    children: [
+      {
+        path: '',
+        redirectTo: ERouteConstans.SERVICE_LIST,
+        pathMatch: 'full',
+      },
+      {
+        path: ERouteConstans.SERVICE_LIST,
+        loadComponent: () =>
+          import('../pages/services/list/list.component').then(
             (c) => c.ListComponent
           ),
-        },
-        {
-          path: ERouteConstans.SERVICE_PAGE,
-          loadComponent: () => import('../pages/services/service-page/service-page.component').then(
+      },
+      {
+        path: ERouteConstans.SERVICE_PAGE,
+        loadComponent: () =>
+          import('../pages/services/service-page/service-page.component').then(
             (c) => c.ServicePageComponent
-          )
-        },
-        {
-          path: ERouteConstans.SERVICE_PRODUCT,
-          loadComponent: () => import('../pages/services/product/product.component').then(
+          ),
+      },
+      {
+        path: ERouteConstans.SERVICE_PRODUCT,
+        loadComponent: () =>
+          import('../pages/services/product/product.component').then(
             (c) => c.ProductComponent
-          )
-        },
-        {
-          path: ERouteConstans.SERVICE_PRODUCT_SALE,
-          loadComponent: () => import('../pages/services/product-sale/product-sale.component').then(
+          ),
+      },
+      {
+        path: ERouteConstans.SERVICE_PRODUCT_SALE,
+        loadComponent: () =>
+          import('../pages/services/product-sale/product-sale.component').then(
             (c) => c.ProductSaleComponent
-          )
-        }
-      ]
+          ),
+      },
+    ],
   },
 ];
 
