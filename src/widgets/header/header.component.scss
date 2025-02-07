@@ -1,90 +1,161 @@
-$color-primary: #b09e86;
-$color-secondary: #b6cb6a;
-$color-accent: #b7c36c;
-$color-light: #8db662;
-$color-background: #d6e5d5;
+$primary-color: #3f51b5;
+$secondary-color: #ff9800;
+$background-color: #ffffff;
+$text-color: #212121;
+$accent-color: #4caf50;
+$error-color: #d50000;
 
-header {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background-color: $color-primary; 
-    padding: 15px 40px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-    color: #fff; 
-    border-bottom: 3px solid #8db662; 
-}
-
-header button {
-    background-color: $color-light; /* Основной цвет кнопок */
-    color: white;
-    border: none;
-    padding: 12px 20px;
-    margin: 0 15px;
-    font-size: 16px;
-    font-weight: 500;
-    cursor: pointer;
-    border-radius: 30px;
-    transition: all 0.3s ease-in-out;
-    text-transform: uppercase;
-    position: relative;
-
-    &:hover {
-        background-color: $color-secondary; 
-        transform: scale(1.05);
-        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-    }
-
-    &:active {
-        transform: scale(0.98);
-        background-color: $color-accent;
-    }
-
-    &:focus {
-        outline: none;
-        box-shadow: 0 0 5px rgba(182, 203, 106, 0.8); 
-    }
-
-    /* Анимация для плавного появления кнопок */
-    animation: fadeIn 0.3s ease-in-out;
-
-    &:nth-child(1) {
-        animation-delay: 0.1s;
-    }
-
-    &:nth-child(2) {
-        animation-delay: 0.2s;
-    }
-
-    &:nth-child(3) {
-        animation-delay: 0.3s;
-    }
-
-    &:nth-child(4) {
-        animation-delay: 0.4s;
-    }
-
-    &:nth-child(5) {
-        animation-delay: 0.5s;
-    }
-
-    &:last-child {
-        background-color: $color-accent; 
-    }
-
-    &:last-child:hover {
-        background-color: $color-secondary;
-    }
-}
-
-/* Анимация для появления кнопок */
 @keyframes fadeIn {
-    0% {
-        opacity: 0;
-        transform: translateY(10px);
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideIn {
+  from {
+    transform: translateX(-100%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+
+body {
+  background-color: $background-color;
+  color: $text-color;
+  font-family: "Roboto", sans-serif;
+  margin: 0;
+  padding: 0;
+}
+
+.sidenav-container {
+  height: 100vh;
+}
+
+.sidenav {
+  width: 325px;
+  background-color: $primary-color;
+  color: white;
+  animation: slideIn 0.5s ease-in-out;
+
+  mat-toolbar {
+    background-color: darken($primary-color, 10%);
+  }
+
+  mat-nav-list {
+    a {
+      color: white;
+      &:hover {
+        background-color: lighten($primary-color, 10%);
+      }
     }
-    100% {
-        opacity: 1;
-        transform: translateY(0);
+  }
+
+  .user-info {
+    padding: 16px;
+    text-align: center;
+    background-color: darken($primary-color, 5%);
+
+    button {
+      background-color: $secondary-color;
+      color: white;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 4px;
+      &:hover {
+        background-color: darken($secondary-color, 10%);
+      }
     }
+  }
+
+  mat-expansion-panel {
+    background-color: transparent;
+    box-shadow: none;
+    &.mat-expanded {
+      background-color: rgba(255, 255, 255, 0.1);
+    }
+    .mat-expansion-panel-header {
+      padding: 0 16px;
+      height: 48px;
+      .mat-expansion-indicator {
+        color: white;
+      }
+      .mat-expansion-panel-header-title {
+        color: white;
+      }
+    }
+    .mat-nav-list {
+      a {
+        padding: 0 16px;
+      }
+    }
+  }
+}
+
+.mat-sidenav-content {
+  padding: 0;
+  margin: 0;
+  animation: fadeIn 0.5s ease-in-out;
+}
+
+.mat-toolbar {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background-color: $primary-color;
+  color: white;
+
+  .spacer {
+    flex: 1 1 auto;
+  }
+
+  .toolbar-user-info {
+    display: flex;
+    align-items: center;
+
+    span {
+      margin-right: 10px;
+    }
+
+    button {
+      color: white;
+
+      .mat-icon {
+        fill: white;
+        stroke: white;
+      }
+    }
+  }
+}
+
+.content {
+  width: 90%;
+  margin: 20px auto;
+  padding: 10px;
+}
+
+.mat-button {
+  background-color: $secondary-color;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 4px;
+  &:hover {
+    background-color: darken($secondary-color, 10%);
+  }
+}
+
+.mat-icon {
+  color: white;
+}
+
+.mat-error {
+  color: $error-color;
+}
+
+.mat-accent {
+  color: $accent-color;
 }

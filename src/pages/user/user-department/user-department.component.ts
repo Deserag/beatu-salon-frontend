@@ -9,7 +9,7 @@ import { CommonModule } from '@angular/common';
 import { MatTableModule } from '@angular/material/table';
 import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
 import { MatSortModule } from '@angular/material/sort';
-import { DepartmentWindowComponent } from 'src/widgets/department-window/department-window.component';
+import { DepartmentWindowComponent } from 'src/widgets/user/department-window/department-window.component';
 @Component({
   selector: 'app-user-department',
   standalone: true,

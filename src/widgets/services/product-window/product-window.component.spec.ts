@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { PageComponent } from './page.component';
+import { ProductWindowComponent } from './product-window.component';
 
-describe('PageComponent', () => {
-  let component: PageComponent;
-  let fixture: ComponentFixture<PageComponent>;
+describe('ProductWindowComponent', () => {
+  let component: ProductWindowComponent;
+  let fixture: ComponentFixture<ProductWindowComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [PageComponent]
+      imports: [ProductWindowComponent]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(PageComponent);
+    fixture = TestBed.createComponent(ProductWindowComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

@@ -16,7 +16,7 @@ export enum ERouteConstans {
     USER_LIST = 'list',
     USER_DEPARTMENT = 'department',
     USER_ROLE = 'role',
-    USER_PAGE = 'detail/:id',
+    USER_PAGE = 'detail',
 
     //Пути для офиса
     OFFICE_PANEL = 'office-panel',
@@ -27,7 +27,7 @@ export enum ERouteConstans {
     //Пути для услуг
     SERVICES_PANEL = 'services-panel',
     SERVICE_LIST = 'list',
-    SERVICE_PAGE = 'detail/:id',
+    SERVICE_PAGE =  'detail',
     SERVICE_PRODUCT = 'product',
     SERVICE_PRODUCT_SALE = 'product-sale',
 
@@ -35,6 +35,11 @@ export enum ERouteConstans {
     WORK_PANEL = 'work-panel',
 
     //КЛиентская часть
-    CLIENT_PANEL ='client-panel'
+    CLIENT_PANEL ='client-panel',
+    CLIENT_LIST ='client-list',
+    CLIENT_PAGE = 'client-page',
+    CLIENT_ORDER = 'client-order',
+    
+
 
 }

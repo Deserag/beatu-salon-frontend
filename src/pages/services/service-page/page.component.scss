@@ -1,0 +1,108 @@
+$primary-color: #b6cb6a;
+$secondary-color: #8db662;
+$background-color: #d6e5d5;
+$text-color: #333;
+$error-color: #dc3545;
+$border-color: #b09e86;
+$box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+$border-radius: 4px;
+$transition-duration: 0.3s;
+
+.service-form {
+  background-color: $background-color;
+  padding: 2rem;
+  border-radius: 8px;
+  box-shadow: $box-shadow;
+  width: 90%;
+  margin: 20px auto;
+
+  h2 {
+    color: $secondary-color;
+    margin-bottom: 1.5rem;
+    text-align: center;
+  }
+
+  form {
+    display: flex;
+    flex-direction: column;
+
+    .form-row {
+      display: flex;
+      gap: 1rem;
+      margin-bottom: 1rem;
+      flex-wrap: wrap;
+
+      .form-group {
+        flex: 1 1 48%; // Немного скорректировал ширину для лучшего распределения
+        min-width: 250px; // Увеличил минимальную ширину
+      }
+    }
+
+    .form-group {
+      margin-bottom: 1rem;
+
+      label {
+        display: block;
+        margin-bottom: 0.5rem;
+        color: $text-color;
+        font-weight: 500;
+      }
+
+      input[type="text"],
+      input[type="number"],
+      textarea,
+      select {
+        width: 100%;
+        padding: 0.8rem;
+        border: 1px solid $border-color;
+        border-radius: $border-radius;
+        box-sizing: border-box;
+        transition: border-color $transition-duration ease, box-shadow $transition-duration ease; // Добавил transition для box-shadow
+
+        &:focus {
+          border-color: $primary-color;
+          outline: none;
+          box-shadow: 0 0 5px rgba($primary-color, 0.3);
+        }
+      }
+
+      textarea {
+        resize: vertical;
+        min-height: 100px;
+      }
+
+      select[multiple] {
+        height: 80px;
+        overflow-y: auto;
+      }
+
+      .error {
+        color: $error-color;
+        font-size: 0.875rem;
+        margin-top: 0.25rem;
+      }
+    }
+
+    button[type="submit"] {
+      background-color: $primary-color;
+      color: white;
+      padding: 0.8rem 1.5rem;
+      border: none;
+      border-radius: $border-radius;
+      cursor: pointer;
+      transition: background-color $transition-duration ease, transform 0.2s ease;
+      align-self: center; // Центрирование кнопки
+
+      &:hover {
+        background-color: darken($primary-color, 10%);
+        transform: scale(1.02);
+      }
+
+      &:disabled {
+        background-color: lighten($primary-color, 20%);
+        cursor: default;
+        transform: none;
+      }
+    }
+  }
+}

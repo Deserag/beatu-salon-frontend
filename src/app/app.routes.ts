@@ -142,8 +142,8 @@ export const servicesRoutes: Routes = [
         },
         {
           path: ERouteConstans.SERVICE_PAGE,
-          loadComponent: () => import('../pages/services/page/page.component').then(
-            (c) => c.PageComponent
+          loadComponent: () => import('../pages/services/service-page/service-page.component').then(
+            (c) => c.ServicePageComponent
           )
         },
         {

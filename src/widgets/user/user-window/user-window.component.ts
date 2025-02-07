@@ -10,7 +10,7 @@ import {
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
-import {  IUser, IUserDepartment, IUserRoles, UserApiService } from '@entity';
+import { IUser, IUserDepartment, IUserRoles, UserApiService } from '@entity';
 import { MatSelectModule } from '@angular/material/select';
 @Component({
   selector: 'app-user-window',
@@ -31,17 +31,17 @@ export class UserWindowComponent {
   @Output() user = new EventEmitter<any>();
   private creatorId: string = 'd52c32d6-0b2b-46e8-b16f-386fdd20d47d';
   roles: IUserRoles[] = [];
-  departments: IUserDepartment[] = []
+  departments: IUserDepartment[] = [];
 
   constructor(
     private _dialogRef: MatDialogRef<UserWindowComponent>,
     private _userApiService: UserApiService,
-    @Inject(MAT_DIALOG_DATA) public data: IUser | null 
+    @Inject(MAT_DIALOG_DATA) public data: IUser | null
   ) {
     this.loadRoles();
     this.loadDepartaments();
     if (this.data) {
-      this.initializeForm(this.data); 
+      this.initializeForm(this.data);
     }
   }
 
@@ -77,7 +77,7 @@ export class UserWindowComponent {
       telegramId: user.telegramId,
       roleId: user.roleId,
     });
-    this.form.controls.password.setValidators(null); 
+    this.form.controls.password.setValidators(null);
   }
 
   submit() {
@@ -85,9 +85,10 @@ export class UserWindowComponent {
       const userData = this.form.value;
 
       if (userData.id) {
-        this.updateUser(userData); 
+        this.updateUser(userData);
       } else {
-        this.onClickCreateUser(userData); 
+        const { id, ...userWithoutId } = userData;
+        this.onClickCreateUser(userWithoutId);
       }
     } else {
       this.form.markAllAsTouched();
@@ -131,13 +132,13 @@ export class UserWindowComponent {
 
   loadDepartaments() {
     this._userApiService.getDepartaments().subscribe({
-      next : (response) => {
+      next: (response) => {
         this.departments = response;
       },
       error: (error) => {
         console.error('Ошибка при получении отделов:', error);
-      }
-    })
+      },
+    });
   }
 
   close() {

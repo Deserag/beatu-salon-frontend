@@ -7,7 +7,7 @@ import { MatSortModule } from '@angular/material/sort';
 import { BehaviorSubject, combineLatestWith, switchMap } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { IUser, TResGetUsers, UserApiService } from '@entity';
-import { UserWindowComponent } from 'src/widgets/user-window/user-window.component';
+import { UserWindowComponent } from 'src/widgets/user/user-window/user-window.component';
 import { ERouteConstans } from '@routes';
 import { Router } from '@angular/router';
 
@@ -20,7 +20,14 @@ import { Router } from '@angular/router';
 })
 export class UserListComponent {
   protected readonly ERoutesConstans = ERouteConstans;
-  displayedColumns: string[] = ['firstName', 'lastName', 'email', 'actions'];
+  displayedColumns: string[] = [
+    'firstName',
+    'lastName',
+    'middleName',
+    'birthDate',
+    'email',
+    'actions',
+  ];
   dataSource$ = new BehaviorSubject<IUser[]>([]);
   totalCount$ = new BehaviorSubject<number>(0);
   private _page$ = new BehaviorSubject<number>(1);
@@ -28,8 +35,6 @@ export class UserListComponent {
   private _userApiService = inject(UserApiService);
   private _dialog = inject(MatDialog);
   private _destroyRef = inject(DestroyRef);
-  private _router = inject(Router);
-
   constructor() {
     this._page$
       .pipe(
@@ -67,13 +72,13 @@ export class UserListComponent {
 
   editUser(user: IUser): void {
     const dialogRef = this._dialog.open(UserWindowComponent, {
-      data: user, 
+      data: user,
     });
-  
+
     dialogRef.afterClosed().subscribe((result) => {
       if (result) {
         console.log('Обновлен пользователь:', result);
-        this._page$.next(this._page$.value); 
+        this._page$.next(this._page$.value);
       }
     });
   }

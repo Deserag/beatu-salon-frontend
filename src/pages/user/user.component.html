@@ -1,16 +1,1 @@
-<div class="page-container">
-  <div class="sidebar">
-    <button [routerLink]="[ERoutesConstans.USER_LIST]" type="button" class="nav-button">
-      Список пользователей
-    </button>
-    <button [routerLink]="[ERoutesConstans.USER_DEPARTMENT]" type="button" class="nav-button">
-      Список направлений
-    </button>
-    <button [routerLink]="[ERoutesConstans.USER_ROLE]" type="button" class="nav-button">
-      Список ролей
-    </button>
-  </div>
-  <div class="router-outlet-container">
-    <router-outlet></router-outlet>
-  </div>
-</div>
+<mat-sidenav-content><router-outlet></router-outlet></mat-sidenav-content>
