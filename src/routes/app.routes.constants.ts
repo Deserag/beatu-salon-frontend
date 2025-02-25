@@ -10,6 +10,7 @@ export enum ERouteConstans {
 
     //Пути для страниц
     ADMIN_PANEL = 'admin-panel',
+    ADMIN_STATISTICS = 'statistics',
 
     //Пути для пользователя
     USER_PANEL = 'user-panel',

@@ -1,0 +1,11 @@
+<div class="content">
+  <app-order-card
+    *ngFor="let order of orders"
+    [fullName]="order.fullName"
+    [master]="order.master"
+    [service]="order.service"
+    [price]="order.price"
+    [dateTime]="order.dateTime"
+    [office]="order.office"
+  ></app-order-card>
+</div>

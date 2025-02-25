@@ -48,7 +48,17 @@ export const personalRoutes: Routes = [
         import('../pages/user/user-page/user-page.component').then(
           (m) => m.UserPageComponent
         ),
-    }
+    },
+]
+
+export const statisticRoutes: Routes = [
+  {
+    path: ERouteConstans.ADMIN_STATISTICS,
+    loadComponent: () =>
+      import('../pages/statistics/statistics.component').then(
+        (m) => m.StatisticsComponent
+      ),
+  }
 ]
 
 export const authRoutes: Routes = [
@@ -193,6 +203,7 @@ export const mainRoutes: Routes = [
   ...officeRoutes,
   ...servicesRoutes,
   ...personalRoutes,
+  ...statisticRoutes,
   {
     path: ERouteConstans.AUTH,
     loadChildren: () => authRoutes,

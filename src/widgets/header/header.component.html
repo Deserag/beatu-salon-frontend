@@ -140,7 +140,9 @@
       <a mat-list-item [routerLink]="['/', ERoutesConstans.ADMIN_PANEL]"
         >Статистика</a
       >
-      <a mat-list-item routerLink="/appointments">Записи</a>
+      <a mat-list-item [routerLink]="['/', ERoutesConstans.ADMIN_STATISTICS]"
+        >Записи</a
+      >
       <a mat-list-item routerLink="/reports">Отчеты</a>
       <a mat-list-item routerLink="/settings">Настройки</a>
       <mat-divider></mat-divider>
