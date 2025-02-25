@@ -19,6 +19,10 @@ export interface IProducts {
     creatorId: string
 }
 
+export interface IProductSale extends IProducts {
+    office: string
+}
+
 export interface ICreateService {
     name: string;
     description: string;
@@ -63,3 +67,4 @@ export interface IGetProduct {
 
 export type TResGetService = IResTablePage<IServices>
 export type TresGetProduct = IResTablePage<IProducts>
+export type TResGetProductSale = IResTablePage<IProductSale>

@@ -36,16 +36,20 @@ export const userRoutes: Routes = [
             (m) => m.UserRoleComponent
           ),
       },
-      {
-        path: ERouteConstans.USER_PAGE,
-        loadComponent: () =>
-          import('../pages/user/user-page/user-page.component').then(
-            (m) => m.UserPageComponent
-          ),
-      },
+      // ,
     ],
   },
 ];
+
+export const personalRoutes: Routes = [
+  {
+      path: ERouteConstans.USER_PAGE,
+      loadComponent: () =>
+        import('../pages/user/user-page/user-page.component').then(
+          (m) => m.UserPageComponent
+        ),
+    }
+]
 
 export const authRoutes: Routes = [
   {
@@ -188,6 +192,7 @@ export const mainRoutes: Routes = [
   ...clientRoutes,
   ...officeRoutes,
   ...servicesRoutes,
+  ...personalRoutes,
   {
     path: ERouteConstans.AUTH,
     loadChildren: () => authRoutes,

@@ -62,7 +62,7 @@ export class AppComponent {
   newClientsCount = 25;
   revenue = 18500;
   averageCheck = 1480;
-  messages: Message[] = [ /* ... */ ]; // Оставим messages как есть
+  messages: Message[] = [ /* ... */ ]; 
 
   employees: Employee[] = [
     { name: 'Елена', appointmentsCount: 32, rating: 4.8 },

@@ -16,7 +16,7 @@ export enum ERouteConstans {
     USER_LIST = 'list',
     USER_DEPARTMENT = 'department',
     USER_ROLE = 'role',
-    USER_PAGE = 'detail',
+    USER_PAGE = 'user-detail',
 
     //Пути для офиса
     OFFICE_PANEL = 'office-panel',
