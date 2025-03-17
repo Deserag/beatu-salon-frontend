@@ -11,6 +11,7 @@ import { AuthService } from '@entity';
 import { ERouteConstans } from '@routes';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatExpansionModule } from '@angular/material/expansion';
+
 @Component({
   selector: 'app-header',
   standalone: true,
@@ -32,13 +33,18 @@ import { MatExpansionModule } from '@angular/material/expansion';
 })
 export class HeaderComponent {
   userName = 'Имя пользователя';
-  logout() {
-    console.log('Выход из системы');
-  }
-
   protected readonly ERoutesConstans = ERouteConstans;
   readonly #authService = inject(AuthService);
+
   protected onClickLogOut(): void {
     this.#authService.logout();
+  }
+
+  get isAuthenticated(): boolean {
+    return this.#authService.isAuthenticated();
+  }
+
+  get user() {
+    return this.#authService.user;
   }
 }

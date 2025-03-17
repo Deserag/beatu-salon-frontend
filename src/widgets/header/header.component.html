@@ -67,7 +67,7 @@
         </button>
         <mat-menu #userMenu="matMenu">
           <button mat-menu-item [routerLink]="['/', ERoutesConstans.USER_PAGE]">Личный кабинет</button>
-          <button mat-menu-item (click)="logout()">Выход</button>
+          <button mat-menu-item (click)="onClickLogOut()">Выход</button>
         </mat-menu>
       </span>
     </mat-toolbar>

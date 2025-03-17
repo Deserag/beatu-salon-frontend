@@ -183,7 +183,6 @@ export const appRoutes: Routes = [
       import('../pages/work-page/work-page.component').then(
         (c) => c.WorkPageComponent
       ),
-    // canActivate: [AuthGuard],
     loadChildren: () => mainRoutes,
   },
   {
