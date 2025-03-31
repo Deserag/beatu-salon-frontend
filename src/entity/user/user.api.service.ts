@@ -12,6 +12,7 @@ import {
   IUpdateUser,
   IUser,
   IUserDepartment,
+  IUserEarnings,
   IUserRoles,
   TResGetDepartment,
   TResGetRoles,
@@ -39,6 +40,14 @@ export class UserApiService {
       `${this._baseURL}user/list-roles`,
       body
     );
+  }
+
+  getUserEarnings(userId: string): Observable<IUserEarnings> {
+    return this._http.get<IUserEarnings>(`${this._baseURL}users-earnings/${userId}`);
+  }
+
+  getUsersWithDepartment(departmentId: string): Observable<IUser[]> {
+    return this._http.get<IUser[]>(`${this._baseURL}users-department/${departmentId}`);
   }
 
   getUserDepartment(body: IReqPage): Observable<TResGetDepartment> {

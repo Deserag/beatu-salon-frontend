@@ -12,17 +12,18 @@
           <p><strong>Дата рождения:</strong> {{ user.user.birthDate | date }}</p>
           <p><strong>Email:</strong> {{ user.user.email }}</p>
           <p><strong>Логин:</strong> {{ user.user.login }}</p>
-          <p><strong>Отдел:</strong> {{ user.user.departments }}</p>
           <p><strong>Роль:</strong> {{ user.userRole.name }}</p>
           <p><strong>Дата создания:</strong> {{ user.user.createdAt | date }}</p>
           <p><strong>Дата обновления:</strong> {{ user.user.updatedAt | date }}</p>
 
           <h3 class="user-page__sub-title">Направления</h3>
           <ul>
-            <!-- <li *ngFor="let direction of user.user.USE.directions">{{ direction }}</li> -->
+            <li *ngFor="let department of user.user.departments">
+              {{ department.department.name }}
+            </li>
           </ul>
 
-          <button class="user-page__edit-button" (click)="onEdit()">Редактировать</button>
+          <button class="user-page__edit-button" (click)="onClickEditUser(user.user)">Редактировать</button>
         </div>
       </section>
 

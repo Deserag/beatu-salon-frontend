@@ -4,14 +4,21 @@ import { MatCardModule } from '@angular/material/card';
 import { MatTableModule } from '@angular/material/table';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatDatepickerModule } from '@angular/material/datepicker';
-import { Chart, ChartType } from 'chart.js';
+import { Chart } from 'chart.js';
 import { MatNativeDateModule } from '@angular/material/core';
 import { MatInputModule } from '@angular/material/input';
 import { BehaviorSubject, combineLatestWith, switchMap } from 'rxjs';
-import { IUser, TResGetUsers, UserApiService, IGetUser } from '@entity';
+import {
+  IUser,
+  TResGetUsers,
+  UserApiService,
+  IGetUser,
+  IUserEarnings,
+} from '@entity';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute } from '@angular/router';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { UserWindowComponent } from '@widgets';
 
 @Component({
   selector: 'app-user-page',
@@ -38,14 +45,18 @@ export class UserPageComponent {
   private readonly _dialog = inject(MatDialog);
   private readonly _destroyRef = inject(DestroyRef);
   private readonly _route = inject(ActivatedRoute);
+  chart: Chart | null = null;
 
   constructor() {
     this._route.paramMap
       .pipe(
         switchMap((params) => {
           const userId = params.get('id');
+          console.log(userId);
           if (userId) {
-            return this._userApiService.getUserInfo(userId);  
+            this.#loadUserDepartments(userId);
+            this.#loaduserEarnings(userId);
+            return this._userApiService.getUserInfo(userId);
           }
           throw new Error('User ID is required');
         }),
@@ -54,7 +65,7 @@ export class UserPageComponent {
       .subscribe((response: IGetUser) => {
         this.user = response;
         this.#loadUser();
-        this.#loadUserSalary();
+        // this.#loadUserDepartments();
       });
 
     this._destroyRef.onDestroy(() => {
@@ -76,29 +87,92 @@ export class UserPageComponent {
       )
       .subscribe((response: TResGetUsers) => {
         this.dataSource$.next(response.rows);
-        // this.totalCount$.next(response.infoPage.totalCount);
       });
   }
 
-  #loadUserSalary() {
-    // Тот же код для загрузки зарплаты
+  #loadUserDepartments(departmentId: string) {
+    this._userApiService
+      .getUsersWithDepartment(departmentId)
+      .pipe(takeUntilDestroyed(this._destroyRef))
+      .subscribe({
+        next: (users: IUser[]) => {
+          console.log('Users in department:', users);
+          this.dataSource$.next(users);
+        },
+        error: (error) => {
+          console.error('Error fetching users:', error);
+        },
+      });
   }
 
-  onEdit() {
-    console.log('Edit clicked');
+  #loaduserEarnings(userId: string) {
+    this._userApiService
+      .getUserEarnings(userId)
+      .pipe(takeUntilDestroyed(this._destroyRef))
+      .subscribe({
+        next: (earnings: IUserEarnings) => {
+          if (this.chart) {
+            this.chart.destroy();
+          }
+
+          const canvas = document.getElementById(
+            'salaryChart'
+          ) as HTMLCanvasElement;
+          if (canvas) {
+            this.chart = new Chart(canvas, {
+              type: 'bar',
+              data: {
+                labels: earnings.earnings.map(
+                  (item) => item.service?.name || 'Unknown'
+                ),
+                datasets: [
+                  {
+                    label: 'Заработок',
+                    data: earnings.earnings.map(
+                      (item) => item.service?.price || 0
+                    ),
+                    backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                    borderColor: 'rgba(54, 162, 235, 1)',
+                    borderWidth: 1,
+                  },
+                ],
+              },
+              options: {
+                scales: {
+                  y: {
+                    beginAtZero: true,
+                  },
+                },
+              },
+            });
+          }
+        },
+        error: (error) => {
+          console.error('Error fetching earnings:', error);
+        },
+      });
+  }
+
+  onClickEditUser(user: IUser): void {
+    const dialogRef = this._dialog.open(UserWindowComponent, { data: user });
+
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result) {
+        console.log('Обновлен пользователь:', result);
+        this.#loadUser();
+      }
+    });
   }
 
   isWorkingDay(date: Date): boolean {
     const day = date.getDay();
-    return [1, 2, 3, 4, 5].includes(day);  // Пн-Пт
+    return [1, 2, 3, 4, 5].includes(day);
   }
 
   getWorkHours(): string {
-    return '10:00 - 19:00';  // Рабочие часы
+    return '10:00 - 19:00';
   }
 
-  dateClass = (date: Date) => {
-    return this.isWorkingDay(date) ? 'working-day' : 'non-working-day';
-  };
+  dateClass = (date: Date) =>
+    this.isWorkingDay(date) ? 'working-day' : 'non-working-day';
 }
-

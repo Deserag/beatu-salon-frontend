@@ -19,6 +19,7 @@ export interface IUser {
 export interface IUserDepartments {
   userId: string;
   departmentsId: string
+  department: IDepartament
 }
 export interface ICreateUser {
   firstName: string;
@@ -35,11 +36,18 @@ export interface ICreateUser {
 export interface IUpdateUser extends ICreateUser {
   id: string;
 }
-
+export interface IDepartament {
+  id: string;
+  name: string;
+  description: string;
+  createdAt: string;
+  updatedAt: string;
+  deletedAt: string | null;
+}
 export interface IRole {
   id: string;
   name: string;
-  description: string
+  description: string;
 }
 
 export interface IGetUser {
@@ -111,6 +119,21 @@ export interface IDeleteUser {
 export interface IDeleteDepartment {
   adminId: string;
   departmentId: string;
+}
+//Сделать тут вместо any  
+export interface IUserEarnings {
+  earnings: any[],
+  totalEarnings: number,
+  totalOrdersPrice: number
+}
+export interface TResGetUser {
+  rows: IUser[];
+  infoPage: {
+    totalCount: number;
+    page?: number;
+    pageSize?: number;
+    totalPages?: number;
+  };
 }
 export type TResGetUsers = IResTablePage<IUser>;
 export type TResGetRoles = IResTablePage<IUserRole>;
