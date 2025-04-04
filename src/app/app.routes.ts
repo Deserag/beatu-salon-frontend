@@ -36,16 +36,30 @@ export const userRoutes: Routes = [
             (m) => m.UserRoleComponent
           ),
       },
-      {
-        path: ERouteConstans.USER_PAGE,
-        loadComponent: () =>
-          import('../pages/user/user-page/user-page.component').then(
-            (m) => m.UserPageComponent
-          ),
-      },
+      // ,
     ],
   },
 ];
+
+export const personalRoutes: Routes = [
+  {
+      path: ERouteConstans.USER_PAGE,
+      loadComponent: () =>
+        import('../pages/user/user-page/user-page.component').then(
+          (m) => m.UserPageComponent
+        ),
+    },
+]
+
+export const statisticRoutes: Routes = [
+  {
+    path: ERouteConstans.ADMIN_STATISTICS,
+    loadComponent: () =>
+      import('../pages/statistics/statistics.component').then(
+        (m) => m.StatisticsComponent
+      ),
+  }
+]
 
 export const authRoutes: Routes = [
   {
@@ -169,7 +183,6 @@ export const appRoutes: Routes = [
       import('../pages/work-page/work-page.component').then(
         (c) => c.WorkPageComponent
       ),
-    // canActivate: [AuthGuard],
     loadChildren: () => mainRoutes,
   },
   {
@@ -188,6 +201,8 @@ export const mainRoutes: Routes = [
   ...clientRoutes,
   ...officeRoutes,
   ...servicesRoutes,
+  ...personalRoutes,
+  ...statisticRoutes,
   {
     path: ERouteConstans.AUTH,
     loadChildren: () => authRoutes,

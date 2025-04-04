@@ -1,1 +1,67 @@
-<p>admin-panel works!</p>
+<div class="content">
+  <div class="chart-container">
+    <div class="chart-wrapper">
+      <h3>Нагрузка офисов</h3>
+      <canvas #officeLoadCanvas width="400" height="400"></canvas>
+      <div class="period-selector">
+        <button (click)="onPeriodChange('officeLoadToday')" [class.active]="selectedPeriod === 'officeLoadToday'">Сегодня</button>
+        <button (click)="onPeriodChange('officeLoadWeek')" [class.active]="selectedPeriod === 'officeLoadWeek'">Неделя</button>
+        <button (click)="onPeriodChange('officeLoadMonth')" [class.active]="selectedPeriod === 'officeLoadMonth'">Месяц</button>
+        <button (click)="onPeriodChange('officeLoadYear')" [class.active]="selectedPeriod === 'officeLoadYear'">Год</button>
+      </div>
+    </div>
+
+    <div class="chart-wrapper">
+      <h3>Количество записей</h3>
+      <canvas #clientsCanvas width="600" height="300"></canvas>
+      <div class="period-selector">
+        <button (click)="onPeriodChange('clientsToday')" [class.active]="selectedPeriod === 'clientsToday'">Сегодня</button>
+        <button (click)="onPeriodChange('clientsWeek')" [class.active]="selectedPeriod === 'clientsWeek'">Неделя</button>
+        <button (click)="onPeriodChange('clientsMonth')" [class.active]="selectedPeriod === 'clientsMonth'">Месяц</button>
+        <button (click)="onPeriodChange('clientsYear')" [class.active]="selectedPeriod === 'clientsYear'">Год</button>
+      </div>
+    </div>
+
+    <div class="chart-wrapper">
+      <h3>Заработок</h3>
+      <canvas #earningsCanvas width="600" height="300"></canvas>
+      <div class="period-selector">
+        <button (click)="onPeriodChange('earningsToday')" [class.active]="selectedPeriod === 'earningsToday'">Сегодня</button>
+        <button (click)="onPeriodChange('earningsWeek')" [class.active]="selectedPeriod === 'earningsWeek'">Неделя</button>
+        <button (click)="onPeriodChange('earningsMonth')" [class.active]="selectedPeriod === 'earningsMonth'">Месяц</button>
+        <button (click)="onPeriodChange('earningsYear')" [class.active]="selectedPeriod === 'earningsYear'">Год</button>
+      </div>
+    </div>
+
+    <div class="chart-wrapper">
+      <div class="average-check">
+        Средний чек: {{ averageCheck }}
+      </div>
+      <h3>Сегодняшние заказы</h3>
+      <div>Сегодняшние заказы:</div>
+      <ul>
+        <li *ngFor="let order of orders" [hidden]="!showOrders && orders.indexOf(order) > 2">
+          {{ order.name }}: {{ order.amount }}
+        </li>
+      </ul>
+      <button (click)="toggleOrders()">{{ showOrders ? 'Скрыть' : 'Показать' }} все заказы</button>
+      <div class="period-selector">
+        <button (click)="onPeriodChange('averageCheckToday')" [class.active]="selectedPeriod === 'averageCheckToday'">Сегодня</button>
+        <button (click)="onPeriodChange('averageCheckWeek')" [class.active]="selectedPeriod === 'averageCheckWeek'">Неделя</button>
+        <button (click)="onPeriodChange('averageCheckMonth')" [class.active]="selectedPeriod === 'averageCheckMonth'">Месяц</button>
+        <button (click)="onPeriodChange('averageCheckYear')" [class.active]="selectedPeriod === 'averageCheckYear'">Год</button>
+      </div>
+    </div>
+
+    <div class="chart-wrapper">
+      <h3>Новые клиенты</h3>
+      <canvas #newClientsCanvas width="600" height="300"></canvas>
+      <div class="period-selector">
+        <button (click)="onPeriodChange('newClientsToday')" [class.active]="selectedPeriod === 'newClientsToday'">Сегодня</button>
+        <button (click)="onPeriodChange('newClientsWeek')" [class.active]="selectedPeriod === 'newClientsWeek'">Неделя</button>
+        <button (click)="onPeriodChange('newClientsMonth')" [class.active]="selectedPeriod === 'newClientsMonth'">Месяц</button>
+        <button (click)="onPeriodChange('newClientsYear')" [class.active]="selectedPeriod === 'newClientsYear'">Год</button>
+      </div>
+    </div>
+  </div>
+</div>

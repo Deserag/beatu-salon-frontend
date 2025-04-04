@@ -2,84 +2,89 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 100vh;
-  background-color: #fefde5;
-}
+  height: 100vh; // Или установите нужную высоту
+  background-color: #f0f0f0;
 
-.login-form {
-  background-color: #caa971;
-  padding: 2rem;
-  border-radius: 8px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-  width: 100%;
-  max-width: 400px;
-}
+  .login-form {
+    width: 350px;
+    padding: 20px;
+    background-color: white;
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
 
-.login-header {
-  text-align: center;
-  font-size: 2rem;
-  color: #f4e664;
-  margin-bottom: 1.5rem;
-}
+    .login-header {
+      text-align: center;
+      margin-bottom: 20px;
+      color: #333;
+    }
 
-.form-group {
-  margin-bottom: 1rem;
-}
+    .form-group {
+      margin-bottom: 15px;
 
-label {
-  display: block;
-  font-weight: bold;
-  color: #f4e664;
-  margin-bottom: 0.5rem;
-}
+      label {
+        display: block;
+        margin-bottom: 5px;
+        color: #555;
+      }
 
-input {
-  width: 100%;
-  padding: 0.75rem;
-  border: 1px solid #ddd;
-  border-radius: 4px;
-  font-size: 1rem;
-}
+      input {
+        width: 100%;
+        padding: 8px;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        box-sizing: border-box;
 
-input.invalid {
-  border-color: #ff5a5f;
-}
+        &.invalid {
+          border-color: #f44336;
+        }
+      }
 
-.error-message {
-  color: #ff5a5f;
-  font-size: 0.875rem;
-  margin-top: 0.25rem;
-}
+      .password-input {
+        position: relative;
+        display: flex;
+        align-items: center;
+        width: 100%;
 
-button {
-  margin-top: 5px;
-  padding: 0.75rem 1.5rem;
-  background-color: #74726b;
-  color: #fff;
-  border: none;
-  border-radius: 4px;
-  font-size: 1rem;
-  cursor: pointer;
-  width: 100%;
-  transition: background-color 0.3s ease;
-}
+        input {
+          width: 100%;
+        }
 
-button:disabled {
-  background-color: #d6d6d6;
-}
+        .toggle-password {
+          position: absolute;
+          right: 8px;
+          border: none;
+          background: none;
+          cursor: pointer;
+          color: #777;
+        }
+      }
 
-button:hover:not(:disabled) {
-  background-color: #f4e664;
-}
+      .error-message {
+        color: #f44336;
+        font-size: 0.8em;
+        margin-top: 5px;
+      }
+    }
 
-.toggle-password {
-  background: none;
-  border: none;
-  color: #74726b;
-  font-size: 0.875rem;
-  cursor: pointer;
-}
+    .submit-btn {
+      width: 100%;
+      padding: 10px;
+      background-color: #2196f3;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
 
-.toggle-password:hover {
-  text-decoration: underline;
+      &:hover {
+        background-color: #1976d2;
+      }
+
+      &:disabled {
+        background-color: #ddd;
+        color: #777;
+        cursor: not-allowed;
+      }
+    }
+  }
 }

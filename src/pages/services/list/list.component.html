@@ -1,4 +1,5 @@
 <div class="content">
+  <div class="table-container">
   <table
     mat-table
     [dataSource]="dataSource$"
@@ -9,10 +10,12 @@
       <th mat-header-cell *matHeaderCellDef mat-sort-header>Название</th>
       <td mat-cell *matCellDef="let service">{{ service.name }}</td>
     </ng-container>
+
     <ng-container matColumnDef="Price">
       <th mat-header-cell *matHeaderCellDef mat-sort-header>Цена</th>
       <td mat-cell *matCellDef="let service">{{ service.price }}</td>
     </ng-container>
+    
     <ng-container matColumnDef="Symbol">
       <th mat-header-cell *matHeaderCellDef>Действия</th>
       <td mat-cell *matCellDef="let service">
@@ -49,4 +52,5 @@
       Создать пользователя
     </button>
   </div>
+</div>
 </div>

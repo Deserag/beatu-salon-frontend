@@ -1,37 +1,40 @@
 <div class="login-container">
-    <form [formGroup]="loginForm" (ngSubmit)="submit()" class="login-form">
-      <h2 class="login-header">Авторизация</h2>
-  
-      <div class="form-group">
-        <label for="login">Логин:</label>
-        <input 
-          id="login" 
-          formControlName="login" 
-          type="login" 
-          placeholder="Введите ваш логин" 
-          [class.invalid]="loginForm.controls.login.invalid && loginForm.get('login')?.touched"
-        />
-        <div *ngIf="loginForm.controls.login.invalid && loginForm.controls.login.touched" class="error-message">
-          
-        </div>
+  <form [formGroup]="loginForm" (ngSubmit)="submit()" class="login-form">
+    <h2 class="login-header">Авторизация</h2>
+
+    <div class="form-group">
+      <label for="login">Логин:</label>
+      <input
+        id="login"
+        formControlName="login"
+        type="text"
+        placeholder="Введите ваш логин"
+        [class.invalid]="loginForm.controls.login.invalid && loginForm.get('login')?.touched"
+      />
+      <div *ngIf="loginForm.controls.login.invalid && loginForm.controls.login.touched" class="error-message">
+        <small *ngIf="loginForm.controls.login.errors?.['required']">Логин обязателен</small>
       </div>
-  
-      <div class="form-group">
-        <label for="password"> Пароль:</label>
-        <input 
-          id="password" 
-          formControlName="password" 
-          [type]="showPassword ? 'text' : 'password'" 
-          placeholder="Введите ваш пароль" 
+    </div>
+
+    <div class="form-group">
+      <label for="password">Пароль:</label>
+      <div class="password-input">
+        <input
+          id="password"
+          formControlName="password"
+          [type]="showPassword ? 'text' : 'password'"
+          placeholder="Введите ваш пароль"
           [class.invalid]="loginForm.controls.password.invalid && loginForm.controls.password.touched"
         />
-        <button type="button" (click)="showPassword = !showPassword" class="toggle-password">Показать</button>
-        <div *ngIf="loginForm.controls.password.invalid && loginForm.controls.password.touched" class="error-message">
-          <small *ngIf="loginForm.controls.password.errors">Пароль обязательный</small>
-        </div>
+        <button type="button" (click)="showPassword = !showPassword" class="toggle-password">
+          {{ showPassword ? 'Скрыть' : 'Показать' }}
+        </button>
       </div>
-  
-      <button type="submit" [disabled]="loginForm.invalid" class="submit-btn">Войти</button>
-    </form>
-  </div>
-  
+      <div *ngIf="loginForm.controls.password.invalid && loginForm.controls.password.touched" class="error-message">
+        <small *ngIf="loginForm.controls.password.errors?.['required']">Пароль обязателен</small>
+      </div>
+    </div>
+
+    <button type="submit" [disabled]="loginForm.invalid" class="submit-btn">Войти</button>
+  </form>
+</div>

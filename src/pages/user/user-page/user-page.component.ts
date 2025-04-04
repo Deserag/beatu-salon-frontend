@@ -7,7 +7,7 @@ import { MatDatepickerModule } from '@angular/material/datepicker';
 import { Chart, ChartType } from 'chart.js';
 import { MatNativeDateModule } from '@angular/material/core';
 import { MatInputModule } from '@angular/material/input';
-import { BehaviorSubject, combineLatestWith, switchMap } from 'rxjs';
+import { BehaviorSubject, combineLatestWith, switchMap, tap } from 'rxjs';
 import { IUser, TResGetUsers, UserApiService, IGetUser } from '@entity';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute } from '@angular/router';
@@ -45,9 +45,14 @@ export class UserPageComponent {
         switchMap((params) => {
           const userId = params.get('id');
           if (userId) {
-            return this._userApiService.getUserInfo(userId);  
+            return this._userApiService.getUserInfo(userId);
           }
           throw new Error('User ID is required');
+        }),
+        tap((response: IGetUser) => {
+          this.user = response;
+          this.#loadUser();
+          this.#loadUserSalary();
         }),
         takeUntilDestroyed(this._destroyRef)
       )
@@ -76,7 +81,6 @@ export class UserPageComponent {
       )
       .subscribe((response: TResGetUsers) => {
         this.dataSource$.next(response.rows);
-        // this.totalCount$.next(response.infoPage.totalCount);
       });
   }
 
@@ -90,15 +94,14 @@ export class UserPageComponent {
 
   isWorkingDay(date: Date): boolean {
     const day = date.getDay();
-    return [1, 2, 3, 4, 5].includes(day);  // Пн-Пт
+    return [1, 2, 3, 4, 5].includes(day); 
   }
 
   getWorkHours(): string {
-    return '10:00 - 19:00';  // Рабочие часы
+    return '10:00 - 19:00'; 
   }
 
   dateClass = (date: Date) => {
     return this.isWorkingDay(date) ? 'working-day' : 'non-working-day';
   };
 }
-

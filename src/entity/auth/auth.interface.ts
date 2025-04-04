@@ -2,25 +2,23 @@ export interface IReqAuthLogin {
   login: string;
   password: string;
   deviceId: string;
-
 }
 
 export interface IResAuthLogin {
   data: {
-    access: string; 
-    refresh: string; 
+    access: string;
+    refresh: string;
   };
   meta: {
-    success: boolean; 
+    success: boolean;
   };
 }
-
 
 export enum EAuthKeys {
   TOKEN = 'accessToken',
   DEVICE_ID = 'deviceId',
+  USER = 'user',
 }
-
 
 export interface IResAuthUserInfo {
   id: string;

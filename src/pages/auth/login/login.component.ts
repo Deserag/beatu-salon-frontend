@@ -15,7 +15,7 @@ export class LoginComponent {
   protected loginForm = new FormGroup({
     login: new FormControl<string>('', {
       nonNullable: true,
-      validators: [Validators.required], 
+      validators: [Validators.required],
     }),
     password: new FormControl<string>('', {
       nonNullable: true,
@@ -33,17 +33,22 @@ export class LoginComponent {
   protected submit() {
     if (this.loginForm.valid) {
       const { login, password } = this.loginForm.getRawValue();
-      const deviceId = this._authService.deviceId;
-      this._authService
-        .login({ login: login, password, deviceId })
-        .subscribe({
-          next: () => {
-            this.router.navigate(['/']).then();
-          },
-          error: (err) => {
-            console.error('вход не удался:', err);
-          },
-        });
+
+      if (login === 'admin' && password === 'admin') {
+        const deviceId = this._authService.deviceId;
+        this._authService
+          .login({ login: login, password, deviceId })
+          .subscribe({
+            next: () => {
+              this.router.navigate(['/']).then();
+            },
+            error: (err) => {
+              console.error('вход не удался:', err);
+            },
+          });
+      } else {
+        console.error('Неверный логин или пароль');
+      }
     } else {
       console.log('форма не валидна');
     }
