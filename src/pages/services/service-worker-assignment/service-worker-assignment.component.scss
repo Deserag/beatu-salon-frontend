@@ -1,0 +1,55 @@
+$primary-color: #b6cb6a;
+$secondary-color: #8db662;
+$background-color: #d6e5d5;
+$text-color: #333;
+$error-color: #dc3545;
+$border-color: #b09e86;
+$box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+$border-radius: 4px;
+$transition-duration: 0.3s;
+
+.container {
+  padding: 20px;
+
+  h2 {
+    color: $secondary-color;
+    margin-bottom: 1.5rem;
+  }
+
+  button[mat-raised-button] {
+    margin-bottom: 1rem;
+  }
+
+  .loading {
+    margin-bottom: 1rem;
+  }
+
+  mat-tree {
+    width: 100%;
+
+    .mat-tree-node {
+      display: flex;
+      align-items: center;
+      height: 48px;
+      padding-left: 16px;
+    }
+
+    .mat-nested-tree-node {
+      padding-left: 16px;
+
+      .mat-tree-node {
+        padding-left: 32px;
+      }
+
+      .tree-invisible {
+        display: none;
+      }
+    }
+
+    .worker-node {
+      padding-left: 48px;
+      font-style: italic;
+      color: $text-color;
+    }
+  }
+}

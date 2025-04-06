@@ -3,7 +3,7 @@ import { inject, Injectable } from "@angular/core";
 import { environment } from "environment/environment";
 import { IReqPage } from "../work-page";
 import { Observable } from "rxjs";
-import { IGetServicesWithWorkersResponse, IUpdateProduct, IUpdateService, TResGetProduct, TResGetProductSale, TResGetService, IServiceWithWorkers, CreateWorkerOnServiceDTO } from "./services.interface";
+import { IUpdateProduct, IUpdateService, TResGetProduct, TResGetProductSale, TResGetService, IServiceWithWorkers, CreateWorkerOnServiceDTO, IWorkerOnService } from "./services.interface";
 
 
 @Injectable({
@@ -37,8 +37,8 @@ export class ServicesApiService {
     return this._http.put<IUpdateProduct>(`${this._baseURL}service/update-product`, body);
   }
 
-  getServicesWithWorkers(body: IReqPage): Observable<IGetServicesWithWorkersResponse> {
-    return this._http.post<IGetServicesWithWorkersResponse>(
+  getServicesWithWorkers(body: IReqPage): Observable<IWorkerOnService[]> {
+    return this._http.post<IWorkerOnService[]>(
       `${this._baseURL}service/worker-on-service/list`,
       body
     );
