@@ -31,6 +31,7 @@ export enum ERouteConstans {
     SERVICE_PAGE =  'detail',
     SERVICE_PRODUCT = 'product',
     SERVICE_PRODUCT_SALE = 'product-sale',
+    SERVICE_USER = 'user',
 
     //Рабочая панель
     WORK_PANEL = 'work-panel',

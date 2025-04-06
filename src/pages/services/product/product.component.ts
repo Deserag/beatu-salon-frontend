@@ -5,7 +5,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
 import { MatSortModule } from '@angular/material/sort';
 import { MatTableModule } from '@angular/material/table';
-import { IProducts, ServicesApiService, TresGetProduct } from '@entity';
+import { IProduct, ServicesApiService, TResGetProduct } from '@entity';
 import { ERouteConstans } from '@routes';
 import { BehaviorSubject, combineLatestWith, switchMap } from 'rxjs';
 
@@ -19,7 +19,7 @@ import { BehaviorSubject, combineLatestWith, switchMap } from 'rxjs';
 export class ProductComponent {
   protected readonly ERoutesConstans = ERouteConstans;
   displayedColumns: string[] = ['Name', 'Volume', 'Unit', 'Quantity', 'Prices', 'Symbol'];
-  dataSource$ = new BehaviorSubject<IProducts[]>([]);
+  dataSource$ = new BehaviorSubject<IProduct[]>([]);
   totalCount$ = new BehaviorSubject<number>(0);
   private _page$ = new BehaviorSubject<number>(1);
   private _pageSize$ = new BehaviorSubject<number>(10);
@@ -36,7 +36,7 @@ export class ProductComponent {
           ),
           takeUntilDestroyed(this._destroyRef)
         )
-        .subscribe((response: TresGetProduct) => {
+        .subscribe((response: TResGetProduct) => {
           this.dataSource$.next(response.rows);
         });
   
@@ -58,7 +58,7 @@ export class ProductComponent {
         // dialogRef.componentInstance.
       }
     
-      onClickUpdateProduct(product: IProducts) {}
+      onClickUpdateProduct(product: IProduct) {}
     
-      onClickDeleteProduct(product: IProducts) {}
+      onClickDeleteProduct(product: IProduct) {}
 }

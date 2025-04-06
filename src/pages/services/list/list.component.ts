@@ -7,10 +7,10 @@ import { MatSortModule } from '@angular/material/sort';
 import { MatTableModule } from '@angular/material/table';
 import { Router, RouterLink } from '@angular/router';
 import {
-  IProducts,
-  IServices,
+  IProduct,
+  IService,
   ServicesApiService,
-  TresGetProduct,
+  TResGetProduct,
   TResGetService,
 } from '@entity';
 import { ERouteConstans } from '@routes';
@@ -27,7 +27,7 @@ import { ServiceWindowComponent } from 'src/widgets/services';
 export class ListComponent {
   protected readonly ERoutesConstans = ERouteConstans;
   displayedColumns: string[] = ['Name', 'Price', 'Symbol'];
-  dataSource$ = new BehaviorSubject<IServices[]>([]);
+  dataSource$ = new BehaviorSubject<IService[]>([]);
   totalCount$ = new BehaviorSubject<number>(0);
   private _page$ = new BehaviorSubject<number>(1);
   private _pageSize$ = new BehaviorSubject<number>(10);
@@ -61,7 +61,7 @@ export class ListComponent {
     this._page$.next(event.pageIndex + 1);
   }
 
-  onCliCkEditService(service: IServices): void {
+  onCliCkEditService(service: IService): void {
     this.router.navigate(
       [ERouteConstans.SERVICES_PANEL, ERouteConstans.SERVICE_PAGE],
       {
@@ -72,10 +72,10 @@ export class ListComponent {
 
   onClickCreateService(): void {
     const dialogRef = this._dialog.open(ServiceWindowComponent);
-    dialogRef.componentInstance.service.subscribe((newService: IServices) => {
+    dialogRef.componentInstance.service.subscribe((newService: IService) => {
       console.log('Создан пользователь:', newService);
       this._page$.next(this._page$.value);
     });
   }
-  onClickDeleteService(service: IServices) {}
+  onClickDeleteService(service: IService) {}
 }

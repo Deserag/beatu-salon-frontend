@@ -171,7 +171,13 @@ export const servicesRoutes: Routes = [
           loadComponent: () => import('../pages/services/product-sale/product-sale.component').then(
             (c) => c.ProductSaleComponent
           )
-        }
+        },
+        {
+          path: ERouteConstans.SERVICE_USER,
+          loadComponent: () => import('../pages/services/service-worker-assignment/service-worker-assignment.component').then(
+            (c) => c.ServiceWorkerAssignmentComponent
+          )
+        },
       ]
   },
 ];

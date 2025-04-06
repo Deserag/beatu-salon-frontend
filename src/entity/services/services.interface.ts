@@ -1,6 +1,6 @@
 import { IResTablePage } from "../work-page";
 
-export interface IServices {
+export interface IService {
     id: string;
     name: string;
     description: string;
@@ -8,20 +8,32 @@ export interface IServices {
     duration: number;
     creatorId: string;
 }
-
-export interface IProducts {
-    id: string
-    name: string
-    description: string
-    volume: string
-    unit: string
-    quantity: number
-    prices: number
-    creatorId: string
+export interface IServiceNode {
+    id: string;
+    name: string;
+    isService: boolean;
+    workers?: IWorkerNode[];
 }
 
-export interface IProductSale extends IProducts {
-    office: string
+export interface IWorkerNode {
+    id: string;
+    name: string;
+    isService: boolean;
+}
+
+export interface IProduct {
+    id: string;
+    name: string;
+    description: string;
+    volume: string;
+    unit: string;
+    quantity: number;
+    prices: number;
+    creatorId: string;
+}
+
+export interface IProductSale extends IProduct {
+    office: string;
 }
 
 export interface ICreateService {
@@ -42,30 +54,29 @@ export interface ICreateProduct {
 }
 
 export interface IUpdateService extends ICreateService {
-    id: string
+    id: string;
 }
 
 export interface IUpdateProduct extends ICreateProduct {
-    id: string
+    id: string;
 }
 
-
-export interface IGetService {
-    name: string;
-    page: number;
-    size: number;
-    totalCount: number;
-    totalPages: number;
+export interface IWorkerOnService {
+    serviceId: string;
+    userId: string;
+    worker: {
+        id: string;
+        firstName: string;
+        lastName: string;
+    };
 }
 
-export interface IGetProduct {
-    name: string;
-    page: number;
-    size: number;
-    totalCount: number;
-    totalPages: number;
+export interface IServiceWithWorkers extends IService {
+    workers: IWorkerOnService[];
 }
 
-export type TResGetService = IResTablePage<IServices>
-export type TresGetProduct = IResTablePage<IProducts>
-export type TResGetProductSale = IResTablePage<IProductSale>
+export interface IGetServicesWithWorkersResponse extends IResTablePage<IServiceWithWorkers> {}
+
+export type TResGetService = IResTablePage<IService>;
+export type TResGetProduct = IResTablePage<IProduct>;
+export type TResGetProductSale = IResTablePage<IProductSale>;

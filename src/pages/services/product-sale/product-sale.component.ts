@@ -5,7 +5,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
 import { MatSortModule } from '@angular/material/sort';
 import { MatTableModule } from '@angular/material/table';
-import { IProducts, IProductSale, ServicesApiService, TresGetProduct, TResGetProductSale } from '@entity';
+import { IProduct, IProductSale, ServicesApiService, TResGetProduct, TResGetProductSale } from '@entity';
 import { ERouteConstans } from '@routes';
 import { BehaviorSubject, combineLatestWith, switchMap } from 'rxjs';
 
@@ -58,7 +58,7 @@ export class ProductSaleComponent {
         // dialogRef.componentInstance.
       }
     
-      onClickUpdateProduct(product: IProducts) {}
+      onClickUpdateProduct(product: IProduct) {}
     
-      onClickDeleteProduct(product: IProducts) {}
+      onClickDeleteProduct(product: IProduct) {}
 }

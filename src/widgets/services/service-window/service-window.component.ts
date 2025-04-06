@@ -2,7 +2,7 @@ import { Component, Inject, Output } from '@angular/core';
 import { EventEmitter } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { IServices, ServicesApiService } from '@entity';
+import { IService, ServicesApiService } from '@entity';
 
 @Component({
   selector: 'app-service-window',
@@ -18,7 +18,7 @@ export class ServiceWindowComponent {
   constructor(
     private _dialogRef: MatDialogRef<ServiceWindowComponent>,
     private _serviceApiService: ServicesApiService,
-    @Inject(MAT_DIALOG_DATA) public data: IServices | null
+    @Inject(MAT_DIALOG_DATA) public data: IService | null
   ) {
     this.#loadDepartment();
     this.#loadUsers();
@@ -37,7 +37,7 @@ export class ServiceWindowComponent {
     price: new FormControl<number | null>(null, Validators.required),
   });
 
-  initializeForm(service: IServices) {
+  initializeForm(service: IService) {
     this.form.patchValue({
       id: service.id,
       name: service.name,

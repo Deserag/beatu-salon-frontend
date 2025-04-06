@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
-import { IServices, IUpdateService, ServicesApiService } from '@entity';
+import { IService, IUpdateService, ServicesApiService } from '@entity';
 import {
   FormBuilder,
   FormGroup,
