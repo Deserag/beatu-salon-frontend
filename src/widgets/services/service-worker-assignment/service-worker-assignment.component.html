@@ -1,0 +1,48 @@
+<div class="modal-container">
+  <h2>Назначение мастеров на сервис</h2>
+
+  @if (errorMessage) {
+  <p style="color: red;">{{ errorMessage }}</p>
+  }
+
+  <form [formGroup]="assignmentForm" (ngSubmit)="onSubmit()">
+    <mat-form-field appearance="outline">
+      <mat-label>Выберите сервис</mat-label>
+      <mat-select formControlName="serviceId">
+        @for (service of services; track service.id) {
+        <mat-option [value]="service.id">
+          {{ service.name }}
+        </mat-option>
+        }
+      </mat-select>
+      @if (assignmentForm.controls['serviceId'].invalid && assignmentForm.controls['serviceId'].touched) {
+      <mat-error>
+        Сервис обязателен
+      </mat-error>
+      }
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Выберите мастеров</mat-label>
+      <mat-select formControlName="workers" multiple>
+        @for (worker of availableWorkers; track worker.id) {
+        <mat-option [value]="worker.id">
+          {{ worker.firstName }} {{ worker.lastName }}
+        </mat-option>
+        }
+      </mat-select>
+      <!-- @if (assignmentForm.controls['workers'].invalid && assignmentForm.controls['workers'].touched) {
+      <mat-error>
+        Необходимо выбрать хотя бы одного мастера
+      </mat-error>
+      } -->
+    </mat-form-field>
+
+    <div class="actions">
+      <button mat-button class="cancel-button" type="button" (click)="onCancel()">Отменить</button>
+      <button mat-raised-button color="primary" class="save-button" type="submit" [disabled]="assignmentForm.invalid">
+        Сохранить
+      </button>
+    </div>
+  </form>
+</div>

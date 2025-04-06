@@ -14,6 +14,11 @@ export interface IServiceNode {
     isService: boolean;
     workers?: IWorkerNode[];
 }
+export interface CreateWorkerOnServiceDTO {
+  serviceId: string;
+  userIds: string[];
+  creatorId: string;
+}
 
 export interface IWorkerNode {
     id: string;
