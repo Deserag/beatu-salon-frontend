@@ -29,13 +29,6 @@ export const userRoutes: Routes = [
             '../pages/user/user-department/user-department.component'
           ).then((m) => m.UserDepartmentComponent),
       },
-      {
-        path: ERouteConstans.USER_ROLE,
-        loadComponent: () =>
-          import('../pages/user/user-role/user-role.component').then(
-            (m) => m.UserRoleComponent
-          ),
-      },
       // ,
     ],
   },
