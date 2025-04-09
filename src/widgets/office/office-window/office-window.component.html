@@ -1,0 +1,29 @@
+<div class="modal-container">
+  <h2>{{ data?.id ? 'Редактировать офис' : 'Создать офис' }}</h2>
+  <form [formGroup]="form" (ngSubmit)="submit()">
+    <mat-form-field appearance="fill">
+      <mat-label>Номер офиса</mat-label>
+      <input matInput formControlName="number" />
+      @if (form.controls.number.invalid && form.controls.number.touched) {
+      <mat-error> Номер офиса обязателен </mat-error>
+      }
+    </mat-form-field>
+
+    <mat-form-field appearance="fill">
+      <mat-label>Адрес</mat-label>
+      <input matInput formControlName="address" />
+      @if (form.controls.address.invalid && form.controls.address.touched) {
+      <mat-error> Адрес обязателен </mat-error>
+      }
+    </mat-form-field>
+
+    <div class="actions">
+      <button mat-raised-button color="primary" type="submit">
+        {{ data?.id ? 'Обновить' : 'Создать' }}
+      </button>
+      <button mat-button color="warn" type="button" (click)="close()">
+        Отмена
+      </button>
+    </div>
+  </form>
+</div>
