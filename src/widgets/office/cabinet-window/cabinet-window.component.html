@@ -1,1 +1,33 @@
-<p>cabinet-window works!</p>
+<div class="modal-container">
+  <h2>{{ data?.id ? 'Редактировать кабинет' : 'Создать кабинет' }}</h2>
+  <form [formGroup]="form" (ngSubmit)="submit()">
+    <mat-form-field appearance="fill">
+      <mat-label>Номер кабинета</mat-label>
+      <input matInput formControlName="number" />
+      @if (form.controls.number.invalid && form.controls.number.touched) {
+      <mat-error> Номер кабинета обязателен </mat-error>
+      }
+    </mat-form-field>
+
+    <mat-form-field appearance="fill">
+      <mat-label>Офис</mat-label>
+      <mat-select formControlName="officeId">
+        <mat-option *ngFor="let office of offices$ | async" [value]="office.id">
+          {{ office.number }} - {{ office.address }}
+        </mat-option>
+      </mat-select>
+      @if (form.controls.officeId.invalid && form.controls.officeId.touched) {
+      <mat-error> Необходимо выбрать офис </mat-error>
+      }
+    </mat-form-field>
+
+    <div class="actions">
+      <button mat-raised-button color="primary" type="submit">
+        {{ data?.id ? 'Обновить' : 'Создать' }}
+      </button>
+      <button mat-button color="warn" type="button" (click)="close()">
+        Отмена
+      </button>
+    </div>
+  </form>
+</div>

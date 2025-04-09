@@ -10,8 +10,11 @@ import {
   TResGetCabinet,
   TResGetOffice,
   IDeleteOffice,
+  ICabinet,
+  ICreateCabinet,
+  IUpdateCabinet,
+  IDeleteCabinet,
 } from './office.interface';
-
 @Injectable({
   providedIn: 'root',
 })
@@ -37,5 +40,17 @@ export class OfficeApiService {
 
   deleteOffice(body: IDeleteOffice): Observable<IDeleteOffice> {
     return this._http.delete<IDeleteOffice>(`${this._baseURL}office/delete-office`, { body });
+  }
+
+  createCabinet(body: ICreateCabinet): Observable<ICabinet> {
+    return this._http.post<ICabinet>(`${this._baseURL}office/create-cabinet`, body);
+  }
+
+  updateCabinet(body: IUpdateCabinet): Observable<ICabinet> {
+    return this._http.put<ICabinet>(`${this._baseURL}office/update-cabinet`, body);
+  }
+
+  deleteCabinet(body: IDeleteCabinet): Observable<IDeleteCabinet> {
+    return this._http.delete<IDeleteCabinet>(`${this._baseURL}office/delete-cabinet`, { body });
   }
 }
