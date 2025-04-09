@@ -1,0 +1,72 @@
+.modal-container {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding: 20px;
+  max-width: 600px;
+  min-height: auto;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  background-color: #f9f9f9;
+  border: 1px solid #ddd;
+}
+
+mat-form-field {
+  width: 100%;
+}
+
+.actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.actions button {
+  min-width: 100px;
+  padding: 10px 15px;
+  border-radius: 4px;
+  font-size: 14px;
+}
+
+h2 {
+  text-align: center;
+  font-size: 20px;
+  margin-bottom: 15px;
+  color: #333;
+}
+
+.actions button[color="primary"] {
+  background-color: #2196f3;
+  color: white;
+  border: none;
+}
+
+.actions button[color="warn"] {
+  background-color: #f44336;
+  color: white;
+  border: none;
+}
+
+@media (max-width: 768px) {
+  .modal-container {
+    padding: 15px;
+    gap: 15px;
+  }
+
+  h2 {
+    font-size: 18px;
+    margin-bottom: 10px;
+  }
+
+  .actions {
+    gap: 8px;
+    margin-top: 15px;
+  }
+
+  .actions button {
+    min-width: 80px;
+    padding: 8px 12px;
+    font-size: 12px;
+  }
+}

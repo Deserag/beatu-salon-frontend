@@ -1,13 +1,23 @@
+import { NgFor, NgIf } from '@angular/common';
 import { Component, Inject, Output } from '@angular/core';
 import { EventEmitter } from '@angular/core';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatSelectModule } from '@angular/material/select';
 import { IService, ServicesApiService } from '@entity';
 
 @Component({
   selector: 'app-service-window',
   standalone: true,
-  imports: [],
+  imports: [
+    ReactiveFormsModule,
+    FormsModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatSelectModule,
+  ],
   templateUrl: './service-window.component.html',
   styleUrl: './service-window.component.scss',
 })
