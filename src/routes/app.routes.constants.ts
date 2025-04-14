@@ -41,6 +41,8 @@ export enum ERouteConstans {
     CLIENT_LIST ='client-list',
     CLIENT_PAGE = 'client-page',
     CLIENT_ORDER = 'client-order',
+
+    HOME_PAGE = 'home-page',
     
 
 

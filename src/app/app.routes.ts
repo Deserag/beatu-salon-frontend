@@ -175,6 +175,16 @@ export const servicesRoutes: Routes = [
   },
 ];
 
+export const homePage: Routes = [
+  {
+    path: ERouteConstans.HOME_PAGE,
+    loadComponent: () =>
+      import('../pages/home-page/home-page.component').then(
+        (c) => c.HomePageComponent
+      )
+  }
+]
+
 export const appRoutes: Routes = [
   {
     path: ERouteConstans.MAIN,
@@ -192,6 +202,7 @@ export const appRoutes: Routes = [
     path: '**',
     redirectTo: ERouteConstans.MAIN,
   },
+
 ];
 
 export const mainRoutes: Routes = [
@@ -202,6 +213,7 @@ export const mainRoutes: Routes = [
   ...servicesRoutes,
   ...personalRoutes,
   ...statisticRoutes,
+  ...homePage,
   {
     path: ERouteConstans.AUTH,
     loadChildren: () => authRoutes,
