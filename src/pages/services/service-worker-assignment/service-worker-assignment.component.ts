@@ -8,6 +8,7 @@ import { CommonModule } from '@angular/common';
 import { MatDialog } from '@angular/material/dialog';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { map } from 'rxjs/operators';
+import { ServiceWorkerAssignmentComponentWindow } from 'src/widgets/services/service-worker-window/service-worker-assignment.component';
 
 interface ServiceTreeNode {
   name: string;
@@ -82,7 +83,7 @@ export class ServiceWorkerAssignmentComponent implements OnInit {
           } else {
             servicesMap.set(serviceId, {
               id: serviceId,
-              name: `Услуга #${serviceId}`, // Вам может потребоваться отдельный запрос для получения названия услуги
+              name: `Услуга #${serviceId}`, 
               children: [workerNode]
             });
           }
@@ -102,7 +103,7 @@ export class ServiceWorkerAssignmentComponent implements OnInit {
   }
 
   openAssignmentModal(): void {
-    const dialogRef = this._dialog.open(ServiceWorkerAssignmentComponent, {});
+    const dialogRef = this._dialog.open(ServiceWorkerAssignmentComponentWindow, {});
 
     dialogRef.afterClosed().subscribe(result => {
       if (result) {

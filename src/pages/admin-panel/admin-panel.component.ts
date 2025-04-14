@@ -8,20 +8,17 @@ import { Chart, registerables } from 'chart.js';
 
 Chart.register(...registerables);
 
-interface ChartData {
-  labels: string[];
-  data: number[];
-}
-
-interface OfficeLoadData {
-  labels: string[];
-  data: number[];
-  colors: string[];
-}
-
 interface Order {
   name: string;
   amount: number;
+}
+
+interface SelectedPeriods {
+  officeLoad: string;
+  clients: string;
+  earnings: string;
+  averageCheck: string;
+  newClients: string;
 }
 
 @Component({
@@ -43,7 +40,14 @@ export class AdminPanelComponent implements AfterViewInit {
   @ViewChild('officeLoadCanvas') officeLoadCanvas!: ElementRef<HTMLCanvasElement>;
   @ViewChild('newClientsCanvas') newClientsCanvas!: ElementRef<HTMLCanvasElement>;
 
-  selectedPeriod: string = 'clientsWeek';
+  selectedPeriods: SelectedPeriods = {
+    officeLoad: 'week',
+    clients: 'week',
+    earnings: 'week',
+    averageCheck: 'week',
+    newClients: 'week'
+  };
+  
   showOrders: boolean = false;
   averageCheck: number = 1500;
   
@@ -68,20 +72,20 @@ export class AdminPanelComponent implements AfterViewInit {
   }
 
   createClientsChart(): void {
-    const data = {
-      labels: ['Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб', 'Вс'],
-      datasets: [{
-        label: 'Количество записей',
-        data: [120, 150, 130, 180, 200, 100, 80],
-        backgroundColor: 'rgba(54, 162, 235, 0.5)',
-        borderColor: 'rgba(54, 162, 235, 1)',
-        borderWidth: 1
-      }]
-    };
-
+    const data = this.getChartData('clients', this.selectedPeriods.clients);
+    
     new Chart(this.clientsCanvas.nativeElement, {
       type: 'bar',
-      data: data,
+      data: {
+        labels: data.labels,
+        datasets: [{
+          label: 'Количество записей',
+          data: data.values,
+          backgroundColor: 'rgba(54, 162, 235, 0.5)',
+          borderColor: 'rgba(54, 162, 235, 1)',
+          borderWidth: 1
+        }]
+      },
       options: {
         responsive: true,
         scales: {
@@ -94,22 +98,22 @@ export class AdminPanelComponent implements AfterViewInit {
   }
 
   createEarningsChart(): void {
-    const data = {
-      labels: ['Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб', 'Вс'],
-      datasets: [{
-        label: 'Заработок (₽)',
-        data: [1500, 1800, 1600, 2200, 2500, 1200, 900],
-        borderColor: 'rgba(75, 192, 192, 1)',
-        backgroundColor: 'rgba(75, 192, 192, 0.2)',
-        borderWidth: 2,
-        tension: 0.3,
-        fill: true
-      }]
-    };
-
+    const data = this.getChartData('earnings', this.selectedPeriods.earnings);
+    
     new Chart(this.earningsCanvas.nativeElement, {
       type: 'line',
-      data: data,
+      data: {
+        labels: data.labels,
+        datasets: [{
+          label: 'Заработок (₽)',
+          data: data.values,
+          borderColor: 'rgba(75, 192, 192, 1)',
+          backgroundColor: 'rgba(75, 192, 192, 0.2)',
+          borderWidth: 2,
+          tension: 0.3,
+          fill: true
+        }]
+      },
       options: {
         responsive: true
       }
@@ -117,18 +121,18 @@ export class AdminPanelComponent implements AfterViewInit {
   }
 
   createOfficeLoadChart(): void {
-    const data = {
-      labels: ['Офис 1', 'Офис 2', 'Офис 3'],
-      datasets: [{
-        data: [60, 80, 40],
-        backgroundColor: ['#FF6384', '#FFCE56', '#36A2EB'],
-        borderWidth: 1
-      }]
-    };
-
+    const data = this.getChartData('officeLoad', this.selectedPeriods.officeLoad);
+    
     new Chart(this.officeLoadCanvas.nativeElement, {
       type: 'doughnut',
-      data: data,
+      data: {
+        labels: data.labels,
+        datasets: [{
+          data: data.values,
+          backgroundColor: ['#FF6384', '#FFCE56', '#36A2EB'],
+          borderWidth: 1
+        }]
+      },
       options: {
         responsive: true,
         plugins: {
@@ -141,20 +145,20 @@ export class AdminPanelComponent implements AfterViewInit {
   }
 
   createNewClientsChart(): void {
-    const data = {
-      labels: ['Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб', 'Вс'],
-      datasets: [{
-        label: 'Новые клиенты',
-        data: [50, 60, 45, 70, 80, 30, 20],
-        backgroundColor: 'rgba(153, 102, 255, 0.5)',
-        borderColor: 'rgba(153, 102, 255, 1)',
-        borderWidth: 1
-      }]
-    };
-
+    const data = this.getChartData('newClients', this.selectedPeriods.newClients);
+    
     new Chart(this.newClientsCanvas.nativeElement, {
       type: 'bar',
-      data: data,
+      data: {
+        labels: data.labels,
+        datasets: [{
+          label: 'Новые клиенты',
+          data: data.values,
+          backgroundColor: 'rgba(153, 102, 255, 0.5)',
+          borderColor: 'rgba(153, 102, 255, 1)',
+          borderWidth: 1
+        }]
+      },
       options: {
         responsive: true,
         scales: {
@@ -166,8 +170,87 @@ export class AdminPanelComponent implements AfterViewInit {
     });
   }
 
-  onPeriodChange(period: string): void {
-    this.selectedPeriod = period;
+  onPeriodChange(period: string, chartType: keyof SelectedPeriods): void {
+    this.selectedPeriods[chartType] = period;
+    this.updateChartData(chartType);
+  }
+
+  private updateChartData(chartType: keyof SelectedPeriods): void {
+    const data = this.getChartData(chartType, this.selectedPeriods[chartType]);
+    
+    switch(chartType) {
+      case 'clients':
+        this.updateChart(this.clientsCanvas, 'bar', 'Количество записей', data);
+        break;
+      case 'earnings':
+        this.updateChart(this.earningsCanvas, 'line', 'Заработок (₽)', data);
+        break;
+      case 'officeLoad':
+        this.updateChart(this.officeLoadCanvas, 'doughnut', '', data);
+        break;
+      case 'newClients':
+        this.updateChart(this.newClientsCanvas, 'bar', 'Новые клиенты', data);
+        break;
+    }
+  }
+
+  private updateChart(
+    canvasRef: ElementRef<HTMLCanvasElement>, 
+    type: any, 
+    label: string, 
+    data: { labels: string[], values: number[] }
+  ): void {
+    const chart = Chart.getChart(canvasRef.nativeElement);
+    if (chart) {
+      chart.data.labels = data.labels;
+      chart.data.datasets[0].data = data.values;
+      chart.data.datasets[0].label = label;
+      chart.update();
+    }
+  }
+
+  private getChartData(chartType: string, period: string): { labels: string[], values: number[] } {
+    // Здесь должна быть логика получения данных в зависимости от типа графика и периода
+    // Это примерная реализация - замените на свою логику получения данных
+    switch(period) {
+      case 'today':
+        return {
+          labels: ['Утро', 'День', 'Вечер'],
+          values: this.generateRandomData(3, chartType)
+        };
+      case 'week':
+        return {
+          labels: ['Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб', 'Вс'],
+          values: this.generateRandomData(7, chartType)
+        };
+      case 'month':
+        return {
+          labels: ['Неделя 1', 'Неделя 2', 'Неделя 3', 'Неделя 4'],
+          values: this.generateRandomData(4, chartType)
+        };
+      case 'year':
+        return {
+          labels: ['Янв', 'Фев', 'Мар', 'Апр', 'Май', 'Июн', 'Июл', 'Авг', 'Сен', 'Окт', 'Ноя', 'Дек'],
+          values: this.generateRandomData(12, chartType)
+        };
+      default:
+        return {
+          labels: [],
+          values: []
+        };
+    }
+  }
+
+  private generateRandomData(count: number, chartType: string): number[] {
+    // Генерация тестовых данных
+    const base = chartType === 'earnings' ? 1000 : 
+                chartType === 'averageCheck' ? 500 : 10;
+    const multiplier = chartType === 'earnings' ? 10 : 
+                      chartType === 'averageCheck' ? 5 : 1;
+    
+    return Array(count).fill(0).map(() => 
+      Math.floor(base + Math.random() * base * multiplier)
+    );
   }
 
   toggleOrders(): void {
