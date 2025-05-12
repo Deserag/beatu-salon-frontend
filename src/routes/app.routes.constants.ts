@@ -39,7 +39,7 @@ export enum ERouteConstans {
     //КЛиентская часть
     CLIENT_PANEL ='client-panel',
     CLIENT_LIST ='client-list',
-    CLIENT_PAGE = 'client-page',
+    CLIENT_PAGE = ':id',
     CLIENT_ORDER = 'client-order',
 
     HOME_PAGE = 'home-page',
