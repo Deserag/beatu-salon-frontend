@@ -19,7 +19,7 @@ import {
 import { MatButtonModule } from '@angular/material/button';
 import { MatSelectModule } from '@angular/material/select';
 import { AsyncPipe, NgFor, NgIf } from '@angular/common';
-import { BehaviorSubject, switchMap} from 'rxjs';
+import { BehaviorSubject, switchMap } from 'rxjs';
 import { DestroyRef, inject } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
@@ -48,8 +48,15 @@ export class CabinetWindowComponent {
     officeId: new FormControl<string>('', Validators.required),
   });
   offices$ = new BehaviorSubject<IOffice[]>([]);
-  private creatorId: string = 'd52c32d6-0b2b-46e8-b16f-386fdd20d47d';
   private _destroyRef = inject(DestroyRef);
+  private readonly creatorId: string = (() => {
+    try {
+      const user = JSON.parse(localStorage.getItem('user') || '{}');
+      return user?.id || '';
+    } catch {
+      return '';
+    }
+  })();
 
   constructor(
     private _dialogRef: MatDialogRef<CabinetWindowComponent>,
@@ -61,10 +68,9 @@ export class CabinetWindowComponent {
       this.initializeForm(this.data);
     }
   }
-
   loadOffices() {
     this._officeApiService
-      .getOffice({ page: 1, pageSize: 1000 }) 
+      .getOffice({ page: 1, pageSize: 1000 })
       .pipe(
         switchMap((response) => {
           this.offices$.next(response.rows);

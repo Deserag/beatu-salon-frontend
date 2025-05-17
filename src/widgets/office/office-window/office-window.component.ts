@@ -1,23 +1,36 @@
-import { Component, Inject, EventEmitter, Output } from '@angular/core';
 import {
-  FormControl,
+  Component,
+  Inject,
+  inject,
+  EventEmitter,
+  Output,
+} from '@angular/core';
+import {
   FormGroup,
-  FormsModule,
-  ReactiveFormsModule,
+  FormControl,
   Validators,
+  ReactiveFormsModule,
+  FormsModule,
 } from '@angular/forms';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatInputModule } from '@angular/material/input';
+import {
+  MatDialogRef,
+  MAT_DIALOG_DATA,
+} from '@angular/material/dialog';
 import {
   IOffice,
   OfficeApiService,
   ICreateOffice,
   IUpdateOffice,
 } from '@entity';
+import {
+  MatFormFieldModule
+} from '@angular/material/form-field';
+import {
+  MatInputModule
+} from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { MatSelectModule } from '@angular/material/select';
-import { NgFor, NgIf } from '@angular/common';
+import { NgIf, NgFor } from '@angular/common';
 
 @Component({
   selector: 'app-office-window',
@@ -27,92 +40,94 @@ import { NgFor, NgIf } from '@angular/common';
     FormsModule,
     MatFormFieldModule,
     MatInputModule,
-    MatSelectModule,
-    MatFormFieldModule,
-    MatInputModule,
     MatButtonModule,
+    MatSelectModule,
   ],
   templateUrl: './office-window.component.html',
   styleUrl: './office-window.component.scss',
 })
 export class OfficeWindowComponent {
   @Output() office = new EventEmitter<IOffice>();
+
   form = new FormGroup({
     id: new FormControl<string | null>(null),
     number: new FormControl<string>('', Validators.required),
     address: new FormControl<string>('', Validators.required),
   });
-  private creatorId: string = 'd52c32d6-0b2b-46e8-b16f-386fdd20d47d';
 
-  constructor(
-    private _dialogRef: MatDialogRef<OfficeWindowComponent>,
-    private _officeApiService: OfficeApiService,
-    @Inject(MAT_DIALOG_DATA) public data: IOffice | null
-  ) {
-    if (this.data) {
-      this.initializeForm(this.data);
+  private _dialogRef = inject(MatDialogRef<OfficeWindowComponent>);
+  private _officeApiService = inject(OfficeApiService);
+
+  private _adminId: string = (() => {
+    try {
+      const user = JSON.parse(localStorage.getItem('user') || '{}');
+      return user?.id || '';
+    } catch {
+      return '';
+    }
+  })();
+
+  constructor(@Inject(MAT_DIALOG_DATA) public data: IOffice | null) {
+    if (data) {
+      this._initializeForm(data);
     }
   }
 
-  initializeForm(office: IOffice) {
+  private _initializeForm(data: IOffice): void {
     this.form.patchValue({
-      id: office.id,
-      number: office.number,
-      address: office.address,
+      id: data.id,
+      number: data.number,
+      address: data.address,
     });
   }
 
-  submit() {
-    if (this.form.valid) {
-      const formData = this.form.value;
-      if (formData.id) {
-        const updateData: IUpdateOffice = {
-          id: formData.id,
-          number: formData.number!,
-          address: formData.address!,
-          creatorId: this.creatorId
-        };
-        this.updateOffice(updateData);
-      } else {
-        const createData: ICreateOffice = {
-          number: formData.number!,
-          address: formData.address!,
-          creatorId: this.creatorId,
-        };
-        this.createOffice(createData);
-      }
-    } else {
+  submit(): void {
+    if (this.form.invalid) {
       this.form.markAllAsTouched();
+      return;
+    }
+
+    const { id, number, address } = this.form.value;
+
+    if (id) {
+      const updateOffice: IUpdateOffice = {
+        id,
+        number: number!,
+        address: address!,
+        creatorId: this._adminId,
+      };
+      this._update(updateOffice);
+    } else {
+      const createOffice: ICreateOffice = {
+        number: number!,
+        address: address!,
+        creatorId: this._adminId,
+      };
+      this._create(createOffice);
     }
   }
 
-  createOffice(office: ICreateOffice) {
+  private _create(office: ICreateOffice): void {
     this._officeApiService.createOffice(office).subscribe({
       next: (response) => {
-        console.log('Офис создан:', response);
         this._dialogRef.close(response);
         this.office.emit(response);
       },
-      error: (error) => {
-        console.error('Ошибка при создании офиса:', error);
-      },
+      error: (err) => console.error('Ошибка создания офиса:', err),
     });
   }
 
-  updateOffice(office: IUpdateOffice) {
+  private _update(office: IUpdateOffice): void {
     this._officeApiService.updateOffice(office).subscribe({
       next: (response) => {
-        console.log('Офис обновлен:', response);
         this._dialogRef.close(response);
         this.office.emit(response);
       },
-      error: (error) => {
-        console.error('Ошибка при обновлении офиса:', error);
-      },
+      error: (err) => console.error('Ошибка обновления офиса:', err),
     });
   }
 
-  close() {
+  close(): void {
     this._dialogRef.close();
   }
 }

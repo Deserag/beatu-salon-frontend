@@ -88,6 +88,7 @@ export interface IUserRole {
 export interface IUserDepartment {
   id: string;
   name: string;
+  description: string;
   createdAt: string;
   updatedAt: string;
   deletedAt: string | null;

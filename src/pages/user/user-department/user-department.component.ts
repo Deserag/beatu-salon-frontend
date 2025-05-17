@@ -58,7 +58,17 @@ export class UserDepartmentComponent {
     });
   }
 
-  onClickEditDepartment(department: IUserDepartment) {}
+  onClickEditDepartment(department: IUserDepartment) {
+  const dialogRef = this._dialog.open(DepartmentWindowComponent, {
+    data: department,
+  });
+
+  dialogRef.componentInstance.department.pipe(takeUntilDestroyed(this._destroyRef)).subscribe(() => {
+    this._loadDepartments();
+  });
+}
+
+
 
   onClickDeleteDepartment(department: IUserDepartment) {
     if (

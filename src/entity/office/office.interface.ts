@@ -18,6 +18,7 @@ export interface ICabinet {
   updatedAt: Date
   deletedAt: Date
   creatorId: string
+  office: IOffice
 }
 
 export interface IGetOffice {
@@ -29,9 +30,9 @@ export interface iGetCabinet {
 }
 
 export interface ICreateOffice {
+    creatorId: string;
     number: string;
     address: string;
-    creatorId: string;
 }
   
 export interface IUpdateOffice extends ICreateOffice {

@@ -28,7 +28,7 @@ import { MatIconModule } from '@angular/material/icon';
 })
 export class OfficeCabinetsComponent {
   protected readonly ERoutesConstans = ERouteConstans;
-  displayedColumns: string[] = ['number', 'NumberOffice', 'actions'];
+  displayedColumns: string[] = ['number', 'numberOffice','adress', 'actions'];
   dataSource$ = new BehaviorSubject<ICabinet[]>([]);
   totalCount$ = new BehaviorSubject<number>(0);
   private _page$ = new BehaviorSubject<number>(1);

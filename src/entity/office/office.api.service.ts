@@ -23,11 +23,11 @@ export class OfficeApiService {
   private _baseURL = environment.apiService;
 
   getOffice(body: IReqPage): Observable<TResGetOffice> {
-    return this._http.post<TResGetOffice>(`${this._baseURL}office/office-list`, body);
+    return this._http.post<TResGetOffice>(`${this._baseURL}office/list`, body);
   }
 
   getCabinets(body: IReqPage): Observable<TResGetCabinet> {
-    return this._http.post<TResGetCabinet>(`${this._baseURL}office/cabinet-list`, body);
+    return this._http.post<TResGetCabinet>(`${this._baseURL}office/list-cabinets`, body);
   }
 
   createOffice(body: ICreateOffice): Observable<IOffice> {

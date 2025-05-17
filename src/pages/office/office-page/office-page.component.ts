@@ -36,8 +36,27 @@ export class OfficePageComponent {
   private _officeApiService = inject(OfficeApiService);
   private _dialog = inject(MatDialog);
   private _destroyRef = inject(DestroyRef);
+  private _adminId: string = (() => {
+    try {
+      const user = JSON.parse(localStorage.getItem('user') || '{}');
+      return user?.id || '';
+    } catch {
+      return '';
+    }
+  })();
 
   constructor() {
+    this._loadOffices();
+
+    this._destroyRef.onDestroy(() => {
+      this._page$.complete();
+      this._pageSize$.complete();
+      this.dataSource$.complete();
+      this.totalCount$.complete();
+    });
+  }
+
+  private _loadOffices(): void {
     this._page$
       .pipe(
         combineLatestWith(this._pageSize$),
@@ -50,13 +69,6 @@ export class OfficePageComponent {
         this.dataSource$.next(response.rows);
         this.totalCount$.next(response.infoPage?.totalCount || 0);
       });
-
-    this._destroyRef.onDestroy(() => {
-      this._page$.complete();
-      this._pageSize$.complete();
-      this.dataSource$.complete();
-      this.totalCount$.complete();
-    });
   }
 
   onPageChange(event: PageEvent): void {
@@ -64,11 +76,12 @@ export class OfficePageComponent {
     this._page$.next(event.pageIndex + 1);
   }
 
-  onClickCreateOffice() {
+  onClickCreateOffice(): void {
     const dialogRef = this._dialog.open(OfficeWindowComponent, {
       width: '600px',
       data: null,
     });
+
     dialogRef.afterClosed().subscribe((result) => {
       if (result) {
         this._page$.next(1);
@@ -76,11 +89,12 @@ export class OfficePageComponent {
     });
   }
 
-  onCLickUpdateOffice(office: IOffice) {
+  onCLickUpdateOffice(office: IOffice): void {
     const dialogRef = this._dialog.open(OfficeWindowComponent, {
       width: '600px',
       data: office,
     });
+
     dialogRef.afterClosed().subscribe((result) => {
       if (result) {
         this._page$.next(this._page$.value);
@@ -88,17 +102,19 @@ export class OfficePageComponent {
     });
   }
 
-  onClickDeleteOffice(office: IOffice) {
+  onClickDeleteOffice(office: IOffice): void {
     if (confirm(`Вы уверены, что хотите удалить офис №${office.number}?`)) {
-      this._officeApiService.deleteOffice({ id: office.id, creatorId: '' }).subscribe({
-        next: (response) => {
-          console.log('Офис удален:', response);
-          this._page$.next(this._page$.value);
-        },
-        error: (error) => {
-          console.error('Ошибка при удалении офиса:', error);
-        },
-      });
+      this._officeApiService
+        .deleteOffice({ id: office.id, creatorId: this._adminId }) 
+        .subscribe({
+          next: () => {
+            this._loadOffices();
+            this._page$.next(this._page$.value);
+          },
+          error: (error) => {
+            console.error('Ошибка при удалении офиса:', error);
+          },
+        });
     }
   }
 }
