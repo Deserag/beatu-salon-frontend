@@ -1,8 +1,9 @@
 import { Component } from '@angular/core';
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { AuthService } from '@entity';
+import { AuthService, IResAuthLogin } from '@entity';
 import { NgIf } from '@angular/common';
+import { ERouteConstans } from '@routes';
 
 @Component({
   selector: 'app-login',
@@ -24,6 +25,7 @@ export class LoginComponent {
   });
 
   protected showPassword = false;
+  protected errorMessage: string | null = null;
 
   constructor(
     private router: Router,
@@ -33,24 +35,32 @@ export class LoginComponent {
   protected submit() {
     if (this.loginForm.valid) {
       const { login, password } = this.loginForm.getRawValue();
+      const deviceId = this._authService.deviceId;
 
-      if (login === 'admin' && password === 'admin') {
-        const deviceId = this._authService.deviceId;
-        this._authService
-          .login({ login: login, password, deviceId })
-          .subscribe({
-            next: () => {
-              this.router.navigate(['/']).then();
-            },
-            error: (err) => {
-              console.error('вход не удался:', err);
-            },
-          });
-      } else {
-        console.error('Неверный логин или пароль');
-      }
+      this._authService
+        .login({ login, password, deviceId })
+        .subscribe({
+          next: (response: IResAuthLogin) => {
+            const user = response?.user;
+            if (user?.id) {
+              localStorage.setItem('userId', user.id.toString());
+            }
+
+            const redirectUrl = sessionStorage.getItem('redirectUrl');
+            if (redirectUrl) {
+              sessionStorage.removeItem('redirectUrl');
+              this.router.navigate([redirectUrl]);
+            } else {
+              this.router.navigate([ERouteConstans.MAIN]);
+            }
+          },
+          error: () => {
+            this.errorMessage = 'Неверный логин или пароль';
+          },
+        });
+
     } else {
-      console.log('форма не валидна');
+      this.errorMessage = 'Пожалуйста, заполните все обязательные поля';
     }
   }
 }

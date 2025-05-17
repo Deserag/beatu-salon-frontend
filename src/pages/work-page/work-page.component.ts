@@ -5,7 +5,7 @@ import { RouterOutlet } from '@angular/router';
 @Component({
   selector: 'app-work-page',
   standalone: true,
-  imports: [HeaderComponent,RouterOutlet],
+  imports: [HeaderComponent, RouterOutlet],
   templateUrl: './work-page.component.html',
   styleUrl: './work-page.component.scss'
 })

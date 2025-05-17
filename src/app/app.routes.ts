@@ -29,7 +29,6 @@ export const userRoutes: Routes = [
             '../pages/user/user-department/user-department.component'
           ).then((m) => m.UserDepartmentComponent),
       },
-      // ,
     ],
   },
 ];
@@ -234,7 +233,7 @@ export const appRoutes: Routes = [
 ];
 
 export const mainRoutes: Routes = [
-  { path: '', redirectTo: ERouteConstans.HOME_PAGE, pathMatch: 'full' }, // Добавьте редирект на главную страницу по умолчанию внутри WorkPageComponent
+  { path: '', redirectTo: ERouteConstans.HOME_PAGE, pathMatch: 'full' },
   {
     path: ERouteConstans.HOME_PAGE,
     loadComponent: () =>
