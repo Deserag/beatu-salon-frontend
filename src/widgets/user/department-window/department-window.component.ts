@@ -1,18 +1,25 @@
-import { Component, Output } from '@angular/core';
-import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import { Component, DestroyRef, Output, inject } from '@angular/core';
+import {
+  FormControl,
+  FormGroup,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
 import { MatDialogRef } from '@angular/material/dialog';
-import { UserApiService } from '@entity';
+import { ICreateDepartment, UserApiService } from '@entity';
 import { EventEmitter } from '@angular/core';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { AuthService } from '@entity';
 
 @Component({
   selector: 'app-department-window',
   standalone: true,
   imports: [
     ReactiveFormsModule,
-    FormsModule,
     MatFormFieldModule,
     MatInputModule,
     MatSelectModule,
@@ -22,56 +29,68 @@ import { MatSelectModule } from '@angular/material/select';
 })
 export class DepartmentWindowComponent {
   @Output() department = new EventEmitter<any>();
-  private creatorId: string = 'b973f509-6ed5-4e9d-92b1-dc8b4e320cbf';
-  constructor(
-    private _dialogRef: MatDialogRef<DepartmentWindowComponent>,
-    private _userApiService: UserApiService
-  ) {
-  }
-
+  private _dialogRef = inject(MatDialogRef<DepartmentWindowComponent>);
+  private _userApiService = inject(UserApiService);
+  private _destroyRef = inject(DestroyRef);
+  private _snackBar = inject(MatSnackBar);
+  private _authService = inject(AuthService);
   form = new FormGroup({
     name: new FormControl<string>('', {
       nonNullable: true,
       validators: [Validators.required],
     }),
-    description: new FormControl<string | null>(null,{
+    description: new FormControl<string | null>(null, {
       validators: [Validators.required],
-    })
-  })
+    }),
+  });
 
   submit() {
     if (this.form.valid) {
-      this.department.emit(this.form.value)
-      this._dialogRef.close()
-    }
-    else {
-      this.form.markAllAsTouched()
+      this.department.emit(this.form.value);
+      this._dialogRef.close();
+    } else {
+      this.form.markAllAsTouched();
     }
   }
 
   onClickClose() {
-    this._dialogRef.close()
+    this.department.emit(this.form.value);
+    this._dialogRef.close();
   }
 
   onClickCreateDepartment() {
-    if (this.form.valid){
-      const FormData = {
-        ...this.form.value,
-        name: this.form.value.name || '',
-        description: this.form.value.description || '',
-        creatorId: this.creatorId
-      }
-      this._userApiService.createDepartment(FormData).subscribe({
-        next: (response) => {
-          console.log('Ответ от сервера:', response);
-          this.onClickClose()
-        },
-        error: (error) => {
-          console.error('Ошибка при создании отдела:', error);
-        },
-      })
+    if (this.form.valid) {
+      const formData: ICreateDepartment = {
+        name: this.form.controls.name.value ?? '',
+        description: this.form.controls.description.value ?? '',
+      };
+
+      this._userApiService
+        .createDepartment(formData)
+        .pipe(takeUntilDestroyed(this._destroyRef))
+        .subscribe({
+          next: (response) => {
+            this.onClickClose();
+            this._snackBar.open(
+              `Отделение "${response.name}" успешно создано`,
+              'Закрыть',
+              { duration: 3000 }
+            );
+          },
+          error: (error) => {
+            console.error('Ошибка при создании отдела:', error);
+            this._snackBar.open(
+              `Ошибка создания отделения: ${error.message}`,
+              'Закрыть',
+              {
+                duration: 5000,
+                panelClass: ['error-snackbar'],
+              }
+            );
+          },
+        });
+    } else {
+      this.form.markAllAsTouched();
     }
   }
-
-
 }

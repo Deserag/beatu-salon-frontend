@@ -3,8 +3,10 @@ import { inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import {
   ICreateDepartment,
+  ICreateDepartmentResponse,
   ICreateUser,
   IDeleteDepartment,
+  IDeleteDepartmentResponse,
   IDeleteRole,
   IDeleteUser,
   IGetRole,
@@ -62,8 +64,8 @@ export class UserApiService {
     return this._http.post<IGetRole>(`${this._baseURL}user/create-role`, body);
   }
 
-  createDepartment(body: ICreateDepartment): Observable<ICreateDepartment> {
-    return this._http.post<ICreateDepartment>(
+  createDepartment(body: ICreateDepartment): Observable<ICreateDepartmentResponse> {
+    return this._http.post<ICreateDepartmentResponse>(
       `${this._baseURL}user/create-department`,
       body
     );
@@ -103,9 +105,9 @@ export class UserApiService {
     );
   }
 
-  deleteDepartment(departmentId: string): Observable<IDeleteDepartment> {
+  deleteDepartment(departmentId: string): Observable<IDeleteDepartmentResponse> {
     const userId = this._authService.user?.id;
-    return this._http.delete<IDeleteDepartment>(
+    return this._http.delete<IDeleteDepartmentResponse>(
       `${this._baseURL}user/delete-department/${departmentId}`,
       { body: { adminId: userId } }
     );

@@ -1,4 +1,4 @@
-import { Component, DestroyRef, inject, OnInit } from '@angular/core';
+import { Component, DestroyRef, inject } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { MatDialog } from '@angular/material/dialog';
 import { IUserDepartment, TResGetDepartment, UserApiService } from '@entity';
@@ -10,6 +10,7 @@ import { MatTableModule } from '@angular/material/table';
 import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
 import { MatSortModule } from '@angular/material/sort';
 import { DepartmentWindowComponent } from 'src/widgets/user/department-window/department-window.component';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-user-department',
@@ -18,7 +19,7 @@ import { DepartmentWindowComponent } from 'src/widgets/user/department-window/de
   templateUrl: './user-department.component.html',
   styleUrl: './user-department.component.scss',
 })
-export class UserDepartmentComponent implements OnInit {
+export class UserDepartmentComponent {
   protected readonly ERoutesConstans = ERouteConstans;
   displayedColumns: string[] = ['Name', 'Description', 'Actions'];
   dataSource$ = new BehaviorSubject<IUserDepartment[]>([]);
@@ -29,10 +30,9 @@ export class UserDepartmentComponent implements OnInit {
   private _dialog = inject(MatDialog);
   private _destroyRef = inject(DestroyRef);
   private _router = inject(Router);
+  private _snackBar = inject(MatSnackBar);
 
-  constructor() {}
-
-  ngOnInit(): void {
+  constructor() {
     this._loadDepartments();
   }
 
@@ -53,7 +53,7 @@ export class UserDepartmentComponent implements OnInit {
 
   onClickCreateDepartment() {
     const dialogRef = this._dialog.open(DepartmentWindowComponent);
-    dialogRef.componentInstance.department.subscribe((newDepartment: IUserDepartment) => {
+    dialogRef.componentInstance.department.pipe(takeUntilDestroyed(this._destroyRef)).subscribe(() => {
       this._loadDepartments();
     });
   }
@@ -68,13 +68,20 @@ export class UserDepartmentComponent implements OnInit {
     ) {
       this._departmentApiService
         .deleteDepartment(department.id)
+        .pipe(takeUntilDestroyed(this._destroyRef))
         .subscribe({
-          next: (response) => {
-            console.log('Отделение успешно удалено', response);
+          next: () => {
             this._loadDepartments();
+            this._snackBar.open(`Отделение "${department.name}" успешно удалено`, 'Закрыть', {
+              duration: 3000,
+            });
           },
           error: (error) => {
             console.error('Ошибка удаления отделения', error);
+            this._snackBar.open(`Ошибка удаления отделения: ${error.message}`, 'Закрыть', {
+              duration: 5000,
+              panelClass: ['error-snackbar'],
+            });
           },
         });
     }
