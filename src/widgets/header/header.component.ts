@@ -7,7 +7,7 @@ import { MatListModule } from '@angular/material/list';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { RouterLink, RouterOutlet } from '@angular/router';
-import { AuthService } from '@entity';
+import { AuthService, IGetUser, IUser, UserApiService } from '@entity';
 import { ERouteConstans } from '@routes';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatExpansionModule } from '@angular/material/expansion';
@@ -32,9 +32,27 @@ import { MatExpansionModule } from '@angular/material/expansion';
   styleUrl: './header.component.scss',
 })
 export class HeaderComponent {
-  userName = 'Имя пользователя';
   protected readonly ERoutesConstans = ERouteConstans;
   readonly #authService = inject(AuthService);
+  readonly #userApiService = inject(UserApiService);
+
+  userName: string = '';
+
+  constructor() {
+    const userId = localStorage.getItem('userId');
+    if (userId) {
+      this.#userApiService.getUserInfo(userId).subscribe({
+        next: (response: IGetUser) => {
+          const { firstName = '', lastName = '' } = response.user;
+          this.userName =
+            `${lastName} ${firstName}`.trim() || 'Имя пользователя';
+        },
+        error: () => {
+          this.userName = 'Имя пользователя';
+        },
+      });
+    }
+  }
 
   protected onClickLogOut(): void {
     this.#authService.logout();

@@ -53,28 +53,29 @@ export class UserDepartmentComponent {
 
   onClickCreateDepartment() {
     const dialogRef = this._dialog.open(DepartmentWindowComponent);
-    dialogRef.componentInstance.department.pipe(takeUntilDestroyed(this._destroyRef)).subscribe(() => {
-      this._loadDepartments();
-    });
+    dialogRef.componentInstance.department
+      .pipe(takeUntilDestroyed(this._destroyRef))
+      .subscribe(() => {
+        this._loadDepartments();
+      });
   }
 
   onClickEditDepartment(department: IUserDepartment) {
-  const dialogRef = this._dialog.open(DepartmentWindowComponent, {
-    data: department,
-  });
+    const dialogRef = this._dialog.open(DepartmentWindowComponent, {
+      data: department, 
+    });
+    dialogRef.componentInstance.departmentData = department;
 
-  dialogRef.componentInstance.department.pipe(takeUntilDestroyed(this._destroyRef)).subscribe(() => {
-    this._loadDepartments();
-  });
-}
-
-
+    dialogRef.componentInstance.department
+      .pipe(takeUntilDestroyed(this._destroyRef))
+      .subscribe(() => {
+        this._loadDepartments();
+      });
+  }
 
   onClickDeleteDepartment(department: IUserDepartment) {
     if (
-      confirm(
-        `Вы уверены, что хотите удалить отделение ${department.name}?`
-      )
+      confirm(`Вы уверены, что хотите удалить отделение ${department.name}?`)
     ) {
       this._departmentApiService
         .deleteDepartment(department.id)
@@ -82,16 +83,24 @@ export class UserDepartmentComponent {
         .subscribe({
           next: () => {
             this._loadDepartments();
-            this._snackBar.open(`Отделение "${department.name}" успешно удалено`, 'Закрыть', {
-              duration: 3000,
-            });
+            this._snackBar.open(
+              `Отделение "${department.name}" успешно удалено`,
+              'Закрыть',
+              {
+                duration: 3000,
+              }
+            );
           },
           error: (error) => {
             console.error('Ошибка удаления отделения', error);
-            this._snackBar.open(`Ошибка удаления отделения: ${error.message}`, 'Закрыть', {
-              duration: 5000,
-              panelClass: ['error-snackbar'],
-            });
+            this._snackBar.open(
+              `Ошибка удаления отделения: ${error.message}`,
+              'Закрыть',
+              {
+                duration: 5000,
+                panelClass: ['error-snackbar'],
+              }
+            );
           },
         });
     }

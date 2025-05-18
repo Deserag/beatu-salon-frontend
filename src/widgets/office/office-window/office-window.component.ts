@@ -30,7 +30,6 @@ import {
 } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { MatSelectModule } from '@angular/material/select';
-import { NgIf, NgFor } from '@angular/common';
 
 @Component({
   selector: 'app-office-window',

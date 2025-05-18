@@ -6,7 +6,7 @@ import {
   Validators,
 } from '@angular/forms';
 import { MatDialogRef } from '@angular/material/dialog';
-import { ICreateDepartment, IUserDepartment, UserApiService } from '@entity';
+import { IUserDepartment, UserApiService } from '@entity';
 import { EventEmitter } from '@angular/core';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
@@ -28,7 +28,22 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 })
 export class DepartmentWindowComponent {
   @Output() department = new EventEmitter<void>();
-  @Input() departmentData?: IUserDepartment;
+
+  private _departmentData?: IUserDepartment;
+
+  @Input()
+  set departmentData(value: IUserDepartment | undefined) {
+    this._departmentData = value;
+    if (value) {
+      this.form.patchValue({
+        name: value.name,
+        description: value.description,
+      });
+    }
+  }
+  get departmentData(): IUserDepartment | undefined {
+    return this._departmentData;
+  }
 
   private _dialogRef = inject(MatDialogRef<DepartmentWindowComponent>);
   private _userApiService = inject(UserApiService);
@@ -44,15 +59,6 @@ export class DepartmentWindowComponent {
       validators: [Validators.required],
     }),
   });
-
-  constructor() {
-    if (this.departmentData) {
-      this.form.patchValue({
-        name: this.departmentData.name,
-        description: this.departmentData.description,
-      });
-    }
-  }
 
   get isEditMode(): boolean {
     return !!this.departmentData;
@@ -99,7 +105,7 @@ export class DepartmentWindowComponent {
         .createDepartment(formData)
         .pipe(takeUntilDestroyed(this._destroyRef))
         .subscribe({
-          next: (res) => {
+          next: () => {
             this._snackBar.open(`Отделение создано`, 'Закрыть', {
               duration: 3000,
             });

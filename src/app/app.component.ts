@@ -56,7 +56,7 @@ export class AppComponent {
       this. #authService.logout();
     }
   
-  userName = 'Имя пользователя';
+  // userName = 'Имя пользователя';
   appointments: Appointment[] = [ /* ... */ ]; 
   clientsCount = 125;
   newClientsCount = 25;
