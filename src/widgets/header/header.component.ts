@@ -7,7 +7,7 @@ import { MatListModule } from '@angular/material/list';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { RouterLink, RouterOutlet } from '@angular/router';
-import { AuthService, IGetUser, IUser, UserApiService } from '@entity';
+import { AuthService, IGetUser, UserApiService } from '@entity';
 import { ERouteConstans } from '@routes';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatExpansionModule } from '@angular/material/expansion';
@@ -29,23 +29,28 @@ import { MatExpansionModule } from '@angular/material/expansion';
     RouterOutlet,
   ],
   templateUrl: './header.component.html',
-  styleUrl: './header.component.scss',
+  styleUrls: ['./header.component.scss'],
 })
 export class HeaderComponent {
   protected readonly ERoutesConstans = ERouteConstans;
   readonly #authService = inject(AuthService);
   readonly #userApiService = inject(UserApiService);
 
-  userName: string = '';
+  userName = '';
+  userRoleId = '';
+  adminRoleId = '';
+  superAdminRoleId = '';
 
   constructor() {
     const userId = localStorage.getItem('userId');
     if (userId) {
       this.#userApiService.getUserInfo(userId).subscribe({
         next: (response: IGetUser) => {
-          const { firstName = '', lastName = '' } = response.user;
+          const { firstName = '', lastName = '', roleId = '' } = response.user;
           this.userName =
             `${lastName} ${firstName}`.trim() || 'Имя пользователя';
+          this.userRoleId = roleId;
+          this.loadRoles();
         },
         error: () => {
           this.userName = 'Имя пользователя';
@@ -54,7 +59,28 @@ export class HeaderComponent {
     }
   }
 
-  protected onClickLogOut(): void {
+  loadRoles() {
+    this.#userApiService
+      .getUserRole({ name: '', page: 1, pageSize: 10 })
+      .subscribe({
+        next: (roles) => {
+          const admin = roles.rows.find(
+            (r) => r.name.toLowerCase() === 'admin'
+          );
+          const superAdmin = roles.rows.find(
+            (r) => r.name.toLowerCase() === 'superadmin'
+          );
+          this.adminRoleId = admin?.id || '';
+          this.superAdminRoleId = superAdmin?.id || '';
+        },
+        error: () => {
+          this.adminRoleId = '';
+          this.superAdminRoleId = '';
+        },
+      });
+  }
+
+  onClickLogOut() {
     this.#authService.logout();
   }
 
@@ -62,7 +88,10 @@ export class HeaderComponent {
     return this.#authService.isAuthenticated();
   }
 
-  get user() {
-    return this.#authService.user;
+  get isAdminOrSuperAdmin(): boolean {
+    return (
+      this.userRoleId === this.adminRoleId ||
+      this.userRoleId === this.superAdminRoleId
+    );
   }
 }

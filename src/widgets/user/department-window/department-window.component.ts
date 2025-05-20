@@ -80,7 +80,6 @@ export class DepartmentWindowComponent {
     };
 
     if (this.isEditMode && this.departmentData?.id) {
-      // Обновление
       this._userApiService
         .updateDepartment({ departmentId: this.departmentData.id, ...formData })
         .pipe(takeUntilDestroyed(this._destroyRef))
@@ -100,7 +99,6 @@ export class DepartmentWindowComponent {
           },
         });
     } else {
-      // Создание
       this._userApiService
         .createDepartment(formData)
         .pipe(takeUntilDestroyed(this._destroyRef))

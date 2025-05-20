@@ -29,7 +29,6 @@ import { MatSelectModule } from '@angular/material/select';
 })
 export class UserWindowComponent {
   @Output() user = new EventEmitter<any>();
-  private creatorId: string = 'd52c32d6-0b2b-46e8-b16f-386fdd20d47d';
   roles: IUserRoles[] = [];
   departments: IUserDepartment[] = [];
 
