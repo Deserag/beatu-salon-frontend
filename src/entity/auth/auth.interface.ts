@@ -5,13 +5,8 @@ export interface IReqAuthLogin {
 }
 
 export interface IResAuthLogin {
-  data: {
-    access: string;
-    refresh: string;
-  };
-  meta: {
-    success: boolean;
-  };
+  accessToken: string;
+  user: IResAuthUserInfo;
 }
 
 export enum EAuthKeys {
@@ -24,13 +19,14 @@ export interface IResAuthUserInfo {
   id: string;
   login: string;
   username: string | null;
-  roles: ERoles;
-  updatedAt: string;
+  roles: ERoles | ERoles[];
+  updatedAt?: string;
 }
 
 export enum ERoles {
   REGULAR_USER = 'REGULAR_USER',
-  ADMIN = 'ADMIN',
+  ADMIN = 'Admin',
+  SUPER_ADMIN = 'SuperAdmin',
 }
 
 export const ROLES_ARRAY: ERoles[] = Object.values(ERoles) as ERoles[];

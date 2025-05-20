@@ -11,15 +11,51 @@ export interface IOffice {
 }
 
 export interface ICabinet {
-    office: IOffice
+  id: string
+  number: string
+  officeId: string
+  createdAt: Date
+  updatedAt: Date
+  deletedAt: Date
+  creatorId: string
+  office: IOffice
 }
 
 export interface IGetOffice {
-cabinet: ICabinet
+  office: IOffice
 }
 
 export interface iGetCabinet {
+  cabinet: ICabinet
+}
 
+export interface ICreateOffice {
+    creatorId: string;
+    number: string;
+    address: string;
+}
+  
+export interface IUpdateOffice extends ICreateOffice {
+    id: string;
+}
+
+export interface IDeleteOffice {
+  id: string;
+  creatorId: string;
+}
+
+export interface ICreateCabinet {
+  number: string;
+  officeId:string;
+  creatorId: string;
+}
+export interface IUpdateCabinet extends ICreateCabinet {
+  id: string;
+}
+
+export interface IDeleteCabinet {
+  id: string;
+  creatorId: string;
 }
 
 export type TResGetOffice = IResTablePage<IOffice>

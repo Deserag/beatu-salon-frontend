@@ -1,67 +1,124 @@
-<div class="content">
-  <div class="chart-container">
-    <div class="chart-wrapper">
-      <h3>Нагрузка офисов</h3>
-      <canvas #officeLoadCanvas width="400" height="400"></canvas>
-      <div class="period-selector">
-        <button (click)="onPeriodChange('officeLoadToday')" [class.active]="selectedPeriod === 'officeLoadToday'">Сегодня</button>
-        <button (click)="onPeriodChange('officeLoadWeek')" [class.active]="selectedPeriod === 'officeLoadWeek'">Неделя</button>
-        <button (click)="onPeriodChange('officeLoadMonth')" [class.active]="selectedPeriod === 'officeLoadMonth'">Месяц</button>
-        <button (click)="onPeriodChange('officeLoadYear')" [class.active]="selectedPeriod === 'officeLoadYear'">Год</button>
-      </div>
-    </div>
+<div class="admin-panel">
+  <h2 class="admin-panel__title">Панель администратора</h2>
 
-    <div class="chart-wrapper">
-      <h3>Количество записей</h3>
-      <canvas #clientsCanvas width="600" height="300"></canvas>
-      <div class="period-selector">
-        <button (click)="onPeriodChange('clientsToday')" [class.active]="selectedPeriod === 'clientsToday'">Сегодня</button>
-        <button (click)="onPeriodChange('clientsWeek')" [class.active]="selectedPeriod === 'clientsWeek'">Неделя</button>
-        <button (click)="onPeriodChange('clientsMonth')" [class.active]="selectedPeriod === 'clientsMonth'">Месяц</button>
-        <button (click)="onPeriodChange('clientsYear')" [class.active]="selectedPeriod === 'clientsYear'">Год</button>
-      </div>
-    </div>
+  <mat-grid-list cols="2" rowHeight="500px" gutterSize="20px" >
+    <!-- Нагрузка офисов -->
+    <mat-grid-tile>
+      <mat-card class="card">
+        <mat-card-title>Нагрузка офисов</mat-card-title>
+        <mat-card-content>
+          <div class="chart-container" >
+            <canvas #officeLoadCanvas></canvas>
+          </div>
+          <div class="period-selector">
+            <button mat-button (click)="onPeriodChange('today', 'officeLoad')" 
+                    [class.active]="selectedPeriods.officeLoad === 'today'">Сегодня</button>
+            <button mat-button (click)="onPeriodChange('week', 'officeLoad')" 
+                    [class.active]="selectedPeriods.officeLoad === 'week'">Неделя</button>
+            <button mat-button (click)="onPeriodChange('month', 'officeLoad')" 
+                    [class.active]="selectedPeriods.officeLoad === 'month'">Месяц</button>
+            <button mat-button (click)="onPeriodChange('year', 'officeLoad')" 
+                    [class.active]="selectedPeriods.officeLoad === 'year'">Год</button>
+          </div>
+        </mat-card-content>
+      </mat-card>
+    </mat-grid-tile>
 
-    <div class="chart-wrapper">
-      <h3>Заработок</h3>
-      <canvas #earningsCanvas width="600" height="300"></canvas>
-      <div class="period-selector">
-        <button (click)="onPeriodChange('earningsToday')" [class.active]="selectedPeriod === 'earningsToday'">Сегодня</button>
-        <button (click)="onPeriodChange('earningsWeek')" [class.active]="selectedPeriod === 'earningsWeek'">Неделя</button>
-        <button (click)="onPeriodChange('earningsMonth')" [class.active]="selectedPeriod === 'earningsMonth'">Месяц</button>
-        <button (click)="onPeriodChange('earningsYear')" [class.active]="selectedPeriod === 'earningsYear'">Год</button>
-      </div>
-    </div>
+    <!-- Количество записей -->
+    <mat-grid-tile>
+      <mat-card class="card">
+        <mat-card-title>Количество записей</mat-card-title>
+        <mat-card-content>
+          <div class="chart-container">
+            <canvas #clientsCanvas></canvas>
+          </div>
+          <div class="period-selector">
+            <button mat-button (click)="onPeriodChange('today', 'clients')" 
+                    [class.active]="selectedPeriods.clients === 'today'">Сегодня</button>
+            <button mat-button (click)="onPeriodChange('week', 'clients')" 
+                    [class.active]="selectedPeriods.clients === 'week'">Неделя</button>
+            <button mat-button (click)="onPeriodChange('month', 'clients')" 
+                    [class.active]="selectedPeriods.clients === 'month'">Месяц</button>
+            <button mat-button (click)="onPeriodChange('year', 'clients')" 
+                    [class.active]="selectedPeriods.clients === 'year'">Год</button>
+          </div>
+        </mat-card-content>
+      </mat-card>
+    </mat-grid-tile>
 
-    <div class="chart-wrapper">
-      <div class="average-check">
-        Средний чек: {{ averageCheck }}
-      </div>
-      <h3>Сегодняшние заказы</h3>
-      <div>Сегодняшние заказы:</div>
-      <ul>
-        <li *ngFor="let order of orders" [hidden]="!showOrders && orders.indexOf(order) > 2">
-          {{ order.name }}: {{ order.amount }}
-        </li>
-      </ul>
-      <button (click)="toggleOrders()">{{ showOrders ? 'Скрыть' : 'Показать' }} все заказы</button>
-      <div class="period-selector">
-        <button (click)="onPeriodChange('averageCheckToday')" [class.active]="selectedPeriod === 'averageCheckToday'">Сегодня</button>
-        <button (click)="onPeriodChange('averageCheckWeek')" [class.active]="selectedPeriod === 'averageCheckWeek'">Неделя</button>
-        <button (click)="onPeriodChange('averageCheckMonth')" [class.active]="selectedPeriod === 'averageCheckMonth'">Месяц</button>
-        <button (click)="onPeriodChange('averageCheckYear')" [class.active]="selectedPeriod === 'averageCheckYear'">Год</button>
-      </div>
-    </div>
+    <!-- Заработок -->
+    <mat-grid-tile>
+      <mat-card class="card">
+        <mat-card-title>Заработок</mat-card-title>
+        <mat-card-content>
+          <div class="chart-container">
+            <canvas #earningsCanvas></canvas>
+          </div>
+          <div class="period-selector">
+            <button mat-button (click)="onPeriodChange('today', 'earnings')" 
+                    [class.active]="selectedPeriods.earnings === 'today'">Сегодня</button>
+            <button mat-button (click)="onPeriodChange('week', 'earnings')" 
+                    [class.active]="selectedPeriods.earnings === 'week'">Неделя</button>
+            <button mat-button (click)="onPeriodChange('month', 'earnings')" 
+                    [class.active]="selectedPeriods.earnings === 'month'">Месяц</button>
+            <button mat-button (click)="onPeriodChange('year', 'earnings')" 
+                    [class.active]="selectedPeriods.earnings === 'year'">Год</button>
+          </div>
+        </mat-card-content>
+      </mat-card>
+    </mat-grid-tile>
 
-    <div class="chart-wrapper">
-      <h3>Новые клиенты</h3>
-      <canvas #newClientsCanvas width="600" height="300"></canvas>
-      <div class="period-selector">
-        <button (click)="onPeriodChange('newClientsToday')" [class.active]="selectedPeriod === 'newClientsToday'">Сегодня</button>
-        <button (click)="onPeriodChange('newClientsWeek')" [class.active]="selectedPeriod === 'newClientsWeek'">Неделя</button>
-        <button (click)="onPeriodChange('newClientsMonth')" [class.active]="selectedPeriod === 'newClientsMonth'">Месяц</button>
-        <button (click)="onPeriodChange('newClientsYear')" [class.active]="selectedPeriod === 'newClientsYear'">Год</button>
-      </div>
-    </div>
-  </div>
+    <!-- Сегодняшние заказы -->
+    <mat-grid-tile>
+      <mat-card class="card">
+        <mat-card-title>Сегодняшние заказы</mat-card-title>
+        <mat-card-content>
+          <div class="average-check">
+            Средний чек: <strong>{{ averageCheck }} ₽</strong>
+          </div>
+          <mat-list>
+            <mat-list-item *ngFor="let order of visibleOrders">
+              <span matListItemTitle>{{ order.name }}</span>
+              <span matListItemLine>{{ order.amount }} ₽</span>
+            </mat-list-item>
+          </mat-list>
+          <button mat-button (click)="toggleOrders()" color="primary">
+            {{ showOrders ? 'Скрыть' : 'Показать все' }}
+          </button>
+          <div class="period-selector">
+            <button mat-button (click)="onPeriodChange('today', 'averageCheck')" 
+                    [class.active]="selectedPeriods.averageCheck === 'today'">Сегодня</button>
+            <button mat-button (click)="onPeriodChange('week', 'averageCheck')" 
+                    [class.active]="selectedPeriods.averageCheck === 'week'">Неделя</button>
+            <button mat-button (click)="onPeriodChange('month', 'averageCheck')" 
+                    [class.active]="selectedPeriods.averageCheck === 'month'">Месяц</button>
+            <button mat-button (click)="onPeriodChange('year', 'averageCheck')" 
+                    [class.active]="selectedPeriods.averageCheck === 'year'">Год</button>
+          </div>
+        </mat-card-content>
+      </mat-card>
+    </mat-grid-tile>
+
+    <!-- Новые клиенты -->
+    <mat-grid-tile>
+      <mat-card class="card">
+        <mat-card-title>Новые клиенты</mat-card-title>
+        <mat-card-content>
+          <div class="chart-container">
+            <canvas #newClientsCanvas></canvas>
+          </div>
+          <div class="period-selector">
+            <button mat-button (click)="onPeriodChange('today', 'newClients')" 
+                    [class.active]="selectedPeriods.newClients === 'today'">Сегодня</button>
+            <button mat-button (click)="onPeriodChange('week', 'newClients')" 
+                    [class.active]="selectedPeriods.newClients === 'week'">Неделя</button>
+            <button mat-button (click)="onPeriodChange('month', 'newClients')" 
+                    [class.active]="selectedPeriods.newClients === 'month'">Месяц</button>
+            <button mat-button (click)="onPeriodChange('year', 'newClients')" 
+                    [class.active]="selectedPeriods.newClients === 'year'">Год</button>
+          </div>
+        </mat-card-content>
+      </mat-card>
+    </mat-grid-tile>
+  </mat-grid-list>
 </div>

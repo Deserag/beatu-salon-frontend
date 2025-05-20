@@ -35,17 +35,22 @@
       <mat-form-field appearance="fill">
         <mat-label>Проффессии</mat-label>
         <mat-select formControlName="departments" multiple>
-          <mat-option *ngFor="let department of departments" [value]="department.id">
+          <mat-option
+            *ngFor="let department of departments"
+            [value]="department.id"
+          >
             {{ department.name }}
           </mat-option>
         </mat-select>
         <mat-error
-          *ngIf="form.controls.departments.invalid && form.controls.departments.touched"
+          *ngIf="
+            form.controls.departments.invalid &&
+            form.controls.departments.touched
+          "
         >
           Необходимо выбрать хотя бы один отдел
         </mat-error>
       </mat-form-field>
-      
 
       <mat-form-field appearance="fill">
         <mat-label>Телеграм Id</mat-label>
@@ -108,12 +113,23 @@
     </mat-form-field>
 
     <div class="actions">
-      @if(!data?.id){
-      <button mat-raised-button color="primary" type="submit">Создать</button>
-      } @if(data?.id){
-      <button mat-raised-button color="primary" type="submit">Обновить</button>
-      }
-      <button mat-button color="warn" type="button" (click)="close()">
+      <button
+        mat-raised-button
+        type="submit"
+        class="create-button"
+        *ngIf="!data?.id"
+      >
+        Создать
+      </button>
+      <button
+        mat-raised-button
+        type="submit"
+        class="create-button"
+        *ngIf="data?.id"
+      >
+        Обновить
+      </button>
+      <button mat-button type="button" class="cancel-button" (click)="close()">
         Отмена
       </button>
     </div>

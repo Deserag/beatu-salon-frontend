@@ -35,7 +35,7 @@
   
     button {
       margin-left: 5px;
-      background-color: #4CAF50;
+      background-color: #4caf50;
       color: white;
       border: none;
       padding: 8px 16px;
@@ -48,7 +48,7 @@
       transition: background-color 0.3s ease;
   
       &:hover {
-        background-color: #45A049;
+        background-color: #45a049;
       }
   
       &[color="warn"] {
@@ -60,10 +60,10 @@
       }
   
       &[color="primary"] {
-        background-color: #2196F3;
+        background-color: #2196f3;
   
         &:hover {
-          background-color: #1976D2;
+          background-color: #1976d2;
         }
       }
     }
@@ -76,3 +76,4 @@
   .user-table {
     width: 100%;
   }
+  

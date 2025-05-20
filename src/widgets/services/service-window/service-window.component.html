@@ -1,1 +1,38 @@
-<p>service-window works!</p>
+<div class="modal-container">
+  <h2>{{ data?.id ? 'Редактировать услугу' : 'Создать услугу' }}</h2>
+  <form [formGroup]="form" (ngSubmit)="submit()">
+    <mat-form-field appearance="outline">
+      <mat-label>Название</mat-label>
+      <input matInput formControlName="name" required />
+      @if (form.controls.name.invalid && form.controls.name.touched) {
+      <mat-error>Название обязательно</mat-error>
+      }
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Описание</mat-label>
+      <textarea matInput formControlName="description" required rows="3"></textarea>
+      @if (form.controls.description.invalid && form.controls.description.touched) {
+      <mat-error>Описание обязательно</mat-error>
+      }
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Цена</mat-label>
+      <input matInput type="number" formControlName="price" required />
+      <span matPrefix>₽&nbsp;</span>
+      @if (form.controls.price.invalid && form.controls.price.touched) {
+      <mat-error>Цена обязательна</mat-error>
+      }
+    </mat-form-field>
+
+    <div class="actions">
+      <button mat-raised-button color="primary" type="submit">
+        {{ data?.id ? 'Обновить' : 'Создать' }}
+      </button>
+      <button mat-button color="warn" type="button" (click)="onClickClose()">
+        Отмена
+      </button>
+    </div>
+  </form>
+</div>

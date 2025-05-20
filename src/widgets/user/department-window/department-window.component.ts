@@ -1,18 +1,24 @@
-import { Component, Output } from '@angular/core';
-import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import { Component, Output, inject, Input, DestroyRef } from '@angular/core';
+import {
+  FormControl,
+  FormGroup,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
 import { MatDialogRef } from '@angular/material/dialog';
-import { UserApiService } from '@entity';
+import { IUserDepartment, UserApiService } from '@entity';
 import { EventEmitter } from '@angular/core';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-department-window',
   standalone: true,
   imports: [
     ReactiveFormsModule,
-    FormsModule,
     MatFormFieldModule,
     MatInputModule,
     MatSelectModule,
@@ -21,57 +27,96 @@ import { MatSelectModule } from '@angular/material/select';
   styleUrl: './department-window.component.scss',
 })
 export class DepartmentWindowComponent {
-  @Output() department = new EventEmitter<any>();
-  private creatorId: string = 'b973f509-6ed5-4e9d-92b1-dc8b4e320cbf';
-  constructor(
-    private _dialogRef: MatDialogRef<DepartmentWindowComponent>,
-    private _userApiService: UserApiService
-  ) {
+  @Output() department = new EventEmitter<void>();
+
+  private _departmentData?: IUserDepartment;
+
+  @Input()
+  set departmentData(value: IUserDepartment | undefined) {
+    this._departmentData = value;
+    if (value) {
+      this.form.patchValue({
+        name: value.name,
+        description: value.description,
+      });
+    }
   }
+  get departmentData(): IUserDepartment | undefined {
+    return this._departmentData;
+  }
+
+  private _dialogRef = inject(MatDialogRef<DepartmentWindowComponent>);
+  private _userApiService = inject(UserApiService);
+  private _destroyRef = inject(DestroyRef);
+  private _snackBar = inject(MatSnackBar);
 
   form = new FormGroup({
     name: new FormControl<string>('', {
       nonNullable: true,
       validators: [Validators.required],
     }),
-    description: new FormControl<string | null>(null,{
+    description: new FormControl<string | null>(null, {
       validators: [Validators.required],
-    })
-  })
+    }),
+  });
 
-  submit() {
-    if (this.form.valid) {
-      this.department.emit(this.form.value)
-      this._dialogRef.close()
-    }
-    else {
-      this.form.markAllAsTouched()
-    }
+  get isEditMode(): boolean {
+    return !!this.departmentData;
   }
 
   onClickClose() {
-    this._dialogRef.close()
+    this._dialogRef.close();
   }
 
   onClickCreateDepartment() {
-    if (this.form.valid){
-      const FormData = {
-        ...this.form.value,
-        name: this.form.value.name || '',
-        description: this.form.value.description || '',
-        creatorId: this.creatorId
-      }
-      this._userApiService.createDepartment(FormData).subscribe({
-        next: (response) => {
-          console.log('Ответ от сервера:', response);
-          this.onClickClose()
-        },
-        error: (error) => {
-          console.error('Ошибка при создании отдела:', error);
-        },
-      })
+    if (!this.form.valid) {
+      this.form.markAllAsTouched();
+      return;
+    }
+
+    const formData = {
+      name: this.form.controls.name.value ?? '',
+      description: this.form.controls.description.value ?? '',
+    };
+
+    if (this.isEditMode && this.departmentData?.id) {
+      this._userApiService
+        .updateDepartment({ departmentId: this.departmentData.id, ...formData })
+        .pipe(takeUntilDestroyed(this._destroyRef))
+        .subscribe({
+          next: () => {
+            this._snackBar.open(`Отделение обновлено`, 'Закрыть', {
+              duration: 3000,
+            });
+            this._dialogRef.close();
+            this.department.emit();
+          },
+          error: (err) => {
+            this._snackBar.open(`Ошибка обновления: ${err.message}`, 'Закрыть', {
+              duration: 5000,
+              panelClass: ['error-snackbar'],
+            });
+          },
+        });
+    } else {
+      this._userApiService
+        .createDepartment(formData)
+        .pipe(takeUntilDestroyed(this._destroyRef))
+        .subscribe({
+          next: () => {
+            this._snackBar.open(`Отделение создано`, 'Закрыть', {
+              duration: 3000,
+            });
+            this._dialogRef.close();
+            this.department.emit();
+          },
+          error: (err) => {
+            this._snackBar.open(`Ошибка создания: ${err.message}`, 'Закрыть', {
+              duration: 5000,
+              panelClass: ['error-snackbar'],
+            });
+          },
+        });
     }
   }
-
-
 }

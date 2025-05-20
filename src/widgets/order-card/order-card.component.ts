@@ -1,12 +1,13 @@
 import { Component, Input } from '@angular/core';
 import { DatePipe } from '@angular/common';
+import { MatCardModule } from '@angular/material/card';
 
 @Component({
   selector: 'app-order-card',
   standalone: true,
-  imports: [DatePipe],
+  imports: [DatePipe, MatCardModule],
   templateUrl: './order-card.component.html',
-  styleUrl: './order-card.component.scss',
+  styleUrls: ['./order-card.component.scss']
 })
 export class OrderCardComponent {
   @Input() fullName: string = '';

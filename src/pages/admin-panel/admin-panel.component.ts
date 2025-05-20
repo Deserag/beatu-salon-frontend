@@ -1,60 +1,56 @@
-import { NgFor } from '@angular/common';
+import { CommonModule } from '@angular/common';
 import { Component, ViewChild, ElementRef, AfterViewInit } from '@angular/core';
-interface ChartData {
-  labels: string[];
-  data: number[];
-}
+import { MatCardModule } from '@angular/material/card';
+import { MatListModule } from '@angular/material/list';
+import { MatButtonModule } from '@angular/material/button';
+import { MatGridListModule } from '@angular/material/grid-list';
+import { Chart, registerables } from 'chart.js';
 
-interface OfficeLoadData {
-  labels: string[];
-  data: number[];
-  colors: string[];
-}
+Chart.register(...registerables);
 
 interface Order {
   name: string;
   amount: number;
 }
 
+interface SelectedPeriods {
+  officeLoad: string;
+  clients: string;
+  earnings: string;
+  averageCheck: string;
+  newClients: string;
+}
+
 @Component({
   selector: 'app-admin-panel',
   standalone: true,
-  imports: [NgFor],
+  imports: [
+    CommonModule,
+    MatCardModule,
+    MatListModule,
+    MatButtonModule,
+    MatGridListModule
+  ],
   templateUrl: './admin-panel.component.html',
-  styleUrl: './admin-panel.component.scss'
+  styleUrls: ['./admin-panel.component.scss']
 })
 export class AdminPanelComponent implements AfterViewInit {
   @ViewChild('clientsCanvas') clientsCanvas!: ElementRef<HTMLCanvasElement>;
   @ViewChild('earningsCanvas') earningsCanvas!: ElementRef<HTMLCanvasElement>;
   @ViewChild('officeLoadCanvas') officeLoadCanvas!: ElementRef<HTMLCanvasElement>;
   @ViewChild('newClientsCanvas') newClientsCanvas!: ElementRef<HTMLCanvasElement>;
-  @ViewChild('emptyCanvas') emptyCanvas!: ElementRef<HTMLCanvasElement>;
 
-  selectedPeriod: string = 'week';
+  selectedPeriods: SelectedPeriods = {
+    officeLoad: 'week',
+    clients: 'week',
+    earnings: 'week',
+    averageCheck: 'week',
+    newClients: 'week'
+  };
+  
   showOrders: boolean = false;
-
-  clientsChartData: ChartData = {
-    labels: ['Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб', 'Вс'],
-    data: [120, 150, 130, 180, 200, 100, 80]
-  };
-
-  earningsChartData: ChartData = {
-    labels: ['Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб', 'Вс'],
-    data: [1500, 1800, 1600, 2200, 2500, 1200, 900]
-  };
-
-  officeLoadChartData: OfficeLoadData = {
-    labels: ['Офис 1', 'Офис 2', 'Офис 3'],
-    data: [60, 80, 40],
-    colors: ['lightcoral', 'gold', 'lightblue']
-  };
-
-  newClientsChartData: ChartData = {
-    labels: ['Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб', 'Вс'],
-    data: [50, 60, 45, 70, 80, 30, 20]
-  };
-
   averageCheck: number = 1500;
+  
   orders: Order[] = [
     { name: 'Иванов Иван', amount: 1200 },
     { name: 'Петров Петр', amount: 1800 },
@@ -64,134 +60,197 @@ export class AdminPanelComponent implements AfterViewInit {
     { name: 'Смирнов Смирн', amount: 1600 }
   ];
 
-  constructor() {
+  get visibleOrders(): Order[] {
+    return this.showOrders ? this.orders : this.orders.slice(0, 3);
   }
+
   ngAfterViewInit(): void {
-    this.drawClientsChart();
-    this.drawEarningsChart();
-    this.drawOfficeLoadChart();
-    this.drawNewClientsChart();
+    this.createClientsChart();
+    this.createEarningsChart();
+    this.createOfficeLoadChart();
+    this.createNewClientsChart();
   }
 
-  drawClientsChart(): void {
-    const canvas = this.clientsCanvas.nativeElement;
-    const ctx = canvas.getContext('2d');
-    if (!ctx) return;
+  createClientsChart(): void {
+    const data = this.getChartData('clients', this.selectedPeriods.clients);
+    
+    new Chart(this.clientsCanvas.nativeElement, {
+      type: 'bar',
+      data: {
+        labels: data.labels,
+        datasets: [{
+          label: 'Количество записей',
+          data: data.values,
+          backgroundColor: 'rgba(54, 162, 235, 0.5)',
+          borderColor: 'rgba(54, 162, 235, 1)',
+          borderWidth: 1
+        }]
+      },
+      options: {
+        responsive: true,
+        scales: {
+          y: {
+            beginAtZero: true
+          }
+        }
+      }
+    });
+  }
 
-    const { labels, data } = this.clientsChartData;
-    const barWidth = 30;
-    const spacing = 20;
-    const startX = 50;
-    const startY = canvas.height - 50;
+  createEarningsChart(): void {
+    const data = this.getChartData('earnings', this.selectedPeriods.earnings);
+    
+    new Chart(this.earningsCanvas.nativeElement, {
+      type: 'line',
+      data: {
+        labels: data.labels,
+        datasets: [{
+          label: 'Заработок (₽)',
+          data: data.values,
+          borderColor: 'rgba(75, 192, 192, 1)',
+          backgroundColor: 'rgba(75, 192, 192, 0.2)',
+          borderWidth: 2,
+          tension: 0.3,
+          fill: true
+        }]
+      },
+      options: {
+        responsive: true
+      }
+    });
+  }
 
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
+  createOfficeLoadChart(): void {
+    const data = this.getChartData('officeLoad', this.selectedPeriods.officeLoad);
+    
+    new Chart(this.officeLoadCanvas.nativeElement, {
+      type: 'doughnut',
+      data: {
+        labels: data.labels,
+        datasets: [{
+          data: data.values,
+          backgroundColor: ['#FF6384', '#FFCE56', '#36A2EB'],
+          borderWidth: 1
+        }]
+      },
+      options: {
+        responsive: true,
+        plugins: {
+          legend: {
+            position: 'bottom'
+          }
+        }
+      }
+    });
+  }
 
-    for (let i = 0; i < data.length; i++) {
-      const barHeight = data[i];
-      const x = startX + i * (barWidth + spacing);
-      const y = startY - barHeight;
+  createNewClientsChart(): void {
+    const data = this.getChartData('newClients', this.selectedPeriods.newClients);
+    
+    new Chart(this.newClientsCanvas.nativeElement, {
+      type: 'bar',
+      data: {
+        labels: data.labels,
+        datasets: [{
+          label: 'Новые клиенты',
+          data: data.values,
+          backgroundColor: 'rgba(153, 102, 255, 0.5)',
+          borderColor: 'rgba(153, 102, 255, 1)',
+          borderWidth: 1
+        }]
+      },
+      options: {
+        responsive: true,
+        scales: {
+          y: {
+            beginAtZero: true
+          }
+        }
+      }
+    });
+  }
 
-      ctx.fillStyle = 'skyblue';
-      ctx.fillRect(x, y, barWidth, barHeight);
+  onPeriodChange(period: string, chartType: keyof SelectedPeriods): void {
+    this.selectedPeriods[chartType] = period;
+    this.updateChartData(chartType);
+  }
 
-      ctx.fillStyle = 'black';
-      ctx.fillText(labels[i], x + barWidth / 2 - 10, startY + 20);
-      ctx.fillText(data[i].toString(), x + barWidth / 2 - 10, y - 5);
+  private updateChartData(chartType: keyof SelectedPeriods): void {
+    const data = this.getChartData(chartType, this.selectedPeriods[chartType]);
+    
+    switch(chartType) {
+      case 'clients':
+        this.updateChart(this.clientsCanvas, 'bar', 'Количество записей', data);
+        break;
+      case 'earnings':
+        this.updateChart(this.earningsCanvas, 'line', 'Заработок (₽)', data);
+        break;
+      case 'officeLoad':
+        this.updateChart(this.officeLoadCanvas, 'doughnut', '', data);
+        break;
+      case 'newClients':
+        this.updateChart(this.newClientsCanvas, 'bar', 'Новые клиенты', data);
+        break;
     }
   }
 
-  drawEarningsChart(): void {
-    const canvas = this.earningsCanvas.nativeElement;
-    const ctx = canvas.getContext('2d');
-    if (!ctx) return;
-
-    const { labels, data } = this.earningsChartData;
-    const startX = 50;
-    const startY = canvas.height - 50;
-
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-    ctx.beginPath();
-    ctx.moveTo(startX, startY - data[0]);
-    for (let i = 1; i < data.length; i++) {
-      ctx.lineTo(startX + i * 50, startY - data[i]);
-    }
-    ctx.strokeStyle = 'lightgreen';
-    ctx.stroke();
-
-    for (let i = 0; i < labels.length; i++) {
-      ctx.fillStyle = 'black';
-      ctx.fillText(labels[i], startX + i * 50 - 10, startY + 20);
-      ctx.fillText(data[i].toString(), startX + i * 50 - 10, startY - data[i] - 5);
+  private updateChart(
+    canvasRef: ElementRef<HTMLCanvasElement>, 
+    type: any, 
+    label: string, 
+    data: { labels: string[], values: number[] }
+  ): void {
+    const chart = Chart.getChart(canvasRef.nativeElement);
+    if (chart) {
+      chart.data.labels = data.labels;
+      chart.data.datasets[0].data = data.values;
+      chart.data.datasets[0].label = label;
+      chart.update();
     }
   }
 
-  drawOfficeLoadChart(): void {
-    const canvas = this.officeLoadCanvas.nativeElement;
-    const ctx = canvas.getContext('2d');
-    if (!ctx) return;
-
-    const { labels, data, colors } = this.officeLoadChartData;
-    const centerX = canvas.width / 2;
-    const centerY = canvas.height / 2;
-    const radius = 80;
-    let startAngle = 0;
-
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-    let total = data.reduce((a, b) => a + b, 0);
-
-    for (let i = 0; i < data.length; i++) {
-      const sliceAngle = (2 * Math.PI * data[i]) / total;
-      ctx.fillStyle = colors[i];
-      ctx.beginPath();
-      ctx.moveTo(centerX, centerY);
-      ctx.arc(centerX, centerY, radius, startAngle, startAngle + sliceAngle);
-      ctx.closePath();
-      ctx.fill();
-
-      startAngle += sliceAngle;
-
-      const labelX = centerX + (radius + 20) * Math.cos(startAngle - sliceAngle / 2);
-      const labelY = centerY + (radius + 20) * Math.sin(startAngle - sliceAngle / 2);
-
-      ctx.fillStyle = 'black';
-      ctx.fillText(labels[i], labelX, labelY);
-      const percent = Math.round((data[i] / total) * 100);
-      ctx.fillText(`${percent}%`, centerX + (radius / 2) * Math.cos(startAngle - sliceAngle / 2), centerY + (radius / 2) * Math.sin(startAngle - sliceAngle / 2));
+  private getChartData(chartType: string, period: string): { labels: string[], values: number[] } {
+    // Здесь должна быть логика получения данных в зависимости от типа графика и периода
+    // Это примерная реализация - замените на свою логику получения данных
+    switch(period) {
+      case 'today':
+        return {
+          labels: ['Утро', 'День', 'Вечер'],
+          values: this.generateRandomData(3, chartType)
+        };
+      case 'week':
+        return {
+          labels: ['Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб', 'Вс'],
+          values: this.generateRandomData(7, chartType)
+        };
+      case 'month':
+        return {
+          labels: ['Неделя 1', 'Неделя 2', 'Неделя 3', 'Неделя 4'],
+          values: this.generateRandomData(4, chartType)
+        };
+      case 'year':
+        return {
+          labels: ['Янв', 'Фев', 'Мар', 'Апр', 'Май', 'Июн', 'Июл', 'Авг', 'Сен', 'Окт', 'Ноя', 'Дек'],
+          values: this.generateRandomData(12, chartType)
+        };
+      default:
+        return {
+          labels: [],
+          values: []
+        };
     }
   }
 
-  drawNewClientsChart(): void {
-    const canvas = this.newClientsCanvas.nativeElement;
-    const ctx = canvas.getContext('2d');
-    if (!ctx) return;
-
-    const { labels, data } = this.newClientsChartData;
-    const barWidth = 30;
-    const spacing = 20;
-    const startX = 50;
-    const startY = canvas.height - 50;
-
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-    for (let i = 0; i < data.length; i++) {
-      const barHeight = data[i];
-      const x = startX + i * (barWidth + spacing);
-      const y = startY - barHeight;
-
-      ctx.fillStyle = 'lightgreen';
-      ctx.fillRect(x, y, barWidth, barHeight);
-
-      ctx.fillStyle = 'black';
-      ctx.fillText(labels[i], x + barWidth / 2 - 10, startY + 20);
-      ctx.fillText(data[i].toString(), x + barWidth / 2 - 10, y - 5);
-    }
-  }
-
-  onPeriodChange(period: string): void {
-    this.selectedPeriod = period;
-    console.log('Выбран период:', period);
+  private generateRandomData(count: number, chartType: string): number[] {
+    // Генерация тестовых данных
+    const base = chartType === 'earnings' ? 1000 : 
+                chartType === 'averageCheck' ? 500 : 10;
+    const multiplier = chartType === 'earnings' ? 10 : 
+                      chartType === 'averageCheck' ? 5 : 1;
+    
+    return Array(count).fill(0).map(() => 
+      Math.floor(base + Math.random() * base * multiplier)
+    );
   }
 
   toggleOrders(): void {

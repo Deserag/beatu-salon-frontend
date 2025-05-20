@@ -1,16 +1,16 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import {
   ICreateDepartment,
+  ICreateDepartmentResponse,
   ICreateUser,
-  IDeleteDepartment,
+  IDeleteDepartmentResponse,
   IDeleteRole,
   IDeleteUser,
   IGetRole,
   IGetUser,
   IUpdateUser,
-  IUser,
   IUserDepartment,
   IUserRoles,
   TResGetDepartment,
@@ -19,12 +19,15 @@ import {
 } from './user.interface';
 import { environment } from 'environment/environment';
 import { IReqPage } from '../work-page';
+import { AuthService } from '@entity';
+
 @Injectable({
   providedIn: 'root',
 })
 export class UserApiService {
   private _http = inject(HttpClient);
   private _baseURL = environment.apiService;
+  private _authService = inject(AuthService);
 
   getUser(body: IReqPage): Observable<TResGetUsers> {
     return this._http.post<TResGetUsers>(`${this._baseURL}user/list`, body);
@@ -59,8 +62,8 @@ export class UserApiService {
     return this._http.post<IGetRole>(`${this._baseURL}user/create-role`, body);
   }
 
-  createDepartment(body: ICreateDepartment): Observable<ICreateDepartment> {
-    return this._http.post<ICreateDepartment>(
+  createDepartment(body: ICreateDepartment): Observable<ICreateDepartmentResponse> {
+    return this._http.post<ICreateDepartmentResponse>(
       `${this._baseURL}user/create-department`,
       body
     );
@@ -74,11 +77,8 @@ export class UserApiService {
     return this._http.post<IGetRole>(`${this._baseURL}user/update-role`, body);
   }
 
-  updateDepartment(body: IGetRole): Observable<IGetRole> {
-    return this._http.post<IGetRole>(
-      `${this._baseURL}user/update-department`,
-      body
-    );
+  updateDepartment(body: any): Observable<any> {
+    return this._http.put<any>(`${this._baseURL}user/update-department`, body);
   }
 
   getUserRoles(): Observable<IUserRoles[]> {
@@ -103,9 +103,11 @@ export class UserApiService {
     );
   }
 
-  deleteDepartment(departmentId: string): Observable<IDeleteDepartment> {
-    return this._http.delete<IDeleteDepartment>(
-      `${this._baseURL}user/delete-department/${departmentId}`
+  deleteDepartment(departmentId: string): Observable<IDeleteDepartmentResponse> {
+    const userId = this._authService.user?.id;
+    return this._http.delete<IDeleteDepartmentResponse>(
+      `${this._baseURL}user/delete-department/${departmentId}`,
+      { body: { adminId: userId } }
     );
   }
 }

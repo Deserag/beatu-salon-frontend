@@ -1,9 +1,8 @@
-<div mat-dialog-content class="modal-content">
-  <div class="modal-header">
-    Создать/Редактировать профессию
-  </div>
-  <form [formGroup]="form" class="department-form">
-    <mat-form-field appearance="fill" class="full-width">
+<div class="modal-container">
+  <h2>Создать/Редактировать профессию</h2>
+
+  <form [formGroup]="form" class="form-row">
+    <mat-form-field appearance="fill">
       <mat-label>Название профессии</mat-label>
       <input
         matInput
@@ -15,7 +14,7 @@
       }
     </mat-form-field>
 
-    <mat-form-field appearance="fill" class="full-width">
+    <mat-form-field appearance="fill">
       <mat-label>Описание профессии</mat-label>
       <textarea
         matInput
@@ -27,18 +26,24 @@
       }
     </mat-form-field>
   </form>
-</div>
 
-<div mat-dialog-actions align="end" class="modal-actions">
-  <button mat-button class="cancel-button" (click)="onClickClose()">
-    Отмена
-  </button>
-  <button
-    mat-raised-button
-    class="create-button"
-    (click)="onClickCreateDepartment()"
-    [disabled]="form.invalid"
-  >
-    Создать
-  </button>
+  <div class="actions">
+    <button
+      mat-button
+      type="button"
+      class="cancel-button"
+      (click)="onClickClose()"
+    >
+      Отмена
+    </button>
+    <button
+      mat-raised-button
+      type="submit"
+      class="create-button"
+      (click)="onClickCreateDepartment()"
+      [disabled]="form.invalid"
+    >
+      Создать
+    </button>
+  </div>
 </div>

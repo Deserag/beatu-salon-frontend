@@ -29,14 +29,6 @@ export const userRoutes: Routes = [
             '../pages/user/user-department/user-department.component'
           ).then((m) => m.UserDepartmentComponent),
       },
-      {
-        path: ERouteConstans.USER_ROLE,
-        loadComponent: () =>
-          import('../pages/user/user-role/user-role.component').then(
-            (m) => m.UserRoleComponent
-          ),
-      },
-      // ,
     ],
   },
 ];
@@ -103,6 +95,29 @@ export const clientRoutes: Routes = [
     path: ERouteConstans.CLIENT_PANEL,
     loadComponent: () =>
       import('../pages/client/client.component').then((m) => m.ClientComponent),
+      children: [
+        {
+          path: ERouteConstans.CLIENT_LIST,
+          loadComponent: () =>
+            import('../pages/client/client-list/client-list.component').then(
+              (m) => m.ClientListComponent
+            )
+        },
+        {
+          path: ERouteConstans.CLIENT_ORDER,
+          loadComponent: () =>
+            import('../pages/client/clients-orders/clients-orders.component').then(
+              (m) => m.ClientsOrdersComponent
+            )
+        },
+        {
+          path: ERouteConstans.CLIENT_PAGE,
+          loadComponent: () =>
+            import('../pages/client/client-page/client-page.component').then(
+              (m) => m.ClientPageComponent
+            )
+        },
+    ]
   },
 ];
 
@@ -119,6 +134,7 @@ export const officeRoutes: Routes = [
       },
       {
         path: ERouteConstans.OFFICE_LIST,
+
         loadComponent: () =>
           import('../pages/office/office-page/office-page.component').then(
             (m) => m.OfficePageComponent
@@ -182,7 +198,21 @@ export const servicesRoutes: Routes = [
   },
 ];
 
+export const homePage: Routes = [
+  {
+    path: ERouteConstans.HOME_PAGE,
+    loadComponent: () =>
+      import('../pages/home-page/home-page.component').then(
+        (c) => c.HomePageComponent
+      )
+  }
+]
+
 export const appRoutes: Routes = [
+  {
+    path: ERouteConstans.AUTH,
+    loadChildren: () => authRoutes,
+  },
   {
     path: ERouteConstans.MAIN,
     loadComponent: () =>
@@ -199,9 +229,18 @@ export const appRoutes: Routes = [
     path: '**',
     redirectTo: ERouteConstans.MAIN,
   },
+
 ];
 
 export const mainRoutes: Routes = [
+  { path: '', redirectTo: ERouteConstans.HOME_PAGE, pathMatch: 'full' },
+  {
+    path: ERouteConstans.HOME_PAGE,
+    loadComponent: () =>
+      import('../pages/home-page/home-page.component').then(
+        (c) => c.HomePageComponent
+      ),
+  },
   ...userRoutes,
   ...adminRoutes,
   ...clientRoutes,
@@ -209,12 +248,4 @@ export const mainRoutes: Routes = [
   ...servicesRoutes,
   ...personalRoutes,
   ...statisticRoutes,
-  {
-    path: ERouteConstans.AUTH,
-    loadChildren: () => authRoutes,
-  },
-  {
-    path: '**',
-    redirectTo: ERouteConstans.MAIN,
-  },
 ];

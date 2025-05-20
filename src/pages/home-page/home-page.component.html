@@ -1,0 +1,84 @@
+<div class="home-page">
+    <h2 class="home-page__title">Добро пожаловать в DORM CRM!</h2>
+  
+    <mat-grid-list cols="2" rowHeight="300px" gutterSize="20px">
+        <mat-grid-tile>
+            <mat-card class="card">
+                <mat-card-title>Обзор выручки</mat-card-title>
+                <mat-card-content>
+                    <p>Сегодня: <strong>{{ revenue.today }} ₽</strong></p>
+                    <p>За эту неделю: <strong>{{ revenue.week }} ₽</strong></p>
+                </mat-card-content>
+            </mat-card>
+        </mat-grid-tile>
+  
+        <mat-grid-tile rowspan="2">
+            <mat-card class="card">
+                <mat-card-title>Дни рождения</mat-card-title>
+                <mat-card-content class="birthdays-content">
+                    <mat-accordion>
+                        <mat-expansion-panel *ngIf="employeeBirthdays.length > 0" expanded="true">
+                            <mat-expansion-panel-header>
+                                <mat-panel-title>Сотрудники</mat-panel-title>
+                            </mat-expansion-panel-header>
+                            <mat-list>
+                                <mat-list-item *ngFor="let birthday of employeeBirthdays">
+                                    <mat-icon matListItemIcon>cake</mat-icon>
+                                    <span matListItemTitle>{{ birthday.name }}</span>
+                                    <span matListItemLine>{{ birthday.date }}</span>
+                                </mat-list-item>
+                            </mat-list>
+                        </mat-expansion-panel>
+  
+                        <mat-expansion-panel *ngIf="clientBirthdays.length > 0" expanded="true">
+                            <mat-expansion-panel-header>
+                                <mat-panel-title>Клиенты</mat-panel-title>
+                            </mat-expansion-panel-header>
+                            <mat-list>
+                                <mat-list-item *ngFor="let birthday of clientBirthdays">
+                                    <mat-icon matListItemIcon>cake</mat-icon>
+                                    <span matListItemTitle>{{ birthday.name }}</span>
+                                    <span matListItemLine>{{ birthday.date }}</span>
+                                </mat-list-item>
+                            </mat-list>
+                        </mat-expansion-panel>
+                    </mat-accordion>
+                </mat-card-content>
+            </mat-card>
+        </mat-grid-tile>
+  
+        <mat-grid-tile rowspan="2">
+            <mat-card class="card">
+                <mat-card-title>Популярность услуг</mat-card-title>
+                <mat-card-content>
+                    <div class="chart-container">
+                        <canvas id="servicePopularityChart"></canvas>
+                    </div>
+                </mat-card-content>
+            </mat-card>
+        </mat-grid-tile>
+  
+        <mat-grid-tile rowspan="2">
+            <mat-card class="card">
+                <mat-card-title>Новые клиенты за неделю</mat-card-title>
+                <mat-card-content>
+                    <div class="chart-container">
+                        <canvas id="newClientsChart"></canvas>
+                    </div>
+                </mat-card-content>
+            </mat-card>
+        </mat-grid-tile>
+  
+        <mat-grid-tile>
+            <mat-card class="card">
+                <mat-card-title>Загруженность кабинетов</mat-card-title>
+                <mat-card-subtitle>Процент занятости рабочих мест</mat-card-subtitle>
+                <mat-card-content>
+                    <div class="chart-container">
+                        <canvas id="officeLoadChart"></canvas>
+                    </div>
+                </mat-card-content>
+            </mat-card>
+        </mat-grid-tile>
+    </mat-grid-list>
+  </div>

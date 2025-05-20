@@ -47,8 +47,17 @@ export interface IUserRoles {
 export interface ICreateDepartment {
   name: string;
   description: string;
-  creatorId: string;
 }
+export interface ICreateDepartmentResponse extends ICreateDepartment {
+  id: string;
+  createdAt: string;
+  updatedAt: string;
+  deletedAt: string | null;
+}
+export interface IDeleteDepartmentResponse {
+  affected: number;
+}
+
 
 export interface IGetUser {
   name: string;
@@ -79,6 +88,7 @@ export interface IUserRole {
 export interface IUserDepartment {
   id: string;
   name: string;
+  description: string;
   createdAt: string;
   updatedAt: string;
   deletedAt: string | null;

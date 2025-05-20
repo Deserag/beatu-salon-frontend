@@ -6,7 +6,7 @@ import { ERouteConstans } from '@routes';
 @Component({
   selector: 'app-office',
   standalone: true,
-  imports: [MatSidenavModule,RouterLink, RouterOutlet],
+  imports: [MatSidenavModule, RouterOutlet],
   templateUrl: './office.component.html',
   styleUrl: './office.component.scss'
 })
