@@ -1,4 +1,4 @@
-import { Component, Inject, EventEmitter, Output } from '@angular/core';
+import { Component, Inject, EventEmitter, Output, OnInit } from '@angular/core';
 import {
   FormControl,
   FormGroup,
@@ -15,11 +15,12 @@ import {
   ICreateCabinet,
   IUpdateCabinet,
   IOffice,
+  IResTablePage,
 } from '@entity';
 import { MatButtonModule } from '@angular/material/button';
 import { MatSelectModule } from '@angular/material/select';
 import { AsyncPipe, NgFor, NgIf } from '@angular/common';
-import { BehaviorSubject, switchMap } from 'rxjs';
+import { BehaviorSubject } from 'rxjs';
 import { DestroyRef, inject } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
@@ -31,7 +32,6 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
     FormsModule,
     MatFormFieldModule,
     MatInputModule,
-    MatFormFieldModule,
     MatSelectModule,
     NgFor,
     MatButtonModule,
@@ -40,7 +40,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
   templateUrl: './cabinet-window.component.html',
   styleUrl: './cabinet-window.component.scss',
 })
-export class CabinetWindowComponent {
+export class CabinetWindowComponent implements OnInit {
   @Output() cabinet = new EventEmitter<ICabinet>();
   form = new FormGroup({
     id: new FormControl<string | null>(null),
@@ -62,26 +62,30 @@ export class CabinetWindowComponent {
     private _dialogRef: MatDialogRef<CabinetWindowComponent>,
     private _officeApiService: OfficeApiService,
     @Inject(MAT_DIALOG_DATA) public data: ICabinet | null
-  ) {
+  ) {}
+
+  ngOnInit(): void {
     this.loadOffices();
     if (this.data) {
       this.initializeForm(this.data);
     }
   }
-  loadOffices() {
+
+  loadOffices(): void {
     this._officeApiService
       .getOffice({ page: 1, pageSize: 1000 })
-      .pipe(
-        switchMap((response) => {
+      .pipe(takeUntilDestroyed(this._destroyRef))
+      .subscribe({
+        next: (response: IResTablePage<IOffice>) => {
           this.offices$.next(response.rows);
-          return this.offices$;
-        }),
-        takeUntilDestroyed(this._destroyRef)
-      )
-      .subscribe();
+        },
+        error: (error) => {
+          console.error('Ошибка при загрузке офисов:', error);
+        },
+      });
   }
 
-  initializeForm(cabinet: ICabinet) {
+  initializeForm(cabinet: ICabinet): void {
     this.form.patchValue({
       id: cabinet.id,
       number: cabinet.number,
@@ -89,7 +93,7 @@ export class CabinetWindowComponent {
     });
   }
 
-  submit() {
+  submit(): void {
     if (this.form.valid) {
       const formData = this.form.value;
       if (formData.id) {
@@ -113,7 +117,7 @@ export class CabinetWindowComponent {
     }
   }
 
-  createCabinet(cabinet: ICreateCabinet) {
+  createCabinet(cabinet: ICreateCabinet): void {
     this._officeApiService.createCabinet(cabinet).subscribe({
       next: (response) => {
         console.log('Кабинет создан:', response);
@@ -126,7 +130,7 @@ export class CabinetWindowComponent {
     });
   }
 
-  updateCabinet(cabinet: IUpdateCabinet) {
+  updateCabinet(cabinet: IUpdateCabinet): void {
     this._officeApiService.updateCabinet(cabinet).subscribe({
       next: (response) => {
         console.log('Кабинет обновлен:', response);
@@ -139,7 +143,7 @@ export class CabinetWindowComponent {
     });
   }
 
-  close() {
+  close(): void {
     this._dialogRef.close();
   }
 }

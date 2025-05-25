@@ -1,1 +1,92 @@
-<p>clients-orders works!</p>
+<div class="content">
+  <div class="header">
+    <h1>Управление Заказами</h1>
+    <button mat-raised-button color="primary" (click)="openCreate()">
+      <mat-icon>add</mat-icon> Добавить заказ
+    </button>
+  </div>
+
+  <div class="table-container mat-elevation-z2">
+    <div *ngIf="loading$ | async" class="loading-overlay">
+      <mat-spinner diameter="50"></mat-spinner>
+    </div>
+
+    <table mat-table [dataSource]="(orders$ | async) || []" class="user-table">
+      <ng-container matColumnDef="fullName">
+        <th mat-header-cell *matHeaderCellDef>Клиент</th>
+        <td mat-cell *matCellDef="let order">{{ order.fullName }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="master">
+        <th mat-header-cell *matHeaderCellDef>Мастер</th>
+        <td mat-cell *matCellDef="let order">{{ order.master }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="service">
+        <th mat-header-cell *matHeaderCellDef>Услуга</th>
+        <td mat-cell *matCellDef="let order">{{ order.service }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="price">
+        <th mat-header-cell *matHeaderCellDef>Цена</th>
+        <td mat-cell *matCellDef="let order">
+          {{ order.price | currency : "RUB" : "symbol" : "1.0-2" }}
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="dateTime">
+        <th mat-header-cell *matHeaderCellDef>Дата и время</th>
+        <td mat-cell *matCellDef="let order">
+          {{ order.dateTime | date : "short" }}
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="office">
+        <th mat-header-cell *matHeaderCellDef>Офис</th>
+        <td mat-cell *matCellDef="let order">{{ order.office }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="actions">
+        <th mat-header-cell *matHeaderCellDef>Действия</th>
+        <td mat-cell *matCellDef="let order">
+          <div class="table-actions">
+            <button
+              mat-icon-button
+              color="accent"
+              (click)="openEdit(order)"
+              aria-label="Редактировать заказ"
+            >
+              <mat-icon>edit</mat-icon>
+            </button>
+            <button
+              mat-icon-button
+              color="warn"
+              (click)="deleteOrder(order.id)"
+              aria-label="Удалить заказ"
+            >
+              <mat-icon>delete</mat-icon>
+            </button>
+          </div>
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+
+      <tr class="mat-row" *matNoDataRow>
+        <td class="mat-cell" [attr.colspan]="displayedColumns.length">
+          Нет данных о заказах. Создайте новый заказ.
+        </td>
+      </tr>
+    </table>
+
+    <mat-paginator
+      [length]="totalCount$ | async"
+      [pageSize]="(pageSize$ | async)!"
+      [pageIndex]="(page$ | async)! - 1"
+      [pageSizeOptions]="[5, 10, 25, 50]"
+      (page)="onPageChange($event)"
+      aria-label="Выбор страницы заказов"
+    ></mat-paginator>
+  </div>
+</div>

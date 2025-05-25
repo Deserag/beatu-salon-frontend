@@ -26,7 +26,7 @@ import { ServiceWindowComponent } from 'src/widgets/services';
 })
 export class ListComponent {
   protected readonly ERoutesConstans = ERouteConstans;
-  displayedColumns: string[] = ['Name', 'Price', 'Symbol'];
+  displayedColumns: string[] = ['Name','Description', 'Price','Duration', 'Symbol'];
   dataSource$ = new BehaviorSubject<IService[]>([]);
   totalCount$ = new BehaviorSubject<number>(0);
   private _page$ = new BehaviorSubject<number>(1);

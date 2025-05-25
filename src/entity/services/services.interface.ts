@@ -45,6 +45,7 @@ export interface ICreateService {
     name: string;
     description: string;
     price: string;
+    duration: Float32Array;
     creatorId: string;
 }
 
