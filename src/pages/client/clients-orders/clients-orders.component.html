@@ -14,12 +14,22 @@
     <table mat-table [dataSource]="(orders$ | async) || []" class="user-table">
       <ng-container matColumnDef="fullName">
         <th mat-header-cell *matHeaderCellDef>Клиент</th>
-        <td mat-cell *matCellDef="let order">{{ order.user?.firstName + " " + order.user?.lastName + " " + order.user?.middleName}}</td>
+        <td mat-cell *matCellDef="let order">
+          {{
+            order.user?.firstName +
+              " " +
+              order.user?.lastName +
+              " " +
+              order.user?.middleName
+          }}
+        </td>
       </ng-container>
 
       <ng-container matColumnDef="master">
         <th mat-header-cell *matHeaderCellDef>Мастер</th>
-        <td mat-cell *matCellDef="let order">{{ order.worker?.firstName + " " + order.worker?.lastName }}</td>
+        <td mat-cell *matCellDef="let order">
+          {{ order.worker?.firstName + " " + order.worker?.lastName }}
+        </td>
       </ng-container>
 
       <ng-container matColumnDef="service">

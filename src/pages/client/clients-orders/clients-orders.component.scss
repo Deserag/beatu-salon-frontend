@@ -84,7 +84,8 @@
     min-width: 40px; // Стандартный размер Material Icon Button
     height: 40px;
 
-    &.mat-raised-button { // Для обычных кнопок
+    &.mat-raised-button {
+      // Для обычных кнопок
       border-radius: 5px;
       padding: 8px 16px;
       min-width: unset;
@@ -103,7 +104,7 @@
     }
 
     &[color="accent"] {
-      color: #ff4081; // Цвет для иконок
+      color: #ff4081; 
       &:hover {
         background-color: rgba(255, 64, 129, 0.08);
       }
