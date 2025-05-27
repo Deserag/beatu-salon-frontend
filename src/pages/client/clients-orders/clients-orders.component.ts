@@ -14,7 +14,7 @@ import {
 import { PageEvent, MatPaginatorModule } from '@angular/material/paginator';
 import { OrderWindowComponent } from 'src/widgets/order-window/order-window.component';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { startWith } from 'rxjs/operators'; 
+import { startWith } from 'rxjs/operators';
 
 @Component({
   selector: 'app-clients-orders',
@@ -81,22 +81,49 @@ export class ClientsOrdersComponent {
 
   openCreate() {
     const ref = this.dialog.open(OrderWindowComponent, { data: null });
-    ref.afterClosed().subscribe((updated) => {
-      if (updated) this.reload();
-    });
+    ref
+      .afterClosed()
+      .subscribe((newOrderData: Partial<IClientsOrders> | false) => {
+        if (newOrderData) {
+          this.api
+            .createOrder(newOrderData)
+            .pipe(takeUntilDestroyed(this.destroyRef))
+            .subscribe({
+              next: () => this.reload(),
+              error: (err) => console.error('Ошибка при создании заказа:', err),
+            });
+        }
+      });
   }
 
   openEdit(order: IClientsOrders) {
     const ref = this.dialog.open(OrderWindowComponent, { data: order });
-    ref.afterClosed().subscribe((updated) => {
-      if (updated) this.reload();
-    });
+    ref
+      .afterClosed()
+      .subscribe((updatedOrderData: Partial<IClientsOrders> | false) => {
+        if (updatedOrderData && updatedOrderData.id) {
+          this.api
+            .updateOrder(updatedOrderData.id, updatedOrderData)
+            .pipe(takeUntilDestroyed(this.destroyRef))
+            .subscribe({
+              next: () => this.reload(),
+              error: (err) =>
+                console.error('Ошибка при обновлении заказа:', err),
+            });
+        }
+      });
   }
 
   deleteOrder(id: string) {
     if (!confirm('Вы точно хотите удалить этот заказ?')) return;
 
-    this.api.deleteOrder(id).subscribe(() => this.reload());
+    this.api
+      .deleteOrder(id)
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: () => this.reload(),
+        error: (err) => console.error('Ошибка при удалении заказа:', err),
+      });
   }
 
   reload() {

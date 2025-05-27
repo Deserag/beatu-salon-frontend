@@ -1,5 +1,5 @@
 <h2 mat-dialog-title>
-  {{ data ? 'Редактировать заказ' : 'Создать новый заказ' }}
+  {{ data ? "Редактировать заказ" : "Создать новый заказ" }}
 </h2>
 
 <mat-dialog-content class="mat-typography">
@@ -11,9 +11,7 @@
           {{ client.lastName }} {{ client.firstName }} {{ client.middleName }}
         </mat-option>
       </mat-select>
-      <mat-error *ngIf="!orderForm.clientId">
-        Клиент обязателен.
-      </mat-error>
+      <mat-error *ngIf="!orderForm.clientId"> Клиент обязателен. </mat-error>
     </mat-form-field>
 
     <mat-form-field appearance="outline" class="full-width">
@@ -23,21 +21,20 @@
           {{ master.lastName }} {{ master.firstName }} {{ master.middleName }}
         </mat-option>
       </mat-select>
-      <mat-error *ngIf="!orderForm.workerId">
-        Мастер обязателен.
-      </mat-error>
+      <mat-error *ngIf="!orderForm.workerId"> Мастер обязателен. </mat-error>
     </mat-form-field>
 
     <mat-form-field appearance="outline" class="full-width">
       <mat-label>Услуга</mat-label>
       <mat-select [(ngModel)]="orderForm.serviceId" name="serviceId" required>
-        <mat-option *ngFor="let service of services$ | async" [value]="service.id">
+        <mat-option
+          *ngFor="let service of services$ | async"
+          [value]="service.id"
+        >
           {{ service.name }}
         </mat-option>
       </mat-select>
-      <mat-error *ngIf="!orderForm.serviceId">
-        Услуга обязательна.
-      </mat-error>
+      <mat-error *ngIf="!orderForm.serviceId"> Услуга обязательна. </mat-error>
     </mat-form-field>
 
     <mat-form-field appearance="outline" class="full-width">
@@ -70,9 +67,7 @@
           {{ office.number }} ({{ office.address }})
         </mat-option>
       </mat-select>
-      <mat-error *ngIf="!orderForm.officeId">
-        Офис обязателен.
-      </mat-error>
+      <mat-error *ngIf="!orderForm.officeId"> Офис обязателен. </mat-error>
     </mat-form-field>
 
     <mat-form-field appearance="outline" class="full-width">
@@ -83,16 +78,17 @@
         required
         [disabled]="!orderForm.officeId || (cabinets$ | async)?.length === 0"
       >
-        <mat-option *ngFor="let cabinet of cabinets$ | async" [value]="cabinet.id">
+        <mat-option
+          *ngFor="let cabinet of cabinets$ | async"
+          [value]="cabinet.id"
+        >
           {{ cabinet.number }}
         </mat-option>
       </mat-select>
       <mat-error *ngIf="!orderForm.workCabinetId">
         Кабинет обязателен.
       </mat-error>
-      <mat-hint *ngIf="!orderForm.officeId">
-        Сначала выберите офис.
-      </mat-hint>
+      <mat-hint *ngIf="!orderForm.officeId"> Сначала выберите офис. </mat-hint>
       <mat-hint *ngIf="orderForm.officeId && (cabinets$ | async)?.length === 0">
         Нет доступных кабинетов для этого офиса.
       </mat-hint>

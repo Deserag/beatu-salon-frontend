@@ -121,7 +121,7 @@ export class OrderWindowComponent {
 
   loadCabinetsByOffice(officeId: string): void {
     this._officeApiService
-      .getCabinetsByOffice({page: 1, pageSize: 9999 })
+      .getCabinetsByOffice({ page: 1, pageSize: 9999 })
       .pipe(
         map((res: TResGetCabinet) => res.rows),
         takeUntilDestroyed(this.destroyRef)

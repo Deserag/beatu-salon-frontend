@@ -1,3 +1,5 @@
+import { ICabinet, IOffice } from "../office";
+import { IService } from "../services";
 import { IResTablePage } from "../work-page";
 
 export interface IClient {
@@ -22,6 +24,11 @@ export interface IClientsOrders {
   officeId: string;
   workCabinetId: string;
   result?: string; 
+  user?: IClient; 
+  worker?: IWorker;
+  service?: IService;
+  office?: IOffice;
+  cabinet?: ICabinet;
 }
 
 export interface IDeleteOrder {
