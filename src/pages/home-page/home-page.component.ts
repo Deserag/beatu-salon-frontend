@@ -71,7 +71,7 @@ export class HomePageComponent implements OnInit {
   }
 
   private createServicePopularityChart(): void {
-    const serviceLabels = ['Строка', 'Подпись', 'Организацию', 'Указ за марш'];
+    const serviceLabels = ['Стрижка мужская', 'Стрижка женская', 'Маникюр', 'Педикюр'];
     const serviceData = [35, 25, 20, 20];
 
     this.servicePopularityChart = new Chart('servicePopularityChart', {

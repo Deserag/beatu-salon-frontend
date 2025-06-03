@@ -40,10 +40,10 @@ export class ServicesApiService {
     return this._http.put<IUpdateProduct>(`${this._baseURL}service/update-product`, body);
   }
 
-  getServicesWithWorkers(body: IReqPage): Observable<IWorkerOnService[]> {
-    return this._http.post<IWorkerOnService[]>(
+  getWorkersForService(serviceId: string): Observable<{ rows: IWorkerOnService[] }> {
+    return this._http.post<{ rows: IWorkerOnService[] }>(
       `${this._baseURL}service/worker-on-service/list`,
-      body
+      { name: serviceId, page: 1, size: 10 }
     );
   }
 

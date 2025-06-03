@@ -1,23 +1,17 @@
-$primary-color: #b6cb6a;
-$secondary-color: #8db662;
-$background-color: #d6e5d5;
-$text-color: #333;
-$error-color: #dc3545;
-$border-color: #b09e86;
-$box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-$border-radius: 4px;
+$primary-color: #3f51b5;
+$background-color: #f5f7fa;
+$text-color: #3f51b5;
+$border-color: #ccc;
+$box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+$border-radius: 6px;
 $transition-duration: 0.3s;
 
 .container {
   padding: 20px;
 
   h2 {
-    color: $secondary-color;
+    color: $primary-color;
     margin-bottom: 1.5rem;
-  }
-
-  button[mat-raised-button] {
-    margin-bottom: 1rem;
   }
 
   .loading {
@@ -30,8 +24,30 @@ $transition-duration: 0.3s;
     .mat-tree-node {
       display: flex;
       align-items: center;
-      height: 48px;
-      padding-left: 16px;
+      padding: 10px 16px;
+      margin-bottom: 8px;
+      cursor: pointer;
+      background-color: #fff;
+      transition: background-color $transition-duration ease;
+
+      &.bordered {
+        border: 1px solid $border-color;
+        border-radius: $border-radius;
+        box-shadow: $box-shadow;
+      }
+
+      .node-name {
+        flex: 1;
+        font-size: 16px;
+      }
+
+      .tree-toggle-icon {
+        margin-right: 8px;
+      }
+
+      .update-workers-button {
+        margin-left: auto;
+      }
     }
 
     .mat-nested-tree-node {
@@ -49,6 +65,11 @@ $transition-duration: 0.3s;
     .worker-node {
       padding-left: 48px;
       font-style: italic;
+      background-color: $background-color;
+    }
+
+    .service-text,
+    .worker-text {
       color: $text-color;
     }
   }

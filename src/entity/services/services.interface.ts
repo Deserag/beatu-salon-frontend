@@ -77,6 +77,22 @@ export interface IWorkerOnService {
     };
 }
 
+export interface AppTreeNode {
+  name: string;
+  id: string;
+  children?: AppTreeNode[];
+}
+
+export interface ServiceTreeNode extends AppTreeNode {
+  rawService: IService;
+  children: WorkerNode[];
+  workersLoaded: boolean;
+}
+
+export interface WorkerNode extends AppTreeNode {
+  children?: undefined;
+}
+
 export interface IServiceWithWorkers extends IService {
     workers: IWorkerOnService[];
 }

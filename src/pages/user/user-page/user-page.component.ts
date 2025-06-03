@@ -49,10 +49,8 @@ export class UserPageComponent {
     this._route.paramMap
       .pipe(
         switchMap((params) => {
-          // Используем userId из paramMap, если есть, иначе из localStorage
           const userId = params.get('id') || userIdFromStorage;
           if (!userId) {
-            // Если нет userId — возвращаем пустой поток, чтобы не упало приложение
             return of(null);
           }
           return this._userApiService.getUserInfo(userId);

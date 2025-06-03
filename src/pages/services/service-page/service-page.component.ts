@@ -58,8 +58,6 @@ export class ServicePageComponent {
       name: ['', Validators.required],
       description: ['', Validators.required],
       price: ['', Validators.required],
-      // employees: [[], Validators.required],
-      // roles: [[], Validators.required],
     });
 
     this.loadService(this.id);
