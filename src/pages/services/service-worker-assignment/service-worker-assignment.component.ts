@@ -1,12 +1,13 @@
 import { Component } from '@angular/core';
-import { MatTreeModule, MatTreeNestedDataSource } from '@angular/material/tree';
+import { MatTreeNestedDataSource } from '@angular/material/tree';
 import { NestedTreeControl } from '@angular/cdk/tree';
 import { MatDialog } from '@angular/material/dialog';
-import { ServiceWorkerAssignmentComponentWindow } from 'src/widgets/services/service-worker-window/service-worker-assignment.component';
 import { CommonModule } from '@angular/common';
+import { MatTreeModule } from '@angular/material/tree';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
+import { ServiceWorkerAssignmentComponentWindow } from 'src/widgets/services/service-worker-window/service-worker-assignment.component';
 
 interface Worker {
   id: number;
@@ -17,6 +18,9 @@ interface Worker {
 interface IService {
   id: number;
   name: string;
+  description: string;
+  price: number;
+  duration: number;
 }
 
 interface AppTreeNode {
@@ -76,9 +80,9 @@ export class ServiceWorkerAssignmentComponent {
     this._isLoading = true;
 
     const mockServices: IService[] = [
-      { id: 1, name: 'Парикмахерские услуги' },
-      { id: 2, name: 'Маникюр и педикюр' },
-      { id: 3, name: 'Массаж' },
+      { id: 1, name: 'Парикмахерские услуги', description: 'Стрижка, укладка', price: 1200, duration: 1 },
+      { id: 2, name: 'Маникюр и педикюр', description: 'Уход за ногтями', price: 1500, duration: 1.5 },
+      { id: 3, name: 'Массаж', description: 'Расслабляющий массаж', price: 2000, duration: 2 },
     ];
 
     const treeData: ServiceTreeNode[] = mockServices.map((service) => ({
@@ -97,8 +101,8 @@ export class ServiceWorkerAssignmentComponent {
     const expanded = this._treeControl.isExpanded(node);
 
     if (!expanded && !node.workersLoaded) {
-      // Мок-данные для мастеров, зависящие от ID услуги
       let mockWorkerAssignments: Worker[] = [];
+
       if (node.id === 1) {
         mockWorkerAssignments = [
           { id: 101, firstName: 'Марина', lastName: 'Иванова' },
@@ -126,9 +130,7 @@ export class ServiceWorkerAssignmentComponent {
       this._dataSource.data = [...this._dataSource.data];
       this._treeControl.expand(node);
     } else {
-      expanded
-        ? this._treeControl.collapse(node)
-        : this._treeControl.expand(node);
+      expanded ? this._treeControl.collapse(node) : this._treeControl.expand(node);
     }
   }
 
@@ -137,14 +139,8 @@ export class ServiceWorkerAssignmentComponent {
   }
 
   openAssignmentModal(service: IService): void {
-    const dialogRef = this._dialog.open(ServiceWorkerAssignmentComponentWindow, {
+    this._dialog.open(ServiceWorkerAssignmentComponentWindow, {
       data: { serviceId: service.id },
-    });
-
-    dialogRef.afterClosed().subscribe((result) => {
-      if (result) {
-        this.loadServices();
-      }
     });
   }
 }
