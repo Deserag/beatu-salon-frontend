@@ -1,0 +1,27 @@
+<div class="container">
+  <mat-progress-bar *ngIf="isLoading" mode="indeterminate"></mat-progress-bar>
+  <div *ngIf="errorMessage" class="error">{{ errorMessage }}</div>
+
+  <div *ngIf="!isLoading && services.length > 0" class="services-grid">
+    <div *ngFor="let service of services" class="service-item">
+      <div class="service-header">
+        <h3>{{ service.name }}</h3>
+        <button
+          mat-stroked-button
+          color="accent"
+          (click)="openAssignDialog(service.id)"
+        >
+          Изменить мастеров
+        </button>
+      </div>
+      <p *ngIf="service.workers.length === 0" class="no-workers-message">
+        Мастера не назначены
+      </p>
+      <mat-list *ngIf="service.workers.length > 0" class="workers-list">
+        <mat-list-item *ngFor="let worker of service.workers">
+          {{ worker.firstName }} {{ worker.lastName }}
+        </mat-list-item>
+      </mat-list>
+    </div>
+  </div>
+</div>

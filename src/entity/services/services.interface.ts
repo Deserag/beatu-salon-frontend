@@ -1,18 +1,18 @@
-import { IResTablePage } from "../work-page";
+import { IResTablePage } from '../work-page';
 
 export interface IService {
-    id: string;
-    name: string;
-    description: string;
-    price: number;
-    duration: number;
-    creatorId: string;
+  id: string;
+  name: string;
+  description: string;
+  price: number;
+  duration: number;
+  creatorId: string;
 }
 export interface IServiceNode {
-    id: string;
-    name: string;
-    isService: boolean;
-    workers?: IWorkerNode[];
+  id: string;
+  name: string;
+  isService: boolean;
+  workers?: IWorkerNode[];
 }
 export interface CreateWorkerOnServiceDTO {
   serviceId: string;
@@ -21,84 +21,78 @@ export interface CreateWorkerOnServiceDTO {
 }
 
 export interface IWorkerNode {
-    id: string;
-    name: string;
-    isService: boolean;
+  id: string;
+  name: string;
+  isService: boolean;
 }
 
 export interface IProduct {
-    id: string;
-    name: string;
-    description: string;
-    volume: string;
-    unit: string;
-    quantity: number;
-    prices: number;
-    creatorId: string;
+  id: string;
+  name: string;
+  description: string;
+  volume: string;
+  unit: string;
+  quantity: number;
+  prices: number;
+  creatorId: string;
 }
 
 export interface IProductSale extends IProduct {
-    office: string;
+  office: string;
 }
 
 export interface ICreateService {
-    name: string;
-    description: string;
-    price: string;
-    duration: Float32Array;
-    creatorId: string;
+  name: string;
+  description: string;
+  price: string;
+  duration: Float32Array;
+  creatorId: string;
 }
 
 export interface ICreateProduct {
-    name: string;
-    description: string;
-    volume: string;
-    unit: string;
-    quantity: number;
-    prices: number;
-    creatorId: string;
+  name: string;
+  description: string;
+  volume: string;
+  unit: string;
+  quantity: number;
+  prices: number;
+  creatorId: string;
 }
 
 export interface IUpdateService extends ICreateService {
-    id: string;
+  id: string;
 }
 
 export interface IUpdateProduct extends ICreateProduct {
-    id: string;
+  id: string;
 }
 
 export interface IWorkerOnService {
-    serviceId: string;
-    userId: string;
-    worker: {
-        id: string;
-        firstName: string;
-        lastName: string;
-    };
+  serviceId: string;
+  userId: string;
+  worker: {
+    id: string;
+    firstName: string;
+    lastName: string;
+  };
 }
 
-export interface AppTreeNode {
-  name: string;
+export interface IWorkerWithService {
   id: string;
-  children?: AppTreeNode[];
+  firstName: string;
+  lastName: string;
+  middleName: string;
 }
 
-export interface ServiceTreeNode extends AppTreeNode {
-  rawService: IService;
-  children: WorkerNode[];
-  workersLoaded: boolean;
+export interface IServiceWithWorkers {
+  id: string;
+  name: string;
+  workers: IWorkerWithService[];
 }
 
-export interface WorkerNode extends AppTreeNode {
-  children?: undefined;
-}
-
-export interface IServiceWithWorkers extends IService {
-    workers: IWorkerOnService[];
-}
-
-export interface IGetServicesWithWorkersResponse extends IResTablePage<IServiceWithWorkers> {}
-
+export interface IGetServicesWithWorkersResponse
+  extends IResTablePage<IServiceWithWorkers> {}
+export type TResGetWorkerOnService = IResTablePage<IWorkerOnService>;
 export type TResGetService = IResTablePage<IService>;
 export type TResGetProduct = IResTablePage<IProduct>;
 export type TResGetProductSale = IResTablePage<IProductSale>;

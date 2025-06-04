@@ -28,7 +28,7 @@ interface DialogData {
   templateUrl: './service-worker-assignment.component.html',
   styleUrls: ['./service-worker-assignment.component.scss'],
 })
-export class ServiceWorkerAssignmentComponentWindow {
+export class ServiceWorkerModalComponentWindow {
   assignmentForm: FormGroup;
   availableWorkers: IUser[] = [];
   service: IService | null = null;
@@ -37,7 +37,7 @@ export class ServiceWorkerAssignmentComponentWindow {
 
   constructor(
     private fb: FormBuilder,
-    private dialogRef: MatDialogRef<ServiceWorkerAssignmentComponentWindow>,
+    private dialogRef: MatDialogRef<ServiceWorkerModalComponentWindow>,
     private servicesApiService: ServicesApiService,
     private userApiService: UserApiService,
     @Inject(MAT_DIALOG_DATA) public data: DialogData
@@ -71,9 +71,6 @@ export class ServiceWorkerAssignmentComponentWindow {
     this.servicesApiService.getServiceById(serviceId).subscribe({
       next: (response: TResGetService) => {
         this.service = response?.rows?.[0] || null;
-        if (!this.service) {
-          this.errorMessage = 'Не удалось загрузить информацию о сервисе.';
-        }
       },
       error: (error: any) => {
         console.error('Ошибка при загрузке информации о сервисе:', error);

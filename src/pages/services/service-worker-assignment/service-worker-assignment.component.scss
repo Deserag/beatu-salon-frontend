@@ -1,59 +1,63 @@
-.content {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+:host {
+  display: block;
+  height: 100vh;
+  overflow-y: auto;
+  background-color: #f5f5f5;
   width: 100%;
 }
 
-.vscode-tree {
-  width: 90%;
-  max-width: 900px;
-  margin-top: 20px;
-  background: #f9f9f9;
-  border-radius: 8px;
-  padding: 16px;
-  font-family: 'Segoe UI', sans-serif;
+.container {
+  // margin: 40px auto;
+  width: 100%;
+  box-sizing: border-box;
+  padding: 0 20px; 
+}
 
-  .node-content {
-    display: flex;
-    align-items: center;
-    padding: 4px 0;
-    font-size: 14px;
+.error {
+  color: #d32f2f;
+  margin: 16px 0;
+  font-size: 16px;
+}
 
-    .toggle-btn {
-      margin-right: 4px;
-    }
+.services-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 28px;
+}
 
-    .folder-icon {
-      color: #ff9800;
-      margin-right: 4px;
-    }
+.service-item {
+  padding: 24px;
+  background-color: #fff;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between; 
+}
 
-    .file-icon {
-      color: #607d8b;
-      margin-right: 8px;
-      margin-left: 24px;
-    }
+.service-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
 
-    .service-name {
-      font-weight: 500;
-    }
+.service-header h3 {
+  margin: 0;
+  font-size: 20px;
+  font-weight: 600;
+}
 
-    .spacer {
-      flex: 1 1 auto;
-    }
+.workers-list {
+  margin-top: 8px;
+}
 
-    button {
-      font-size: 13px;
-      padding: 2px 8px;
-    }
-  }
+.workers-list mat-list-item {
+  font-size: 16px;
+  padding-left: 8px;
+}
 
-  .worker-node {
-    margin-left: 28px;
-  }
-
-  .hidden {
-    display: none;
-  }
+.no-workers-message {
+  color: #d32f2f; 
+  margin-top: 8px;
 }

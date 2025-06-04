@@ -1,146 +1,65 @@
-import { Component } from '@angular/core';
-import { MatTreeNestedDataSource } from '@angular/material/tree';
-import { NestedTreeControl } from '@angular/cdk/tree';
-import { MatDialog } from '@angular/material/dialog';
+import { Component, inject, DestroyRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { MatTreeModule } from '@angular/material/tree';
-import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
-import { ServiceWorkerAssignmentComponentWindow } from 'src/widgets/services/service-worker-window/service-worker-assignment.component';
-
-interface Worker {
-  id: number;
-  firstName: string;
-  lastName: string;
-}
-
-interface IService {
-  id: number;
-  name: string;
-  description: string;
-  price: number;
-  duration: number;
-}
-
-interface AppTreeNode {
-  id: number;
-  name: string;
-  children?: AppTreeNode[];
-}
-
-interface ServiceTreeNode extends AppTreeNode {
-  rawService: IService;
-  workersLoaded: boolean;
-}
-
-interface WorkerNode extends AppTreeNode {}
+import { MatListModule } from '@angular/material/list';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { ServicesApiService, IServiceWithWorkers } from '@entity';
+import { ServiceWorkerModalComponentWindow } from 'src/widgets/services/service-worker-window/service-worker-modal.component';
 
 @Component({
   selector: 'app-service-worker-assignment',
   standalone: true,
   imports: [
     CommonModule,
-    MatTreeModule,
-    MatIconModule,
     MatButtonModule,
     MatProgressBarModule,
+    MatListModule,
+    MatDialogModule,
   ],
   templateUrl: './service-worker-assignment.component.html',
   styleUrls: ['./service-worker-assignment.component.scss'],
 })
 export class ServiceWorkerAssignmentComponent {
-  private _treeControl = new NestedTreeControl<AppTreeNode>((node) => node.children);
-  private _dataSource = new MatTreeNestedDataSource<AppTreeNode>();
-  private _isLoading = true;
+  services: IServiceWithWorkers[] = [];
+  isLoading = false;
+  errorMessage = '';
 
-  constructor(private _dialog: MatDialog) {
-    this.loadServices();
+  private api = inject(ServicesApiService);
+  private destroyRef = inject(DestroyRef);
+  private dialog = inject(MatDialog);
+
+  constructor() {
+    this.loadServicesWithWorkers();
   }
 
-  get treeControl() {
-    return this._treeControl;
+  loadServicesWithWorkers(): void {
+    this.isLoading = true;
+    this.errorMessage = '';
+    this.api
+      .getAllServicesWithWorkers()
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: (res) => {
+          this.services = Object.values(res);
+          this.isLoading = false;
+        },
+        error: () => {
+          this.errorMessage = 'Ошибка при загрузке услуг с мастерами.';
+          this.isLoading = false;
+        },
+      });
   }
 
-  get dataSource() {
-    return this._dataSource;
-  }
-
-  get isLoading() {
-    return this._isLoading;
-  }
-
-  hasChild = (_: number, node: AppTreeNode) => {
-    return this.isServiceNode(node)
-      ? !node.workersLoaded || (node.children && node.children.length > 0)
-      : false;
-  };
-
-  loadServices(): void {
-    this._isLoading = true;
-
-    const mockServices: IService[] = [
-      { id: 1, name: 'Парикмахерские услуги', description: 'Стрижка, укладка', price: 1200, duration: 1 },
-      { id: 2, name: 'Маникюр и педикюр', description: 'Уход за ногтями', price: 1500, duration: 1.5 },
-      { id: 3, name: 'Массаж', description: 'Расслабляющий массаж', price: 2000, duration: 2 },
-    ];
-
-    const treeData: ServiceTreeNode[] = mockServices.map((service) => ({
-      id: service.id,
-      name: service.name,
-      children: [],
-      rawService: service,
-      workersLoaded: false,
-    }));
-
-    this._dataSource.data = treeData;
-    this._isLoading = false;
-  }
-
-  toggleService(node: ServiceTreeNode): void {
-    const expanded = this._treeControl.isExpanded(node);
-
-    if (!expanded && !node.workersLoaded) {
-      let mockWorkerAssignments: Worker[] = [];
-
-      if (node.id === 1) {
-        mockWorkerAssignments = [
-          { id: 101, firstName: 'Марина', lastName: 'Иванова' },
-          { id: 102, firstName: 'Ольга', lastName: 'Петрова' },
-        ];
-      } else if (node.id === 2) {
-        mockWorkerAssignments = [
-          { id: 201, firstName: 'Елена', lastName: 'Смирнова' },
-          { id: 202, firstName: 'Дарья', lastName: 'Козлова' },
-        ];
-      } else if (node.id === 3) {
-        mockWorkerAssignments = [
-          { id: 301, firstName: 'Алексей', lastName: 'Сидоров' },
-          { id: 302, firstName: 'Игорь', lastName: 'Кузнецов' },
-        ];
+  openAssignDialog(serviceId?: string): void {
+    const dialogRef = this.dialog.open(ServiceWorkerModalComponentWindow, {
+      data: { serviceId },
+    });
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result) {
+        this.loadServicesWithWorkers();
       }
-
-      const workerNodes: WorkerNode[] = mockWorkerAssignments.map((worker) => ({
-        id: worker.id,
-        name: `${worker.firstName} ${worker.lastName}`,
-      }));
-
-      node.children = workerNodes;
-      node.workersLoaded = true;
-      this._dataSource.data = [...this._dataSource.data];
-      this._treeControl.expand(node);
-    } else {
-      expanded ? this._treeControl.collapse(node) : this._treeControl.expand(node);
-    }
-  }
-
-  isServiceNode(node: AppTreeNode): node is ServiceTreeNode {
-    return (node as ServiceTreeNode).rawService !== undefined;
-  }
-
-  openAssignmentModal(service: IService): void {
-    this._dialog.open(ServiceWorkerAssignmentComponentWindow, {
-      data: { serviceId: service.id },
     });
   }
 }
