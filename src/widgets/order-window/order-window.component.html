@@ -1,0 +1,109 @@
+<h2 mat-dialog-title>
+  {{ data ? "Редактировать заказ" : "Создать новый заказ" }}
+</h2>
+
+<mat-dialog-content class="mat-typography">
+  <form class="order-form">
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Клиент</mat-label>
+      <mat-select [(ngModel)]="orderForm.clientId" name="clientId" required>
+        <mat-option *ngFor="let client of clients$ | async" [value]="client.id">
+          {{ client.lastName }} {{ client.firstName }} {{ client.middleName }}
+        </mat-option>
+      </mat-select>
+      <mat-error *ngIf="!orderForm.clientId"> Клиент обязателен. </mat-error>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Мастер</mat-label>
+      <mat-select [(ngModel)]="orderForm.workerId" name="workerId" required>
+        <mat-option *ngFor="let master of masters$ | async" [value]="master.id">
+          {{ master.lastName }} {{ master.firstName }} {{ master.middleName }}
+        </mat-option>
+      </mat-select>
+      <mat-error *ngIf="!orderForm.workerId"> Мастер обязателен. </mat-error>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Услуга</mat-label>
+      <mat-select [(ngModel)]="orderForm.serviceId" name="serviceId" required>
+        <mat-option
+          *ngFor="let service of services$ | async"
+          [value]="service.id"
+        >
+          {{ service.name }}
+        </mat-option>
+      </mat-select>
+      <mat-error *ngIf="!orderForm.serviceId"> Услуга обязательна. </mat-error>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Дата и время</mat-label>
+      <input
+        matInput
+        [matDatepicker]="picker"
+        [(ngModel)]="orderForm.dateTime"
+        name="dateTime"
+        required
+        placeholder="Выберите дату"
+      />
+      <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+      <mat-datepicker #picker></mat-datepicker>
+      <mat-hint>Выберите дату</mat-hint>
+      <mat-error *ngIf="!orderForm.dateTime">
+        Дата и время обязательны.
+      </mat-error>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Офис</mat-label>
+      <mat-select
+        [(ngModel)]="orderForm.officeId"
+        name="officeId"
+        required
+        (selectionChange)="onOfficeChange($event.value)"
+      >
+        <mat-option *ngFor="let office of offices$ | async" [value]="office.id">
+          {{ office.number }} ({{ office.address }})
+        </mat-option>
+      </mat-select>
+      <mat-error *ngIf="!orderForm.officeId"> Офис обязателен. </mat-error>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Кабинет</mat-label>
+      <mat-select
+        [(ngModel)]="orderForm.workCabinetId"
+        name="workCabinetId"
+        required
+        [disabled]="!orderForm.officeId || (cabinets$ | async)?.length === 0"
+      >
+        <mat-option
+          *ngFor="let cabinet of cabinets$ | async"
+          [value]="cabinet.id"
+        >
+          {{ cabinet.number }}
+        </mat-option>
+      </mat-select>
+      <mat-error *ngIf="!orderForm.workCabinetId">
+        Кабинет обязателен.
+      </mat-error>
+      <mat-hint *ngIf="!orderForm.officeId"> Сначала выберите офис. </mat-hint>
+      <mat-hint *ngIf="orderForm.officeId && (cabinets$ | async)?.length === 0">
+        Нет доступных кабинетов для этого офиса.
+      </mat-hint>
+    </mat-form-field>
+  </form>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-button (click)="onCancel()">Отмена</button>
+  <button
+    mat-raised-button
+    color="primary"
+    (click)="onSave()"
+    [disabled]="!isFormValid()"
+  >
+    Сохранить
+  </button>
+</mat-dialog-actions>

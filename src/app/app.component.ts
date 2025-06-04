@@ -77,7 +77,6 @@ export class AppComponent {
     { clientName: 'Виктория', text: 'Ирина - настоящий художник! Моя новая стрижка просто потрясающая.', rating: 5 },
   ];
 
-  // Переменные для раскрывающихся виджетов
   appointmentsExpanded = false;
   employeesExpanded = false;
   reviewsExpanded = false;
@@ -89,5 +88,9 @@ export class AppComponent {
 
   openAppointmentModal() {
     console.log('Открыть модальное окно');
+  }
+
+   constructor(private _authService: AuthService) {
+    this._authService.init();
   }
 }

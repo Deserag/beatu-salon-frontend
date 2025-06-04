@@ -210,8 +210,6 @@ export class AdminPanelComponent implements AfterViewInit {
   }
 
   private getChartData(chartType: string, period: string): { labels: string[], values: number[] } {
-    // Здесь должна быть логика получения данных в зависимости от типа графика и периода
-    // Это примерная реализация - замените на свою логику получения данных
     switch(period) {
       case 'today':
         return {

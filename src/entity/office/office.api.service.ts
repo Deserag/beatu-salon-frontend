@@ -53,4 +53,7 @@ export class OfficeApiService {
   deleteCabinet(body: IDeleteCabinet): Observable<IDeleteCabinet> {
     return this._http.delete<IDeleteCabinet>(`${this._baseURL}office/delete-cabinet`, { body });
   }
+  getCabinetsByOffice(body: IReqPage): Observable<TResGetCabinet> {
+    return this._http.post<TResGetCabinet>(`${this._baseURL}office/list-cabinets`, body);
+  }
 }

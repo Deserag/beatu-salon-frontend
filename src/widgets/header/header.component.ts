@@ -38,8 +38,9 @@ export class HeaderComponent {
 
   userName = '';
   userRoleId = '';
-  adminRoleId = '';
-  superAdminRoleId = '';
+  rolesMap = new Map<string, string>(); 
+
+  isRolesLoaded = false;
 
   constructor() {
     const userId = localStorage.getItem('userId');
@@ -47,8 +48,7 @@ export class HeaderComponent {
       this.#userApiService.getUserInfo(userId).subscribe({
         next: (response: IGetUser) => {
           const { firstName = '', lastName = '', roleId = '' } = response.user;
-          this.userName =
-            `${lastName} ${firstName}`.trim() || 'Имя пользователя';
+          this.userName = `${lastName} ${firstName}`.trim() || 'Имя пользователя';
           this.userRoleId = roleId;
           this.loadRoles();
         },
@@ -60,24 +60,17 @@ export class HeaderComponent {
   }
 
   loadRoles() {
-    this.#userApiService
-      .getUserRole({ name: '', page: 1, pageSize: 10 })
-      .subscribe({
-        next: (roles) => {
-          const admin = roles.rows.find(
-            (r) => r.name.toLowerCase() === 'admin'
-          );
-          const superAdmin = roles.rows.find(
-            (r) => r.name.toLowerCase() === 'superadmin'
-          );
-          this.adminRoleId = admin?.id || '';
-          this.superAdminRoleId = superAdmin?.id || '';
-        },
-        error: () => {
-          this.adminRoleId = '';
-          this.superAdminRoleId = '';
-        },
-      });
+    this.#userApiService.getUserRole({ name: '', page: 1, pageSize: 10 }).subscribe({
+      next: (roles) => {
+        roles.rows.forEach((r) => {
+          this.rolesMap.set(r.name.toLowerCase(), r.id);
+        });
+        this.isRolesLoaded = true;
+      },
+      error: () => {
+        this.isRolesLoaded = false;
+      },
+    });
   }
 
   onClickLogOut() {
@@ -89,9 +82,9 @@ export class HeaderComponent {
   }
 
   get isAdminOrSuperAdmin(): boolean {
-    return (
-      this.userRoleId === this.adminRoleId ||
-      this.userRoleId === this.superAdminRoleId
-    );
+    if (!this.isRolesLoaded) return false;
+    const adminId = this.rolesMap.get('admin');
+    const superAdminId = this.rolesMap.get('superadmin');
+    return this.userRoleId === adminId || this.userRoleId === superAdminId;
   }
 }

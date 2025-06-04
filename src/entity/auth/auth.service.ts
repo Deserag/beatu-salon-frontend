@@ -17,6 +17,16 @@ export class AuthService {
     private _router: Router
   ) {}
 
+   init(): void {
+    const user = this.user;
+    const hasRoleInStorage = !!localStorage.getItem(EAuthKeys.ROLE);
+
+    if (this.isAuthenticated() && user && !hasRoleInStorage && user.roles?.length) {
+    localStorage.setItem(EAuthKeys.ROLE, user.roles[0]);
+  }
+
+  }
+
   get token(): string | null {
     return sessionStorage.getItem(EAuthKeys.TOKEN) || localStorage.getItem(EAuthKeys.TOKEN);
   }

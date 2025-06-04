@@ -43,7 +43,6 @@ export class UserListComponent {
       )
       .subscribe((response: TResGetUsers) => {
         this.dataSource$.next(response.rows);
-        // this.totalCount$.next(response.infoPage.totalCount);
       });
     this._destroyRef.onDestroy(() => {
       this._page$.complete();

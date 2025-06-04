@@ -34,7 +34,6 @@ export class ServicePageComponent {
   roles = ['Admin', 'Manager', 'Stylist'];
   employees = ['Employee 1', 'Employee 2', 'Employee 3'];
   id: string;
-  private creatorId: string = 'd52c32d6-0b2b-46e8-b16f-386fdd20d47d';
   constructor(
     private _router: Router,
     private _fb: FormBuilder,
@@ -54,12 +53,10 @@ export class ServicePageComponent {
     console.log(this.id);
 
     this.serviceForm = this._fb.group({
-      creatorId: this.creatorId,
+      creatorId: [this._getCreatorId()],
       name: ['', Validators.required],
       description: ['', Validators.required],
       price: ['', Validators.required],
-      // employees: [[], Validators.required],
-      // roles: [[], Validators.required],
     });
 
     this.loadService(this.id);
@@ -71,11 +68,20 @@ export class ServicePageComponent {
     });
   }
 
+  private _getCreatorId(): string | null {
+    try {
+      const user = JSON.parse(localStorage.getItem('user') || '{}');
+      return user?.id || null;
+    } catch {
+      return null;
+    }
+  }
+
   onSubmit(): void {
     if (this.serviceForm.valid) {
       const updatedService = {
         ...this.serviceForm.value,
-        id: this.id, // id будет обновляться с текущим значением
+        id: this.id, 
       };
 
       this._servicesApi.updateService(updatedService).subscribe(() => {

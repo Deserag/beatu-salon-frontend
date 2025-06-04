@@ -28,7 +28,7 @@ export class AuthInterceptor implements HttpInterceptor {
         if (
           err instanceof HttpErrorResponse &&
           err.status === 401 &&
-          !reqWithAuth.url.includes(`${this.apiUrls.authService}api/auth/refresh-tokens`) // Corrected URL check
+          !reqWithAuth.url.includes(`${this.apiUrls.authService}api/auth/refresh-tokens`) 
         ) {
           return this.#handle401Error(req, next);
         } else {

@@ -215,6 +215,7 @@ export const appRoutes: Routes = [
   },
   {
     path: ERouteConstans.MAIN,
+    canActivate: [AuthGuard],
     loadComponent: () =>
       import('../pages/work-page/work-page.component').then(
         (c) => c.WorkPageComponent

@@ -1,7 +1,6 @@
 export enum ERouteConstans {
   //Авторизация:
   LOGIN = 'login',
-  //Сделал сразу чтоб потом вдруг если потребуется уже имелись
   FORGOT_PASSWORD = 'forgot-password',
   AUTH = 'auth',
   MAIN = 'work',

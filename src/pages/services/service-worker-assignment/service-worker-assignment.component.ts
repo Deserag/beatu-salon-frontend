@@ -1,25 +1,40 @@
-import { Component, OnInit } from '@angular/core';
-import { ServicesApiService, IWorkerOnService } from '@entity';
-import { MatTreeModule, MatTreeNestedDataSource } from '@angular/material/tree';
+import { Component } from '@angular/core';
+import { MatTreeNestedDataSource } from '@angular/material/tree';
 import { NestedTreeControl } from '@angular/cdk/tree';
+import { MatDialog } from '@angular/material/dialog';
+import { CommonModule } from '@angular/common';
+import { MatTreeModule } from '@angular/material/tree';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
-import { CommonModule } from '@angular/common';
-import { MatDialog } from '@angular/material/dialog';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
-import { map } from 'rxjs/operators';
 import { ServiceWorkerAssignmentComponentWindow } from 'src/widgets/services/service-worker-window/service-worker-assignment.component';
 
-interface ServiceTreeNode {
-  name: string;
-  children?: WorkerNode[];
-  id: string;
+interface Worker {
+  id: number;
+  firstName: string;
+  lastName: string;
 }
 
-interface WorkerNode {
+interface IService {
+  id: number;
   name: string;
-  id: string;
+  description: string;
+  price: number;
+  duration: number;
 }
+
+interface AppTreeNode {
+  id: number;
+  name: string;
+  children?: AppTreeNode[];
+}
+
+interface ServiceTreeNode extends AppTreeNode {
+  rawService: IService;
+  workersLoaded: boolean;
+}
+
+interface WorkerNode extends AppTreeNode {}
 
 @Component({
   selector: 'app-service-worker-assignment',
@@ -29,22 +44,18 @@ interface WorkerNode {
     MatTreeModule,
     MatIconModule,
     MatButtonModule,
-    MatProgressBarModule
+    MatProgressBarModule,
   ],
-  templateUrl: './service-worker-assignment.component.html'
+  templateUrl: './service-worker-assignment.component.html',
+  styleUrls: ['./service-worker-assignment.component.scss'],
 })
-export class ServiceWorkerAssignmentComponent implements OnInit {
-  private _treeControl = new NestedTreeControl<ServiceTreeNode>(node => node.children);
-  private _dataSource = new MatTreeNestedDataSource<ServiceTreeNode>();
+export class ServiceWorkerAssignmentComponent {
+  private _treeControl = new NestedTreeControl<AppTreeNode>((node) => node.children);
+  private _dataSource = new MatTreeNestedDataSource<AppTreeNode>();
   private _isLoading = true;
 
-  constructor(
-    private _servicesApi: ServicesApiService,
-    private _dialog: MatDialog
-  ) { }
-
-  ngOnInit(): void {
-    this._loadServicesWithWorkers();
+  constructor(private _dialog: MatDialog) {
+    this.loadServices();
   }
 
   get treeControl() {
@@ -59,56 +70,77 @@ export class ServiceWorkerAssignmentComponent implements OnInit {
     return this._isLoading;
   }
 
-  hasChild = (_: number, node: ServiceTreeNode) => !!node.children && node.children.length > 0;
+  hasChild = (_: number, node: AppTreeNode) => {
+    return this.isServiceNode(node)
+      ? !node.workersLoaded || (node.children && node.children.length > 0)
+      : false;
+  };
 
-  private _loadServicesWithWorkers(): void {
+  loadServices(): void {
     this._isLoading = true;
-    this._servicesApi.getServicesWithWorkers({ page: 1, pageSize: 100 }).pipe(
-      map((response: IWorkerOnService[]) => {
-        const servicesMap = new Map<string, ServiceTreeNode>();
-        response.forEach((item: IWorkerOnService) => {
-          const serviceId = item.serviceId;
-          const workerNode: WorkerNode = {
-            id: item.worker.id,
-            name: `${item.worker.firstName} ${item.worker.lastName}`
-          };
 
-          if (servicesMap.has(serviceId)) {
-            const serviceNode = servicesMap.get(serviceId)!;
-            if (serviceNode.children) {
-              serviceNode.children.push(workerNode);
-            } else {
-              serviceNode.children = [workerNode];
-            }
-          } else {
-            servicesMap.set(serviceId, {
-              id: serviceId,
-              name: `Услуга #${serviceId}`, 
-              children: [workerNode]
-            });
-          }
-        });
-        return Array.from(servicesMap.values());
-      })
-    ).subscribe({
-      next: (treeData) => {
-        this._dataSource.data = treeData;
-        this._isLoading = false;
-      },
-      error: (err) => {
-        console.error('Error loading services with workers', err);
-        this._isLoading = false;
-      }
-    });
+    const mockServices: IService[] = [
+      { id: 1, name: 'Парикмахерские услуги', description: 'Стрижка, укладка', price: 1200, duration: 1 },
+      { id: 2, name: 'Маникюр и педикюр', description: 'Уход за ногтями', price: 1500, duration: 1.5 },
+      { id: 3, name: 'Массаж', description: 'Расслабляющий массаж', price: 2000, duration: 2 },
+    ];
+
+    const treeData: ServiceTreeNode[] = mockServices.map((service) => ({
+      id: service.id,
+      name: service.name,
+      children: [],
+      rawService: service,
+      workersLoaded: false,
+    }));
+
+    this._dataSource.data = treeData;
+    this._isLoading = false;
   }
 
-  openAssignmentModal(): void {
-    const dialogRef = this._dialog.open(ServiceWorkerAssignmentComponentWindow, {});
+  toggleService(node: ServiceTreeNode): void {
+    const expanded = this._treeControl.isExpanded(node);
 
-    dialogRef.afterClosed().subscribe(result => {
-      if (result) {
-        this._loadServicesWithWorkers();
+    if (!expanded && !node.workersLoaded) {
+      let mockWorkerAssignments: Worker[] = [];
+
+      if (node.id === 1) {
+        mockWorkerAssignments = [
+          { id: 101, firstName: 'Марина', lastName: 'Иванова' },
+          { id: 102, firstName: 'Ольга', lastName: 'Петрова' },
+        ];
+      } else if (node.id === 2) {
+        mockWorkerAssignments = [
+          { id: 201, firstName: 'Елена', lastName: 'Смирнова' },
+          { id: 202, firstName: 'Дарья', lastName: 'Козлова' },
+        ];
+      } else if (node.id === 3) {
+        mockWorkerAssignments = [
+          { id: 301, firstName: 'Алексей', lastName: 'Сидоров' },
+          { id: 302, firstName: 'Игорь', lastName: 'Кузнецов' },
+        ];
       }
+
+      const workerNodes: WorkerNode[] = mockWorkerAssignments.map((worker) => ({
+        id: worker.id,
+        name: `${worker.firstName} ${worker.lastName}`,
+      }));
+
+      node.children = workerNodes;
+      node.workersLoaded = true;
+      this._dataSource.data = [...this._dataSource.data];
+      this._treeControl.expand(node);
+    } else {
+      expanded ? this._treeControl.collapse(node) : this._treeControl.expand(node);
+    }
+  }
+
+  isServiceNode(node: AppTreeNode): node is ServiceTreeNode {
+    return (node as ServiceTreeNode).rawService !== undefined;
+  }
+
+  openAssignmentModal(service: IService): void {
+    this._dialog.open(ServiceWorkerAssignmentComponentWindow, {
+      data: { serviceId: service.id },
     });
   }
 }

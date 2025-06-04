@@ -88,9 +88,25 @@ export class OfficeCabinetsComponent {
     });
   }
 
+  private _getCreatorId(): string | null {
+    try {
+      const user = JSON.parse(localStorage.getItem('user') || '{}');
+      return user?.id || null;
+    } catch {
+      return null;
+    }
+  }
+  
+
   onClickDeleteCabinet(cabinet: ICabinet) {
+    const creatorId = this._getCreatorId();
+    if (!creatorId) {
+      console.error('Не удалось получить creatorId из localStorage');
+      return;
+    }
+  
     if (confirm(`Вы уверены, что хотите удалить кабинет №${cabinet.number}?`)) {
-      this._cabinetApiService.deleteCabinet({ id: cabinet.id, creatorId: '' }).subscribe({
+      this._cabinetApiService.deleteCabinet({ id: cabinet.id, creatorId }).subscribe({
         next: (response) => {
           console.log('Кабинет удален:', response);
           this._page$.next(this._page$.value);
@@ -101,4 +117,5 @@ export class OfficeCabinetsComponent {
       });
     }
   }
+  
 }

@@ -13,6 +13,7 @@ export enum EAuthKeys {
   TOKEN = 'accessToken',
   DEVICE_ID = 'deviceId',
   USER = 'user',
+  ROLE  = 'role',
 }
 
 export interface IResAuthUserInfo {
