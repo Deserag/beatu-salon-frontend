@@ -32,7 +32,6 @@ export class ServiceWorkerAssignmentComponentWindow {
   assignmentForm: FormGroup;
   availableWorkers: IUser[] = [];
   service: IService | null = null;
-  creatorId: string = 'db61d2d2-fa62-4321-b206-a19864df7506';
   errorMessage: string = '';
   services: IService[] = [];
 
@@ -99,12 +98,16 @@ export class ServiceWorkerAssignmentComponentWindow {
   onSubmit(): void {
     if (this.assignmentForm.valid) {
       const selectedWorkerIds = this.assignmentForm.get('workers')?.value as string[];
-      if (this.assignmentForm.value['serviceId'] && selectedWorkerIds && selectedWorkerIds.length > 0) {
+      const serviceId = this.assignmentForm.value['serviceId'];
+      const creatorId = this._getCreatorId();
+  
+      if (serviceId && selectedWorkerIds && selectedWorkerIds.length > 0 && creatorId) {
         const payload = {
-          serviceId: this.assignmentForm.value['serviceId'],
+          serviceId,
           userIds: selectedWorkerIds,
-          creatorId: this.creatorId,
+          creatorId,
         };
+  
         this.servicesApiService.createWorkerOnService(payload).subscribe({
           next: (response) => {
             console.log('Мастера успешно назначены:', response);
@@ -116,14 +119,24 @@ export class ServiceWorkerAssignmentComponentWindow {
           },
         });
       } else {
-        this.errorMessage = 'Пожалуйста, выберите сервис и хотя бы одного мастера.';
+        this.errorMessage = 'Пожалуйста, выберите сервис, хотя бы одного мастера и убедитесь, что вы авторизованы.';
       }
     } else {
       this.errorMessage = 'Форма не валидна. Проверьте поля.';
     }
   }
+  
 
   onCancel(): void {
     this.dialogRef.close(false);
+  }
+
+  private _getCreatorId(): string | null {
+    try {
+      const user = JSON.parse(localStorage.getItem('user') || '{}');
+      return user?.id || null;
+    } catch {
+      return null;
+    }
   }
 }

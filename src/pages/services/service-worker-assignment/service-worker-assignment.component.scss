@@ -1,76 +1,59 @@
-$primary-color: #3f51b5;
-$background-color: #f5f7fa;
-$text-color: #3f51b5;
-$border-color: #ccc;
-$box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-$border-radius: 6px;
-$transition-duration: 0.3s;
+.content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+}
 
-.container {
-  padding: 20px;
+.vscode-tree {
+  width: 90%;
+  max-width: 900px;
+  margin-top: 20px;
+  background: #f9f9f9;
+  border-radius: 8px;
+  padding: 16px;
+  font-family: 'Segoe UI', sans-serif;
 
-  h2 {
-    color: $primary-color;
-    margin-bottom: 1.5rem;
+  .node-content {
+    display: flex;
+    align-items: center;
+    padding: 4px 0;
+    font-size: 14px;
+
+    .toggle-btn {
+      margin-right: 4px;
+    }
+
+    .folder-icon {
+      color: #ff9800;
+      margin-right: 4px;
+    }
+
+    .file-icon {
+      color: #607d8b;
+      margin-right: 8px;
+      margin-left: 24px;
+    }
+
+    .service-name {
+      font-weight: 500;
+    }
+
+    .spacer {
+      flex: 1 1 auto;
+    }
+
+    button {
+      font-size: 13px;
+      padding: 2px 8px;
+    }
   }
 
-  .loading {
-    margin-bottom: 1rem;
+  .worker-node {
+    margin-left: 28px;
   }
 
-  mat-tree {
-    width: 100%;
-
-    .mat-tree-node {
-      display: flex;
-      align-items: center;
-      padding: 10px 16px;
-      margin-bottom: 8px;
-      cursor: pointer;
-      background-color: #fff;
-      transition: background-color $transition-duration ease;
-
-      &.bordered {
-        border: 1px solid $border-color;
-        border-radius: $border-radius;
-        box-shadow: $box-shadow;
-      }
-
-      .node-name {
-        flex: 1;
-        font-size: 16px;
-      }
-
-      .tree-toggle-icon {
-        margin-right: 8px;
-      }
-
-      .update-workers-button {
-        margin-left: auto;
-      }
-    }
-
-    .mat-nested-tree-node {
-      padding-left: 16px;
-
-      .mat-tree-node {
-        padding-left: 32px;
-      }
-
-      .tree-invisible {
-        display: none;
-      }
-    }
-
-    .worker-node {
-      padding-left: 48px;
-      font-style: italic;
-      background-color: $background-color;
-    }
-
-    .service-text,
-    .worker-text {
-      color: $text-color;
-    }
+  .hidden {
+    display: none;
   }
 }
