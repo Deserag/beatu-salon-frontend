@@ -1,51 +1,81 @@
 <div class="modal-container">
-  <h2>{{ form.value.id ? "Редактировать запись" : "Создать запись" }}</h2>
+  <h2>
+    {{ data?.id ? "Редактировать запись" : "Создать запись" }}
+  </h2>
   <form [formGroup]="form" (ngSubmit)="submit()">
     <mat-form-field appearance="fill">
       <mat-label>Клиент</mat-label>
       <mat-select formControlName="clientId">
-        <mat-option *ngFor="let client of clients$ | async" [value]="client.id">
-          {{ client.lastName }} {{ client.firstName }} {{ client.middleName }}
+        <mat-option *ngFor="let client of clients" [value]="client.id">
+          {{ client.firstName }} {{ client.lastName }}
         </mat-option>
       </mat-select>
+      @if (form.get('clientId')?.invalid && form.get('clientId')?.touched) {
+      <mat-error> Клиент обязателен </mat-error>
+      }
     </mat-form-field>
 
     <mat-form-field appearance="fill">
       <mat-label>Услуга</mat-label>
       <mat-select formControlName="serviceId">
-        <mat-option
-          *ngFor="let service of services$ | async"
-          [value]="service.id"
-        >
+        <mat-option *ngFor="let service of services" [value]="service.id">
           {{ service.name }}
         </mat-option>
       </mat-select>
+      @if (form.get('serviceId')?.invalid && form.get('serviceId')?.touched) {
+      <mat-error> Услуга обязательна </mat-error>
+      }
     </mat-form-field>
 
     <mat-form-field appearance="fill">
       <mat-label>Мастер</mat-label>
       <mat-select formControlName="masterId">
-        <mat-option *ngFor="let master of masters$ | async" [value]="master.id">
-          {{ master.lastName }} {{ master.firstName }} {{ master.middleName }}
+        <mat-option *ngFor="let master of masters" [value]="master.id">
+          {{ master.firstName }} {{ master.lastName }}
         </mat-option>
       </mat-select>
+      @if (form.get('masterId')?.invalid && form.get('masterId')?.touched) {
+      <mat-error> Мастер обязателен </mat-error>
+      }
     </mat-form-field>
 
     <mat-form-field appearance="fill">
       <mat-label>Офис</mat-label>
-      <input matInput formControlName="officeId" />
+      <mat-select formControlName="officeId">
+        <mat-option *ngFor="let office of offices" [value]="office.id">
+          {{ office.number }}
+        </mat-option>
+      </mat-select>
+      @if (form.get('officeId')?.invalid && form.get('officeId')?.touched) {
+      <mat-error> Офис обязателен </mat-error>
+      }
     </mat-form-field>
 
     <mat-form-field appearance="fill">
-      <mat-label>Дата и время записи</mat-label>
-      <input matInput formControlName="date" type="datetime-local" />
+      <mat-label>Кабинет</mat-label>
+      <mat-select formControlName="cabinetId">
+        <mat-option *ngFor="let cabinet of cabinets" [value]="cabinet.id">
+          {{ cabinet.number }}
+        </mat-option>
+      </mat-select>
+      @if (form.get('cabinetId')?.invalid && form.get('cabinetId')?.touched) {
+      <mat-error> Кабинет обязателен </mat-error>
+      }
+    </mat-form-field>
+
+    <mat-form-field appearance="fill">
+      <mat-label>Дата и время</mat-label>
+      <input matInput type="datetime-local" formControlName="dateTime" />
+      @if (form.get('dateTime')?.invalid && form.get('dateTime')?.touched) {
+      <mat-error> Дата и время обязательны </mat-error>
+      }
     </mat-form-field>
 
     <div class="actions">
       <button mat-raised-button color="primary" type="submit">
-        {{ form.value.id ? "Обновить" : "Создать" }}
+        {{ data?.id ? "Обновить" : "Создать" }}
       </button>
-      <button mat-button color="warn" type="button" (click)="close()">
+      <button mat-button color="warn" type="button" (click)="cancel()">
         Отмена
       </button>
     </div>

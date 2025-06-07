@@ -1,119 +1,155 @@
-import { CommonModule } from '@angular/common';
-import { Component, Inject, inject } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import {
-  FormControl,
+  FormBuilder,
   FormGroup,
   Validators,
   ReactiveFormsModule,
 } from '@angular/forms';
-import { MatButtonModule } from '@angular/material/button';
-import { MatOptionModule } from '@angular/material/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { CommonModule } from '@angular/common';
+import {
+  combineLatest,
+  filter,
+  map,
+  Observable,
+  startWith,
+  switchMap,
+  take,
+  tap,
+} from 'rxjs';
+import {
+  RecordApiService,
+  ServicesApiService,
+  OfficeApiService,
+  IUser,
+  IService,
+  IOffice,
+  ICabinet,
+  TResGetService,
+  TResGetOffice,
+  TResGetCabinet,
+  TResGetUsers,
+  UserApiService,
+} from '@entity';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
-import {
-  IRecord,
-  ICreateRecord,
-  RecordApiService,
-  ServicesApiService,
-  UserApiService,
-  IUser,
-} from '@entity';
-import { BehaviorSubject } from 'rxjs';
+import { MatOptionModule } from '@angular/material/core';
+import { MatButtonModule } from '@angular/material/button';
 
 @Component({
   selector: 'app-records-window',
   standalone: true,
   imports: [
     ReactiveFormsModule,
+    CommonModule,
     MatFormFieldModule,
     MatInputModule,
-    MatButtonModule,
-    MatOptionModule,
     MatSelectModule,
-    CommonModule,
+    MatOptionModule,
+    MatButtonModule,
   ],
   templateUrl: './records-window.component.html',
   styleUrls: ['./records-window.component.scss'],
 })
 export class RecordsWindowComponent {
-  form = new FormGroup({
-    id: new FormControl<string | null>(null),
-    clientId: new FormControl<string>('', Validators.required),
-    serviceId: new FormControl<string>('', Validators.required),
-    masterId: new FormControl<string>('', Validators.required),
-    officeId: new FormControl<string>('', Validators.required),
-    date: new FormControl<Date>(new Date(), Validators.required),
-  });
+  form: FormGroup;
+  clients: IUser[] = [];
+  services: IService[] = [];
+  masters: IUser[] = [];
+  offices: IOffice[] = [];
+  cabinets: ICabinet[] = [];
 
-  clients$ = new BehaviorSubject<IUser[]>([]);
-  masters$ = new BehaviorSubject<IUser[]>([]);
-  services$ = new BehaviorSubject<{ id: string; name: string }[]>([]);
+  private fb = inject(FormBuilder);
+  private dialogRef = inject(MatDialogRef<RecordsWindowComponent>);
+  data = inject(MAT_DIALOG_DATA);
+  private recordApi = inject(RecordApiService);
+  private serviceApi = inject(ServicesApiService);
+  private officeApi = inject(OfficeApiService);
+  private userApi = inject(UserApiService);
 
-  private _dialogRef = inject(MatDialogRef<RecordsWindowComponent>);
-  private _recordApiService = inject(RecordApiService);
-  private _servicesApiService = inject(ServicesApiService);
-  private _userApiService = inject(UserApiService);
+  private adminId: string = '';
 
-  constructor(@Inject(MAT_DIALOG_DATA) public data: IRecord | null) {
-    this.loadClients();
-    this.loadAllServices();
-
-    if (data) {
-      this.form.patchValue({
-        id: data.id,
-        clientId: data.client?.id || '',
-        serviceId: data.service?.id || '',
-        masterId: data.master?.id || '',
-        officeId: data.office?.id || '',
-        date: new Date(data.date),
-      });
-
-      if (data.service?.id) {
-        this.loadMastersByService(data.service.id);
-      }
+  constructor() {
+    try {
+      this.adminId = JSON.parse(localStorage.getItem('user') || '{}').id || '';
+    } catch (e) {
+      console.error('Error parsing user from localStorage:', e);
+      this.adminId = '';
     }
 
-    this.form.get('clientId')?.valueChanges.subscribe(() => {
-      this.masters$.next([]);
-      this.form.patchValue({ serviceId: '', masterId: '', officeId: '' });
-      // If services were dependent on client, you would load them here.
-      // For now, we assume all services are loaded initially.
+    this.form = this.fb.group({
+      clientId: [this.data?.client?.id || this.adminId, Validators.required],
+      serviceId: [this.data?.service?.id || '', Validators.required],
+      masterId: [this.data?.master?.id || '', Validators.required],
+      officeId: [this.data?.office?.id || '', Validators.required],
+      cabinetId: [this.data?.cabinet?.id || '', Validators.required],
+      dateTime: [this.data?.dateTime || '', Validators.required],
     });
 
-    this.form.get('serviceId')?.valueChanges.subscribe((serviceId) => {
-      this.masters$.next([]);
-      this.form.patchValue({ masterId: '', officeId: '' });
-      if (serviceId) {
-        this.loadMastersByService(serviceId);
-      }
-    });
-  }
-
-  private loadClients(): void {
-    this._userApiService
-      .getUser({ page: 1, pageSize: 100 })
-      .subscribe((res) => {
-        this.clients$.next(res.rows);
+    combineLatest([
+      this.userApi.getUser({ page: 1, pageSize: 100 }).pipe(
+        map((res: TResGetUsers) => res.rows),
+        tap((users) => (this.clients = users))
+      ),
+      this.serviceApi.getService({ page: 1, pageSize: 100 }).pipe(
+        map((res: TResGetService) => res.rows),
+        tap((services) => (this.services = services))
+      ),
+      this.officeApi.getOffice({ page: 1, pageSize: 100 }).pipe(
+        map((res: TResGetOffice) => res.rows),
+        tap((offices) => (this.offices = offices))
+      ),
+      this.officeApi.getCabinets({ page: 1, pageSize: 100 }).pipe(
+        map((res: TResGetCabinet) => res.rows),
+        tap((cabinets) => (this.cabinets = cabinets))
+      ),
+    ])
+      .pipe(
+        take(1),
+        tap(() => {
+          if (this.data?.service?.id) {
+            this.recordApi
+              .getMastersByService(this.data.service.id)
+              .pipe(
+                take(1),
+                map((response) => response.map((item: any) => item.worker))
+              )
+              .subscribe((list) => (this.masters = list));
+          }
+        })
+      )
+      .subscribe({
+        error: (err) => console.error('Error loading initial data:', err),
       });
-  }
 
-  private loadAllServices(): void {
-    this._servicesApiService
-      .getService({ page: 1, pageSize: 100 })
-      .subscribe((res) => {
-        this.services$.next(
-          res.rows.map((service) => ({ id: service.id, name: service.name }))
-        );
+    this.form
+      .get('serviceId')!
+      .valueChanges.pipe(
+        startWith(this.form.get('serviceId')!.value),
+        filter((id) => !!id),
+        switchMap((id) =>
+          this.recordApi
+            .getMastersByService(id)
+            .pipe(map((response) => response.map((item: any) => item.worker)))
+        )
+      )
+      .subscribe((list) => {
+        this.masters = list;
+        if (
+          this.form.get('masterId')!.value &&
+          !list.some((master) => master.id === this.form.get('masterId')!.value)
+        ) {
+          this.form.get('masterId')!.reset('');
+        }
       });
-  }
 
-  private loadMastersByService(serviceId: string): void {
-    this._recordApiService
-      .getMastersByService(serviceId)
-      .subscribe((masters) => {
-        this.masters$.next(masters);
+    this.form
+      .get('serviceId')!
+      .valueChanges.pipe(filter((id) => !id))
+      .subscribe(() => {
+        this.masters = [];
+        this.form.get('masterId')!.reset('');
       });
   }
 
@@ -123,28 +159,18 @@ export class RecordsWindowComponent {
       return;
     }
 
-    const value = this.form.value;
+    const v = this.form.value;
+    const obs: Observable<any> = this.data?.id
+      ? this.recordApi.updateRecord({ ...v, id: this.data.id })
+      : this.recordApi.createRecord(v);
 
-    const dto: ICreateRecord = {
-      clientId: value.clientId!,
-      serviceId: value.serviceId!,
-      masterId: value.masterId!,
-      officeId: value.officeId!,
-      date: value.date!,
-    };
-
-    if (value.id) {
-      this._recordApiService
-        .updateRecord({ ...dto, id: value.id })
-        .subscribe((res) => this._dialogRef.close(res));
-    } else {
-      this._recordApiService
-        .createRecord(dto)
-        .subscribe((res) => this._dialogRef.close(res));
-    }
+    obs.pipe(take(1)).subscribe({
+      next: () => this.dialogRef.close(true),
+      error: (err) => console.error('Error submitting record:', err),
+    });
   }
 
-  close(): void {
-    this._dialogRef.close();
+  cancel(): void {
+    this.dialogRef.close(false);
   }
 }
