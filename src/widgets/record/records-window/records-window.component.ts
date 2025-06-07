@@ -4,6 +4,8 @@ import {
   FormGroup,
   Validators,
   ReactiveFormsModule,
+  AbstractControl,
+  ValidationErrors,
 } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { CommonModule } from '@angular/common';
@@ -36,7 +38,26 @@ import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { MatOptionModule } from '@angular/material/core';
 import { MatButtonModule } from '@angular/material/button';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatNativeDateModule } from '@angular/material/core';
 
+function futureDateTimeValidator(): Validators {
+  return (control: AbstractControl): ValidationErrors | null => {
+    if (!control.value) {
+      return null;
+    }
+
+    const selectedDateTime = new Date(control.value);
+    const currentDateTime = new Date();
+    const selectedTime = selectedDateTime.getTime();
+    const currentTime = currentDateTime.getTime();
+
+    if (selectedTime < currentTime) {
+      return { pastDateTime: true };
+    }
+    return null;
+  };
+}
 @Component({
   selector: 'app-records-window',
   standalone: true,
@@ -48,6 +69,8 @@ import { MatButtonModule } from '@angular/material/button';
     MatSelectModule,
     MatOptionModule,
     MatButtonModule,
+    MatDatepickerModule,
+    MatNativeDateModule,
   ],
   templateUrl: './records-window.component.html',
   styleUrls: ['./records-window.component.scss'],
@@ -59,6 +82,7 @@ export class RecordsWindowComponent {
   masters: IUser[] = [];
   offices: IOffice[] = [];
   cabinets: ICabinet[] = [];
+
 
   private fb = inject(FormBuilder);
   private dialogRef = inject(MatDialogRef<RecordsWindowComponent>);

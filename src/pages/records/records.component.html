@@ -6,11 +6,11 @@
   <div class="content">
     <app-order-card
       *ngFor="let record of records$ | async"
-      [fullName]="(record.client?.lastName || '') + ' ' + (record.client?.firstName || '') + ' ' + (record.client?.middleName || '')"
-      [master]="(record.master?.lastName || '') + ' ' + (record.master?.firstName || '') + ' ' + (record.master?.middleName || '')"
+      [fullName]="(record.user?.lastName || '') + ' ' + (record.user?.firstName || '') + ' ' + (record.user?.middleName || '')"
+      [master]="(record.worker?.lastName || '') + ' ' + (record.worker?.firstName || '') + ' ' + (record.worker?.middleName || '')"
       [service]="record.service?.name || ''"
       [price]="record.service?.price || 0"
-      [dateTime]="record.date"
+      [dateTime]="record.dateTime"
       [office]="record.office?.number || ''"
       (click)="onClickEdit(record)"
     ></app-order-card>

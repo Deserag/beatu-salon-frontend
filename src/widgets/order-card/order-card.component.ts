@@ -14,6 +14,6 @@ export class OrderCardComponent {
   @Input() master: string = '';
   @Input() service: string = '';
   @Input() price: number = 0;
-  @Input() dateTime: Date = new Date();
+  @Input() dateTime: string = '';
   @Input() office: string = '';
 }

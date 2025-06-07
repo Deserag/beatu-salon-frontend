@@ -4,16 +4,25 @@ import { IUser } from "../user";
 
 export interface IRecord {
   id: string;
-  client?: IUser;
-  master?: IUser;
+  userId: string; 
+  workerId: string; 
+  dateTime: string; 
+  officeId: string; 
+  workCabinetId: string; 
+  result: any | null; 
+  createdAt: string; 
+  updatedAt: string;
+  deletedAt: string | null; 
+
+  user?: IUser;
+  worker?: IUser; 
   service?: IService;
-  office?: IOffice;
-  date: Date;
+  office?: IOffice; 
 }
 
 
 export interface ICreateRecord {
-  clientId: string;
+  userId: string;
   masterId: string;
   serviceId: string;
   officeId: string;
