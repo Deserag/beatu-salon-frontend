@@ -4,7 +4,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { RecordApiService, IRecord, TResGetRecord } from '@entity';
 import { RecordsWindowComponent } from 'src/widgets/record/records-window/records-window.component';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { OrderCardComponent } from "../../widgets/order-card/order-card.component";
+import { OrderCardComponent } from '../../widgets/order-card/order-card.component';
 import { CommonModule } from '@angular/common';
 
 @Component({
@@ -12,7 +12,7 @@ import { CommonModule } from '@angular/common';
   standalone: true,
   imports: [OrderCardComponent, CommonModule],
   templateUrl: './records.component.html',
-  styleUrls: ['./records.component.scss'], 
+  styleUrls: ['./records.component.scss'],
 })
 export class RecordsComponent {
   records$ = new BehaviorSubject<IRecord[]>([]);

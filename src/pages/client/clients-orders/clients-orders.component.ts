@@ -12,9 +12,8 @@ import {
   TResGetClientsOrders,
 } from '@entity';
 import { PageEvent, MatPaginatorModule } from '@angular/material/paginator';
-import { OrderWindowComponent } from 'src/widgets/order-window/order-window.component';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { startWith } from 'rxjs/operators';
+import { RecordsWindowComponent } from 'src/widgets/record/records-window/records-window.component';
 
 @Component({
   selector: 'app-clients-orders',
@@ -53,6 +52,10 @@ export class ClientsOrdersComponent {
   ];
 
   constructor() {
+    this.loadOrders();
+  }
+
+  loadOrders() {
     this.page$
       .pipe(
         combineLatestWith(this.pageSize$),
@@ -80,7 +83,7 @@ export class ClientsOrdersComponent {
   }
 
   openCreate() {
-    const ref = this.dialog.open(OrderWindowComponent, { data: null });
+    const ref = this.dialog.open(RecordsWindowComponent, { data: null });
     ref
       .afterClosed()
       .subscribe((newOrderData: Partial<IClientsOrders> | false) => {
@@ -97,7 +100,7 @@ export class ClientsOrdersComponent {
   }
 
   openEdit(order: IClientsOrders) {
-    const ref = this.dialog.open(OrderWindowComponent, { data: order });
+    const ref = this.dialog.open(RecordsWindowComponent, { data: order });
     ref
       .afterClosed()
       .subscribe((updatedOrderData: Partial<IClientsOrders> | false) => {
@@ -128,5 +131,9 @@ export class ClientsOrdersComponent {
 
   reload() {
     this.page$.next(this.page$.value);
+  }
+
+  trackById(index: number, item: IClientsOrders) {
+    return item.id;
   }
 }
