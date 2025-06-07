@@ -2,20 +2,6 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 20px;
-}
-
-.header {
-  width: 90%;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 20px;
-
-  h1 {
-    margin: 0;
-    color: #3f51b5;
-  }
 }
 
 .table-container {
@@ -23,96 +9,59 @@
   margin: 20px auto;
   display: flex;
   flex-direction: column;
-  position: relative;
-  border-radius: 4px;
-  overflow: hidden; // Ensures rounded corners apply to content
 
-  .loading-overlay {
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background: rgba(255, 255, 255, 0.8);
-    z-index: 100;
-  }
-
-  .user-table {
+  table {
     width: 100%;
     border-collapse: collapse;
   }
 
   th,
   td {
-    padding: 12px 16px; // Увеличенный отступ
+    padding: 10px;
     text-align: left;
-    border-bottom: 1px solid #e0e0e0; // Более светлая граница
+    border-bottom: 1px solid #ddd;
   }
 
   th {
-    background-color: #f5f5f5; // Светлый фон для заголовков
+    background-color: #f0f0f0;
     font-weight: bold;
-    color: #424242; // Темнее цвет текста
   }
 
-  .mat-row:hover {
-    background-color: #f0f0f0; // Эффект при наведении
-  }
-
-  .table-actions {
+  .table-footer {
     display: flex;
-    gap: 8px; // Промежуток между кнопками
+    justify-content: flex-end;
+    margin-top: 10px;
   }
 
   button {
-    background-color: transparent; // Сброс фона для icon-button
-    color: inherit; // Наследует цвет от родителя
+    margin-left: 5px;
+    background-color: #4caf50;
+    color: white;
     border: none;
-    padding: 0;
+    padding: 8px 16px;
     text-align: center;
     text-decoration: none;
-    display: inline-flex; // Для выравнивания иконок
-    align-items: center;
-    justify-content: center;
+    display: inline-block;
     font-size: 16px;
-    border-radius: 50%; // Круглые кнопки для иконок
+    border-radius: 5px;
     cursor: pointer;
     transition: background-color 0.3s ease;
-    min-width: 40px; // Стандартный размер Material Icon Button
-    height: 40px;
-
-    &.mat-raised-button {
-      // Для обычных кнопок
-      border-radius: 5px;
-      padding: 8px 16px;
-      min-width: unset;
-      height: unset;
-    }
 
     &:hover {
-      background-color: rgba(0, 0, 0, 0.04); // Легкий фон при наведении
+      background-color: #45a049;
     }
 
     &[color="warn"] {
-      color: #f44336; // Цвет для иконок
-      &:hover {
-        background-color: rgba(244, 67, 54, 0.08);
-      }
-    }
+      background-color: #f44336;
 
-    &[color="accent"] {
-      color: #ff4081; 
       &:hover {
-        background-color: rgba(255, 64, 129, 0.08);
+        background-color: #d32f2f;
       }
     }
 
     &[color="primary"] {
       background-color: #2196f3;
-      color: white;
+
       &:hover {
         background-color: #1976d2;
       }
@@ -121,14 +70,9 @@
 
   .mat-paginator {
     margin-top: 10px;
-    border-top: 1px solid #e0e0e0;
-    background-color: #f5f5f5;
   }
 }
 
-.mat-row.mat-no-data-row {
-  text-align: center;
-  padding: 16px;
-  font-style: italic;
-  color: #757575;
+.user-table {
+  width: 100%;
 }
