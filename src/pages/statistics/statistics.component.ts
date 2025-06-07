@@ -16,7 +16,7 @@ export class StatisticsComponent {
       master: 'Петров Петр Петрович',
       service: 'Стрижка',
       price: 1500,
-      dateTime: new Date('2024-03-15T10:00:00'),
+      dateTime: '2024-03-15',
       office: 'Офис 1'
     },
     {
@@ -24,7 +24,7 @@ export class StatisticsComponent {
       master: 'Петров Петр Петрович',
       service: 'Маникюр',
       price: 1000,
-      dateTime: new Date('2024-03-16T12:00:00'),
+      dateTime: '2024-03-16T12:00:00',
       office: 'Офис 2'
     }
   ];
