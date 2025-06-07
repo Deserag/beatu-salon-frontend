@@ -208,6 +208,16 @@ export const homePage: Routes = [
   }
 ]
 
+export const recordsPage: Routes = [
+  {
+    path: ERouteConstans.RECORDS_LIST,
+    loadComponent: () =>
+      import('../pages/records/records.component').then(
+        (c) => c.RecordsComponent
+      )
+  }
+]
+
 export const appRoutes: Routes = [
   {
     path: ERouteConstans.AUTH,
@@ -249,4 +259,5 @@ export const mainRoutes: Routes = [
   ...servicesRoutes,
   ...personalRoutes,
   ...statisticRoutes,
+  ...recordsPage,
 ];

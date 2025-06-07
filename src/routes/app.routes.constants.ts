@@ -40,5 +40,9 @@ export enum ERouteConstans {
   CLIENT_PAGE = ':id',
   CLIENT_ORDER = 'client-order',
 
+  //Записи
+  RECORDS_PANEL = 'records-panel',
+  RECORDS_LIST = 'list',
+
   HOME_PAGE = 'home-page',
 }

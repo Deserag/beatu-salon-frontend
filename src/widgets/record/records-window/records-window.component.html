@@ -1,0 +1,53 @@
+<div class="modal-container">
+  <h2>{{ form.value.id ? "Редактировать запись" : "Создать запись" }}</h2>
+  <form [formGroup]="form" (ngSubmit)="submit()">
+    <mat-form-field appearance="fill">
+      <mat-label>Клиент</mat-label>
+      <mat-select formControlName="clientId">
+        <mat-option *ngFor="let client of clients$ | async" [value]="client.id">
+          {{ client.lastName }} {{ client.firstName }} {{ client.middleName }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field appearance="fill">
+      <mat-label>Услуга</mat-label>
+      <mat-select formControlName="serviceId">
+        <mat-option
+          *ngFor="let service of services$ | async"
+          [value]="service.id"
+        >
+          {{ service.name }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field appearance="fill">
+      <mat-label>Мастер</mat-label>
+      <mat-select formControlName="masterId">
+        <mat-option *ngFor="let master of masters$ | async" [value]="master.id">
+          {{ master.lastName }} {{ master.firstName }} {{ master.middleName }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field appearance="fill">
+      <mat-label>Офис</mat-label>
+      <input matInput formControlName="officeId" />
+    </mat-form-field>
+
+    <mat-form-field appearance="fill">
+      <mat-label>Дата и время записи</mat-label>
+      <input matInput formControlName="date" type="datetime-local" />
+    </mat-form-field>
+
+    <div class="actions">
+      <button mat-raised-button color="primary" type="submit">
+        {{ form.value.id ? "Обновить" : "Создать" }}
+      </button>
+      <button mat-button color="warn" type="button" (click)="close()">
+        Отмена
+      </button>
+    </div>
+  </form>
+</div>
