@@ -1,13 +1,30 @@
 <div class="records-container">
-  <button mat-raised-button color="primary" (click)="onClickCreate()">
+  <button
+    mat-raised-button
+    color="primary"
+    (click)="onClickCreate()"
+    class="create-record-button"
+  >
     Создать запись
   </button>
 
   <div class="content">
     <app-order-card
       *ngFor="let record of records$ | async"
-      [fullName]="(record.user?.lastName || '') + ' ' + (record.user?.firstName || '') + ' ' + (record.user?.middleName || '')"
-      [master]="(record.worker?.lastName || '') + ' ' + (record.worker?.firstName || '') + ' ' + (record.worker?.middleName || '')"
+      [fullName]="
+        (record.user?.lastName || '') +
+        ' ' +
+        (record.user?.firstName || '') +
+        ' ' +
+        (record.user?.middleName || '')
+      "
+      [master]="
+        (record.worker?.lastName || '') +
+        ' ' +
+        (record.worker?.firstName || '') +
+        ' ' +
+        (record.worker?.middleName || '')
+      "
       [service]="record.service?.name || ''"
       [price]="record.service?.price || 0"
       [dateTime]="record.dateTime"
