@@ -9,8 +9,9 @@ import {
   TResGetClientsOrders,
   IClientsOrders,
   IDeleteOrder,
-  IClient, 
+  IClient,
 } from './clients.interface';
+import { IUpdateUser } from '../user';
 
 @Injectable({
   providedIn: 'root',
@@ -27,8 +28,8 @@ export class ClientApiService {
     return this._http.post<IClient>(`${this._baseURL}client/create`, client);
   }
 
-  updateClient(clientId: string, client: Partial<IClient>): Observable<IClient> {
-    return this._http.put<IClient>(`${this._baseURL}client/update/${clientId}`, client);
+  updateClient(body: IUpdateUser): Observable<IUpdateUser> {
+    return this._http.put<IUpdateUser>(`${this._baseURL}user/update`, body);
   }
 
   deleteClient(userId: string): Observable<IDeleteClient> {

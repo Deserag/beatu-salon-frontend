@@ -26,7 +26,13 @@ import { ServiceWindowComponent } from 'src/widgets/services';
 })
 export class ListComponent {
   protected readonly ERoutesConstans = ERouteConstans;
-  displayedColumns: string[] = ['Name','Description', 'Price','Duration', 'Symbol'];
+  displayedColumns: string[] = [
+    'Name',
+    'Description',
+    'Price',
+    'Duration',
+    'Symbol',
+  ];
   dataSource$ = new BehaviorSubject<IService[]>([]);
   totalCount$ = new BehaviorSubject<number>(0);
   private _page$ = new BehaviorSubject<number>(1);
@@ -62,12 +68,16 @@ export class ListComponent {
   }
 
   onCliCkEditService(service: IService): void {
-    this.router.navigate(
-      [ERouteConstans.SERVICES_PANEL, ERouteConstans.SERVICE_PAGE],
-      {
-        state: { id: service.id },
+    const dialogRef = this._dialog.open(ServiceWindowComponent, {
+      data: service, 
+    });
+
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result) {
+        console.log('Услуга обновлена:', result);
+        this._page$.next(this._page$.value); 
       }
-    );
+    });
   }
 
   onClickCreateService(): void {

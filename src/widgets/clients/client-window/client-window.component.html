@@ -1,1 +1,60 @@
-<p>client-window works!</p>
+<div class="modal-container">
+  <h2>Создать/Редактировать клиента</h2>
+  <form [formGroup]="form" (ngSubmit)="submit()">
+    <div class="form-row">
+      <mat-form-field appearance="fill">
+        <mat-label>Имя</mat-label>
+        <input matInput formControlName="firstName" />
+        @if (form.controls.firstName.invalid && form.controls.firstName.touched) {
+          <mat-error>Имя обязательно</mat-error>
+        }
+      </mat-form-field>
+
+      <mat-form-field appearance="fill">
+        <mat-label>Фамилия</mat-label>
+        <input matInput formControlName="lastName" />
+        @if (form.controls.lastName.invalid && form.controls.lastName.touched) {
+          <mat-error>Фамилия обязательна</mat-error>
+        }
+      </mat-form-field>
+
+      <mat-form-field appearance="fill">
+        <mat-label>Отчество</mat-label>
+        <input matInput formControlName="middleName" />
+      </mat-form-field>
+    </div>
+
+    <div class="form-row">
+      <mat-form-field appearance="fill">
+        <mat-label>Дата рождения</mat-label>
+        <input matInput type="date" formControlName="birthDate" />
+        @if (form.controls.birthDate.invalid && form.controls.birthDate.touched) {
+          <mat-error>Дата рождения обязательна</mat-error>
+        }
+      </mat-form-field>
+
+      <mat-form-field appearance="fill">
+        <mat-label>Telegram ID</mat-label>
+        <input matInput formControlName="telegramId" />
+        @if (form.controls.telegramId.invalid && form.controls.telegramId.touched) {
+          <mat-error>Телеграм ID обязателен</mat-error>
+        }
+      </mat-form-field>
+    </div>
+
+    
+     
+
+    <div class="actions">
+      <button mat-raised-button type="submit" class="create-button" *ngIf="!data?.id">
+        Создать
+      </button>
+      <button mat-raised-button type="submit" class="create-button" *ngIf="data?.id">
+        Обновить
+      </button>
+      <button mat-button type="button" class="cancel-button" (click)="close()">
+        Отмена
+      </button>
+    </div>
+  </form>
+</div>

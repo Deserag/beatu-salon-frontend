@@ -65,11 +65,11 @@ export class ClientListComponent {
   }
 
   createClient() {
-    // const dialogRef = this._dialog.open(ClientWindowComponent);
-    // dialogRef.componentInstance.client.subscribe((newClient: IClient) => {
-    //   console.log('Создан клиент:', newClient);
-    //   this._page$.next(this._page$.value);
-    // });
+    const dialogRef = this._dialog.open(ClientWindowComponent);
+    dialogRef.componentInstance.client.subscribe((newClient: IClient) => {
+      console.log('Создан клиент:', newClient);
+      this._page$.next(this._page$.value);
+    });
   }
 
   viewClient(client: IClient): void {
