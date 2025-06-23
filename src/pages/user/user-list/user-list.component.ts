@@ -4,7 +4,12 @@ import { MatDialog } from '@angular/material/dialog';
 import { MatTableModule } from '@angular/material/table';
 import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
 import { MatSortModule } from '@angular/material/sort';
-import { BehaviorSubject, combineLatest, combineLatestWith, switchMap } from 'rxjs';
+import {
+  BehaviorSubject,
+  combineLatest,
+  combineLatestWith,
+  switchMap,
+} from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { IUser, TResGetUsers, UserApiService } from '@entity';
 import { UserWindowComponent } from 'src/widgets/user/user-window/user-window.component';
@@ -34,11 +39,14 @@ export class UserListComponent {
   private _userApiService = inject(UserApiService);
   private _dialog = inject(MatDialog);
   private _destroyRef = inject(DestroyRef);
+  private creatorId: string;
   constructor() {
     this._page$
       .pipe(
         combineLatestWith(this._pageSize$),
-        switchMap(([page, pageSize]) => this._userApiService.getUser({ page, pageSize })),
+        switchMap(([page, pageSize]) =>
+          this._userApiService.getUser({ page, pageSize })
+        ),
         takeUntilDestroyed(this._destroyRef)
       )
       .subscribe((response: TResGetUsers) => {
@@ -50,6 +58,15 @@ export class UserListComponent {
       this.dataSource$.complete();
       this.totalCount$.complete();
     });
+
+    this.creatorId = (() => {
+      try {
+        const user = JSON.parse(localStorage.getItem('user') || '{}');
+        return user?.id || '';
+      } catch {
+        return '';
+      }
+    })();
   }
 
   onPageChange(event: PageEvent): void {
@@ -84,15 +101,25 @@ export class UserListComponent {
         `Вы уверены, что хотите удалить пользователя ${user.firstName} ${user.lastName}?`
       )
     ) {
-      this._userApiService.deleteUser(user.id).subscribe({
-        next: (response) => {
-          console.log('Пользователь успешно удален', response);
-          this._page$.next(this._page$.value);
-        },
-        error: (error) => {
-          console.error('Ошибка удаления пользователя', error);
-        },
-      });
+      const admin = JSON.parse(localStorage.getItem('user') || '{}');
+      const adminId = admin?.id;
+
+      if (!adminId) {
+        console.error('Admin ID не найден в localStorage');
+        return;
+      }
+
+      this._userApiService
+        .deleteUser({ userId: user.id, adminId: this.creatorId }) 
+        .subscribe({
+          next: (response) => {
+            console.log('Пользователь успешно удален', response);
+            this._page$.next(this._page$.value);
+          },
+          error: (error) => {
+            console.error('Ошибка удаления пользователя', error);
+          },
+        });
     }
   }
 }

@@ -69,23 +69,27 @@ export class ListComponent {
 
   onCliCkEditService(service: IService): void {
     const dialogRef = this._dialog.open(ServiceWindowComponent, {
-      data: service, 
+      data: service,
     });
 
     dialogRef.afterClosed().subscribe((result) => {
       if (result) {
         console.log('Услуга обновлена:', result);
-        this._page$.next(this._page$.value); 
+        this._page$.next(this._page$.value);
       }
     });
   }
 
   onClickCreateService(): void {
     const dialogRef = this._dialog.open(ServiceWindowComponent);
-    dialogRef.componentInstance.service.subscribe((newService: IService) => {
-      console.log('Создан пользователь:', newService);
-      this._page$.next(this._page$.value);
+
+    dialogRef.afterClosed().subscribe((newService: IService | undefined) => {
+      if (newService) {
+        console.log('Создана услуга:', newService);
+        this._page$.next(this._page$.value); 
+      }
     });
   }
+
   onClickDeleteService(service: IService) {}
 }

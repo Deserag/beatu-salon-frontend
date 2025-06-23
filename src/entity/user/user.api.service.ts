@@ -11,6 +11,7 @@ import {
   IGetRole,
   IGetUser,
   IUpdateUser,
+  IUser,
   IUserDepartment,
   IUserRoles,
   TResGetDepartment,
@@ -62,7 +63,9 @@ export class UserApiService {
     return this._http.post<IGetRole>(`${this._baseURL}user/create-role`, body);
   }
 
-  createDepartment(body: ICreateDepartment): Observable<ICreateDepartmentResponse> {
+  createDepartment(
+    body: ICreateDepartment
+  ): Observable<ICreateDepartmentResponse> {
     return this._http.post<ICreateDepartmentResponse>(
       `${this._baseURL}user/create-department`,
       body
@@ -97,13 +100,16 @@ export class UserApiService {
     });
   }
 
-  deleteUser(userId: string): Observable<IDeleteUser> {
-    return this._http.delete<IDeleteUser>(
-      `${this._baseURL}user/delete-user/${userId}`
-    );
+  deleteUser(dto: { userId: string; adminId: string }): Observable<any> {
+    return this._http.delete<any>(`${this._baseURL}user/delete-user`, {
+      body: dto,
+    });
   }
+  // 4cac872b-36c8-4759-90e5-1e782aa1a8b1
 
-  deleteDepartment(departmentId: string): Observable<IDeleteDepartmentResponse> {
+  deleteDepartment(
+    departmentId: string
+  ): Observable<IDeleteDepartmentResponse> {
     const userId = this._authService.user?.id;
     return this._http.delete<IDeleteDepartmentResponse>(
       `${this._baseURL}user/delete-department/${departmentId}`,
