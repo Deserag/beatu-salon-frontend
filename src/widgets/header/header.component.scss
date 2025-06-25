@@ -15,36 +15,63 @@ body {
 
 .sidenav-container {
   height: 100vh;
+  .mat-drawer-backdrop {
+    &.mat-drawer-shown {
+      @media (min-width: 960px) {
+        display: none;
+      }
+    }
+  }
 }
 
 .sidenav {
   width: 325px;
   background-color: $primary-color;
   color: white;
-  animation: slideIn 0.5s ease-in-out;
+  box-shadow: 2px 0 6px rgba(0, 0, 0, 0.24);
+  animation: slideIn 0.3s ease-in-out forwards;
 
   mat-toolbar {
     background-color: darken($primary-color, 10%);
+    min-height: 64px;
+    height: 64px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    display: flex;
+    align-items: center;
+    padding: 0 16px;
+    font-size: 1.25em;
+    font-weight: 500;
   }
 
   mat-nav-list {
+    padding: 8px 0;
     .mat-list-item {
       color: white;
+      height: 48px;
       &:hover {
-        background-color: lighten($primary-color, 10%);
+        background-color: rgba(255, 255, 255, 0.1);
+      }
+      &.active-link {
+        background-color: rgba(255, 255, 255, 0.2);
+      }
+      .mat-list-item-content {
+        padding: 0 16px;
       }
     }
 
     .mat-expansion-panel-header {
-      height: 64px;
-
+      height: 48px;
+      padding: 0 16px;
       .mat-expansion-indicator,
       .mat-expansion-panel-header-title {
         color: white;
       }
-
       .mat-expansion-panel-header-title {
-        font-size: 1.2em;
+        font-size: 1em;
+        font-weight: 500;
+      }
+      &:hover {
+        background-color: rgba(255, 255, 255, 0.1);
       }
     }
   }
@@ -53,6 +80,7 @@ body {
     padding: 16px;
     text-align: center;
     background-color: darken($primary-color, 5%);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 
     button {
       background-color: $secondary-color;
@@ -60,6 +88,7 @@ body {
       border: none;
       padding: 8px 16px;
       border-radius: 4px;
+      transition: background-color 0.2s ease-in-out;
 
       &:hover {
         background-color: darken($secondary-color, 10%);
@@ -70,9 +99,20 @@ body {
   mat-expansion-panel {
     background-color: transparent;
     box-shadow: none;
+    border-radius: 0;
 
     &.mat-expanded {
       background-color: rgba(255, 255, 255, 0.1);
+    }
+    .mat-expansion-panel-body {
+      padding: 0;
+      .mat-nav-list {
+        padding-top: 0;
+        padding-bottom: 0;
+        .mat-list-item {
+          padding-left: 32px;
+        }
+      }
     }
   }
 }
@@ -80,7 +120,7 @@ body {
 .mat-sidenav-content {
   padding: 0;
   margin: 0;
-  animation: fadeIn 0.5s ease-in-out;
+  animation: fadeIn 0.3s ease-in-out;
 }
 
 .mat-toolbar {
@@ -89,6 +129,9 @@ body {
   z-index: 100;
   background-color: $primary-color;
   color: white;
+  min-height: 64px;
+  height: 64px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 
   .spacer {
     flex: 1 1 auto;
@@ -100,11 +143,11 @@ body {
 
     span {
       margin-right: 10px;
+      white-space: nowrap;
     }
 
     button {
       color: white;
-
       .mat-icon {
         fill: white;
         stroke: white;
@@ -114,9 +157,9 @@ body {
 }
 
 .content {
-  width: 90%;
+  padding: 20px;
+  max-width: 1200px;
   margin: 20px auto;
-  padding: 10px;
 }
 
 .mat-button {
@@ -125,6 +168,7 @@ body {
   border: none;
   padding: 8px 16px;
   border-radius: 4px;
+  transition: background-color 0.2s ease-in-out;
 
   &:hover {
     background-color: darken($secondary-color, 10%);
@@ -141,4 +185,92 @@ body {
 
 .mat-accent {
   color: $accent-color;
+}
+
+@media (max-width: 959px) {
+  .sidenav {
+    width: 70vw; 
+    box-shadow: none; 
+    animation: none; 
+
+    mat-toolbar {
+      background-color: darken($primary-color, 10%);
+      min-height: 56px; 
+      height: 56px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+      font-size: 1.1em; 
+    }
+
+    mat-nav-list {
+      padding: 0; 
+      .mat-list-item {
+        height: 48px;
+        .mat-list-item-content {
+          padding: 0 16px;
+        }
+      }
+      .mat-expansion-panel-header {
+        height: 48px;
+        padding: 0 16px;
+        .mat-expansion-panel-header-title {
+          font-size: 1em;
+        }
+      }
+    }
+
+    .user-info {
+      padding: 12px; 
+      font-size: 0.9em;
+    }
+
+    mat-expansion-panel {
+      .mat-expansion-panel-body {
+        .mat-nav-list {
+          .mat-list-item {
+            padding-left: 6px; 
+          }
+        }
+      }
+    }
+  }
+
+  .mat-sidenav-content {
+    animation: none;
+  }
+
+  .mat-toolbar {
+    min-height: 56px; 
+    height: 56px;
+
+    .toolbar-user-info {
+      span {
+        display: none; 
+      }
+    }
+  }
+
+  .content {
+    padding: 2px; 
+    margin: 2px auto; 
+    width: auto;
+    max-width: 100%; 
+  }
+}
+
+@keyframes slideIn {
+  from {
+    transform: translateX(-100%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }

@@ -1,7 +1,7 @@
 <div class="order-card">
   <mat-card class="card">
     <mat-card-header class="card-header">
-      <mat-card-title>Заказ</mat-card-title>
+      <mat-card-title>Запись</mat-card-title>
     </mat-card-header>
     <mat-card-content class="card-body">
       <div class="row">
@@ -13,8 +13,15 @@
         <p><strong>Цена:</strong> {{ price }} ₽</p>
       </div>
       <div class="row">
-        <p><strong>Дата и время:</strong> {{ dateTime | date:'dd.MM.yyyy HH:mm' }}</p>
-        <p><strong>Офис:</strong> {{ office }}</p>
+        <p>
+          <strong>Дата и время:</strong>
+          {{ dateTime | date : "dd.MM.yyyy HH:mm" }}
+        </p>
+        <p><strong>Кабинет:</strong> {{ office }}</p>
+      </div>
+      <div class="row">
+        <p><strong>Оценка:</strong> {{ grade }}</p>
+        <p><strong>Комментарий:</strong> {{ comment }}</p>
       </div>
     </mat-card-content>
   </mat-card>

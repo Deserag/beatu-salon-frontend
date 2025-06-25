@@ -23,6 +23,9 @@ export class RecordsComponent {
   private _recordApiService = inject(RecordApiService);
   private _dialog = inject(MatDialog);
 
+  currentPage = 1;
+  totalPages = 1;
+
   constructor() {
     this._loadRecords();
   }
@@ -40,7 +43,10 @@ export class RecordsComponent {
       )
       .subscribe((response: TResGetRecord) => {
         this.records$.next(response.rows);
-        this.totalCount$.next(response.infoPage?.totalCount || 0);
+        const total = response.infoPage?.totalCount || 0;
+        this.totalCount$.next(total);
+        this.totalPages = Math.ceil(total / this._pageSize$.value);
+        this.currentPage = this._page$.value;
       });
   }
 
@@ -68,5 +74,17 @@ export class RecordsComponent {
         this._page$.next(this._page$.value);
       }
     });
+  }
+
+  onNextPage(): void {
+    if (this._page$.value < this.totalPages) {
+      this._page$.next(this._page$.value + 1);
+    }
+  }
+
+  onPreviousPage(): void {
+    if (this._page$.value > 1) {
+      this._page$.next(this._page$.value - 1);
+    }
   }
 }

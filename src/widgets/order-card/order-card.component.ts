@@ -16,4 +16,6 @@ export class OrderCardComponent {
   @Input() price: number = 0;
   @Input() dateTime: string = '';
   @Input() office: string = '';
+  @Input() grade: string = '';
+  @Input() comment: string = '';
 }

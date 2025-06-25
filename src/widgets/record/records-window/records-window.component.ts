@@ -43,21 +43,18 @@ import { MatNativeDateModule } from '@angular/material/core';
 
 function futureDateTimeValidator(): Validators {
   return (control: AbstractControl): ValidationErrors | null => {
-    if (!control.value) {
-      return null;
-    }
+    if (!control.value) return null;
 
     const selectedDateTime = new Date(control.value);
     const currentDateTime = new Date();
-    const selectedTime = selectedDateTime.getTime();
-    const currentTime = currentDateTime.getTime();
 
-    if (selectedTime < currentTime) {
+    if (selectedDateTime.getTime() < currentDateTime.getTime()) {
       return { pastDateTime: true };
     }
     return null;
   };
 }
+
 @Component({
   selector: 'app-records-window',
   standalone: true,
@@ -83,7 +80,6 @@ export class RecordsWindowComponent {
   offices: IOffice[] = [];
   cabinets: ICabinet[] = [];
 
-
   private fb = inject(FormBuilder);
   private dialogRef = inject(MatDialogRef<RecordsWindowComponent>);
   data = inject(MAT_DIALOG_DATA);
@@ -97,18 +93,20 @@ export class RecordsWindowComponent {
   constructor() {
     try {
       this.adminId = JSON.parse(localStorage.getItem('user') || '{}').id || '';
-    } catch (e) {
-      console.error('Error parsing user from localStorage:', e);
+    } catch {
       this.adminId = '';
     }
 
     this.form = this.fb.group({
-      clientId: [this.data?.client?.id || this.adminId, Validators.required],
+      clientId: [this.data.client?.id || '', Validators.required],
       serviceId: [this.data?.service?.id || '', Validators.required],
-      masterId: [this.data?.master?.id || '', Validators.required],
+      masterId: [this.data?.worker?.id || '', Validators.required],
       officeId: [this.data?.office?.id || '', Validators.required],
       cabinetId: [this.data?.cabinet?.id || '', Validators.required],
-      dateTime: [this.data?.dateTime || '', Validators.required],
+      dateTime: [
+        this.data?.dateTime || '',
+        [Validators.required, futureDateTimeValidator()],
+      ],
     });
 
     combineLatest([
@@ -132,6 +130,10 @@ export class RecordsWindowComponent {
       .pipe(
         take(1),
         tap(() => {
+          if (!this.form.get('clientId')!.value && this.adminId) {
+            this.form.get('clientId')!.setValue(this.adminId);
+          }
+
           if (this.data?.service?.id) {
             this.recordApi
               .getMastersByService(this.data.service.id)
@@ -184,9 +186,19 @@ export class RecordsWindowComponent {
     }
 
     const v = this.form.value;
+
+    const payload = {
+      userId: v.clientId,
+      masterId: v.masterId,
+      serviceId: v.serviceId,
+      officeId: v.officeId,
+      workCabinetId: v.cabinetId,
+      date: new Date(v.dateTime),
+    };
+
     const obs: Observable<any> = this.data?.id
-      ? this.recordApi.updateRecord({ ...v, id: this.data.id })
-      : this.recordApi.createRecord(v);
+      ? this.recordApi.updateRecord({ ...payload, id: this.data.id })
+      : this.recordApi.createRecord(payload);
 
     obs.pipe(take(1)).subscribe({
       next: () => this.dialogRef.close(true),

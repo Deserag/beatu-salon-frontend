@@ -32,4 +32,25 @@
       (click)="onClickEdit(record)"
     ></app-order-card>
   </div>
+
+  <div class="pagination">
+    <button
+      mat-raised-button
+      color="primary"
+      (click)="onPreviousPage()"
+      [disabled]="currentPage === 1"
+      class="create-record-button"
+    >
+      Назад
+    </button>
+    <button
+      mat-raised-button
+      color="primary"
+      (click)="onNextPage()"
+      [disabled]="currentPage === totalPages"
+      class="create-record-button"
+    >
+      Вперед
+    </button>
+  </div>
 </div>

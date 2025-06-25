@@ -13,6 +13,8 @@ export interface IRecord {
   createdAt: string; 
   updatedAt: string;
   deletedAt: string | null; 
+  grade: string | null;
+  comment: string | null;
 
   user?: IUser;
   worker?: IUser; 

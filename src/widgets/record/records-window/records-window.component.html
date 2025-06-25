@@ -1,7 +1,5 @@
 <div class="modal-container">
-  <h2>
-    {{ data?.id ? "Редактировать запись" : "Создать запись" }}
-  </h2>
+  <h2>{{ data?.id ? "Редактировать запись" : "Создать запись" }}</h2>
   <form [formGroup]="form" (ngSubmit)="submit()">
     <mat-form-field appearance="fill">
       <mat-label>Клиент</mat-label>
@@ -10,9 +8,11 @@
           {{ client.firstName }} {{ client.lastName }}
         </mat-option>
       </mat-select>
-      @if (form.get('clientId')?.invalid && form.get('clientId')?.touched) {
-      <mat-error> Клиент обязателен </mat-error>
-      }
+      <mat-error
+        *ngIf="form.get('clientId')?.invalid && form.get('clientId')?.touched"
+      >
+        Клиент обязателен
+      </mat-error>
     </mat-form-field>
 
     <mat-form-field appearance="fill">
@@ -22,9 +22,11 @@
           {{ service.name }}
         </mat-option>
       </mat-select>
-      @if (form.get('serviceId')?.invalid && form.get('serviceId')?.touched) {
-      <mat-error> Услуга обязательна </mat-error>
-      }
+      <mat-error
+        *ngIf="form.get('serviceId')?.invalid && form.get('serviceId')?.touched"
+      >
+        Услуга обязательна
+      </mat-error>
     </mat-form-field>
 
     <mat-form-field appearance="fill">
@@ -34,9 +36,11 @@
           {{ master.firstName }} {{ master.lastName }}
         </mat-option>
       </mat-select>
-      @if (form.get('masterId')?.invalid && form.get('masterId')?.touched) {
-      <mat-error> Мастер обязателен </mat-error>
-      }
+      <mat-error
+        *ngIf="form.get('masterId')?.invalid && form.get('masterId')?.touched"
+      >
+        Мастер обязателен
+      </mat-error>
     </mat-form-field>
 
     <mat-form-field appearance="fill">
@@ -46,9 +50,11 @@
           {{ office.number }}
         </mat-option>
       </mat-select>
-      @if (form.get('officeId')?.invalid && form.get('officeId')?.touched) {
-      <mat-error> Офис обязателен </mat-error>
-      }
+      <mat-error
+        *ngIf="form.get('officeId')?.invalid && form.get('officeId')?.touched"
+      >
+        Офис обязателен
+      </mat-error>
     </mat-form-field>
 
     <mat-form-field appearance="fill">
@@ -58,18 +64,38 @@
           {{ cabinet.number }}
         </mat-option>
       </mat-select>
-      @if (form.get('cabinetId')?.invalid && form.get('cabinetId')?.touched) {
-      <mat-error> Кабинет обязателен </mat-error>
-      }
+      <mat-error
+        *ngIf="form.get('cabinetId')?.invalid && form.get('cabinetId')?.touched"
+      >
+        Кабинет обязателен
+      </mat-error>
     </mat-form-field>
 
     <mat-form-field appearance="fill">
       <mat-label>Дата и время</mat-label>
       <input matInput type="datetime-local" formControlName="dateTime" />
-      @if (form.get('dateTime')?.invalid && form.get('dateTime')?.touched) {
-      <mat-error> Дата и время обязательны </mat-error>
-      }
+      <mat-error
+        *ngIf="form.get('dateTime')?.invalid && form.get('dateTime')?.touched"
+      >
+        Дата и время обязательны
+      </mat-error>
     </mat-form-field>
+
+    <div *ngIf="data?.id" class="read-only-fields">
+      <mat-form-field appearance="fill" disabled>
+        <mat-label>Оценка</mat-label>
+        <input matInput [value]="data.grade || 'Нет оценки'" readonly />
+      </mat-form-field>
+
+      <mat-form-field appearance="fill" disabled>
+        <mat-label>Комментарий</mat-label>
+        <textarea
+          matInput
+          [value]="data.comment || 'Комментарий отсутствует'"
+          readonly
+        ></textarea>
+      </mat-form-field>
+    </div>
 
     <div class="actions">
       <button mat-raised-button color="primary" type="submit">

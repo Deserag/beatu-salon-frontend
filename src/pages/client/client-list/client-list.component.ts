@@ -28,7 +28,6 @@ export class ClientListComponent {
     'birthDate',
     'telegramId',
     'actions',
-    'view',
   ];
   dataSource$ = new BehaviorSubject<IClient[]>([]);
   totalCount$ = new BehaviorSubject<number>(0);
