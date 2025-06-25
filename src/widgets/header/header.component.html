@@ -158,17 +158,13 @@
       <a
         mat-list-item
         *ngIf="isAdminOrSuperAdmin"
-        [routerLink]="['/', ERoutesConstans.MAIN, ERoutesConstans.ADMIN_PANEL]"
+        [routerLink]="['/', ERoutesConstans.MAIN, ERoutesConstans.HOME_PAGE]"
         >Статистика</a
       >
       <a
         mat-list-item
         *ngIf="isAdminOrSuperAdmin"
-        [routerLink]="[
-          '/',
-          ERoutesConstans.MAIN,
-          ERoutesConstans.RECORDS_LIST
-        ]"
+        [routerLink]="['/', ERoutesConstans.MAIN, ERoutesConstans.RECORDS_LIST]"
         >Записи</a
       >
     </mat-nav-list>
