@@ -9,6 +9,7 @@ export interface IClient {
   middleName: string;
   birthDate: Date;
   telegramId: string | null;
+  createdAt: string;
 }
 
 export interface IWorker {

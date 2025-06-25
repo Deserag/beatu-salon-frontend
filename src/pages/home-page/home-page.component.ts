@@ -1,11 +1,14 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, inject, OnInit, OnDestroy } from '@angular/core';
 import { MatCardModule } from '@angular/material/card';
 import { MatListModule } from '@angular/material/list';
 import { MatIconModule } from '@angular/material/icon';
 import { Chart, registerables } from 'chart.js';
 import { MatGridListModule } from '@angular/material/grid-list';
 import { MatExpansionModule } from '@angular/material/expansion';
+import { RecordApiService, UserApiService, ClientApiService } from '@entity';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 
 Chart.register(...registerables);
 
@@ -29,119 +32,222 @@ interface OfficeLoad {
 @Component({
   selector: 'app-home-page',
   standalone: true,
-  imports: [CommonModule, MatCardModule, MatListModule, MatIconModule, MatGridListModule, MatExpansionModule],
+  imports: [
+    CommonModule,
+    MatCardModule,
+    MatListModule,
+    MatIconModule,
+    MatGridListModule,
+    MatExpansionModule,
+  ],
   templateUrl: './home-page.component.html',
   styleUrl: './home-page.component.scss',
 })
-export class HomePageComponent implements OnInit {
+export class HomePageComponent implements OnInit, OnDestroy {
   revenue: RevenueData = { today: 0, week: 0 };
   employeeBirthdays: Birthday[] = [];
   clientBirthdays: Birthday[] = [];
+  officeLoad: OfficeLoad[] = [];
+
   servicePopularityChart: Chart | null = null;
   newClientsChart: Chart | null = null;
   officeLoadChart: Chart | null = null;
-  officeLoad: OfficeLoad[] = [];
+
+  private recordApi = inject(RecordApiService);
+  private userApi = inject(UserApiService);
+  private clientApi = inject(ClientApiService);
+  private _destroy$ = new Subject<void>();
 
   ngOnInit(): void {
-    this.loadHomePageData();
-    this.initializeCharts();
-    this.loadOfficeLoad();
+    this.loadBirthdays();
+    this.loadDataFromApi();
+    this.loadNewClientsChart();
   }
 
-  private loadHomePageData(): void {
-    this.revenue = {
-      today: 437,
-      week: 3089,
-    };
+  ngOnDestroy(): void {
+    this._destroy$.next();
+    this._destroy$.complete();
+  }
 
-    this.employeeBirthdays = [
-      { name: 'Анна', date: '15.04', type: 'employee' },
-      { name: 'Петр', date: '20.04', type: 'employee' },
-    ];
+  private loadBirthdays(): void {
+    this.userApi
+      .getUser({ page: 1, pageSize: 10 })
+      .pipe(takeUntil(this._destroy$))
+      .subscribe((res) => {
+        const filtered = res.rows
+          .filter((u) => u.birthDate)
+          .map((u) => ({
+            name: `${u.firstName} ${u.lastName}`.trim(),
+            date: new Date(u.birthDate).toLocaleDateString('ru-RU', {
+              day: '2-digit',
+              month: '2-digit',
+            }),
+            type: 'employee' as const,
+          }));
+        this.employeeBirthdays = filtered.slice(0, 3);
+      });
 
-    this.clientBirthdays = [
-      { name: 'Иван', date: '18.04', type: 'client' },
-      { name: 'Елена', date: '25.04', type: 'client' },
-    ];
+    this.clientApi
+      .getClients({ page: 1, pageSize: 10 })
+      .pipe(takeUntil(this._destroy$))
+      .subscribe((res) => {
+        const filtered = res.rows
+          .filter((c) => c.birthDate)
+          .map((c) => ({
+            name: `${c.firstName} ${c.lastName}`.trim(),
+            date: new Date(c.birthDate).toLocaleDateString('ru-RU', {
+              day: '2-digit',
+              month: '2-digit',
+            }),
+            type: 'client' as const,
+          }));
+        this.clientBirthdays = filtered.slice(0, 3);
+      });
+  }
+
+  private loadNewClientsChart(): void {
+    this.clientApi
+      .getClients({ page: 1, pageSize: 1000 })
+      .pipe(takeUntil(this._destroy$))
+      .subscribe((res) => {
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+
+        const weekDays = ['Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб', 'Вс'];
+        const counts = [0, 0, 0, 0, 0, 0, 0];
+
+        res.rows.forEach((c) => {
+          if (c.createdAt) {
+            const createdDate = new Date(c.createdAt);
+            const createdDay = new Date(createdDate);
+            createdDay.setHours(0, 0, 0, 0);
+
+            const diffDays = Math.floor(
+              (today.getTime() - createdDay.getTime()) / (1000 * 60 * 60 * 24)
+            );
+            if (diffDays >= 0 && diffDays <= 6) {
+              const dayIndex = (createdDate.getDay() + 6) % 7;
+              counts[dayIndex]++;
+            }
+          }
+        });
+
+        if (this.newClientsChart) {
+          this.newClientsChart.destroy();
+        }
+
+        this.newClientsChart = new Chart('newClientsChart', {
+          type: 'line',
+          data: {
+            labels: weekDays,
+            datasets: [
+              {
+                label: 'Новые клиенты',
+                data: counts,
+                borderColor: '#673ab7',
+                backgroundColor: 'rgba(103, 58, 183, 0.1)',
+                borderWidth: 2,
+                fill: true,
+              },
+            ],
+          },
+        });
+      });
+  }
+
+  private loadDataFromApi(): void {
+    this.recordApi.getRecords({ page: 1, size: 10 }).subscribe({
+      next: (res) => {
+        const today = new Date();
+        this.revenue.today = res.rows.reduce((sum, rec) => {
+          const recDate = new Date(rec.dateTime);
+          if (
+            recDate.getDate() === today.getDate() &&
+            recDate.getMonth() === today.getMonth() &&
+            recDate.getFullYear() === today.getFullYear()
+          ) {
+            return sum + (rec.service?.price ?? 0);
+          }
+          return sum;
+        }, 0);
+
+        const now = today.getTime();
+        this.revenue.week = res.rows.reduce((sum, rec) => {
+          const recDate = new Date(rec.dateTime);
+          const diff = now - recDate.getTime();
+          if (diff >= 0 && diff <= 7 * 24 * 60 * 60 * 1000) {
+            return sum + (rec.service?.price ?? 0);
+          }
+          return sum;
+        }, 0);
+
+        this.initializeCharts();
+      },
+      error: (err) => {
+        console.error('Ошибка загрузки данных для домашней страницы:', err);
+      },
+    });
   }
 
   private initializeCharts(): void {
     this.createServicePopularityChart();
-    this.createNewClientsChart();
+    this.createOfficeLoadChart();
   }
 
   private createServicePopularityChart(): void {
-    const serviceLabels = ['Стрижка мужская', 'Стрижка женская', 'Маникюр', 'Педикюр'];
-    const serviceData = [35, 25, 20, 20];
+    const serviceLabels = [
+      'Стрижка мужская',
+      'Стрижка женская',
+      'Маникюр',
+      'Педикюр',
+    ];
+    const serviceData = [2, 1, 1, 2];
+
+    if (this.servicePopularityChart) {
+      this.servicePopularityChart.destroy();
+    }
 
     this.servicePopularityChart = new Chart('servicePopularityChart', {
       type: 'doughnut',
       data: {
         labels: serviceLabels,
-        datasets: [{
-          data: serviceData,
-          backgroundColor: [
-            '#FF6384',
-            '#36A2EB',
-            '#FFCE56',
-            '#4BC0C0',
-          ],
-        }],
+        datasets: [
+          {
+            data: serviceData,
+            backgroundColor: ['#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0'],
+          },
+        ],
       },
     });
-  }
-
-  private createNewClientsChart(): void {
-    const daysOfWeek = ['Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб', 'Вс'];
-    const newClientsData = [5, 7, 3, 8, 6, 9, 4];
-
-    this.newClientsChart = new Chart('newClientsChart', {
-      type: 'line',
-      data: {
-        labels: daysOfWeek,
-        datasets: [{
-          label: 'Новые клиенты',
-          data: newClientsData,
-          borderColor: '#673ab7',
-          backgroundColor: 'rgba(103, 58, 183, 0.1)',
-          borderWidth: 2,
-          fill: true,
-        }],
-      },
-    });
-  }
-
-  private loadOfficeLoad(): void {
-    this.officeLoad = [
-      { name: 'Кабинет 1', occupiedSlots: 3, totalSlots: 5 },
-      { name: 'Кабинет 2', occupiedSlots: 5, totalSlots: 7 },
-      { name: 'Кабинет 3', occupiedSlots: 2, totalSlots: 3 },
-    ];
-
-    this.createOfficeLoadChart();
   }
 
   private createOfficeLoadChart(): void {
-    const labels = this.officeLoad.map(office => office.name);
-    const data = this.officeLoad.map(office => (office.occupiedSlots / office.totalSlots) * 100);
+    const labels = this.officeLoad.map((office) => office.name);
+    const data = this.officeLoad.map(
+      (office) => (office.occupiedSlots / office.totalSlots) * 100
+    );
+
+    if (this.officeLoadChart) {
+      this.officeLoadChart.destroy();
+    }
 
     this.officeLoadChart = new Chart('officeLoadChart', {
       type: 'bar',
       data: {
         labels: labels,
-        datasets: [{
-          label: 'Занятость (%)',
-          data: data,
-          backgroundColor: data.map(p => 
-            p < 50 ? '#4CAF50' : p < 80 ? '#FFC107' : '#F44336'
-          ),
-        }],
+        datasets: [
+          {
+            label: 'Занятость (%)',
+            data: data,
+            backgroundColor: data.map((p) =>
+              p < 50 ? '#4CAF50' : p < 80 ? '#FFC107' : '#F44336'
+            ),
+          },
+        ],
       },
       options: {
         scales: {
-          y: {
-            max: 100,
-          },
+          y: { max: 100 },
         },
       },
     });
